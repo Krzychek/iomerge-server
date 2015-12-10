@@ -1,5 +1,7 @@
 package pl.kbieron.iomerge.server.ui.movementReader;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
@@ -26,6 +28,8 @@ import static java.awt.event.MouseEvent.BUTTON3;
 @Component
 public class MouseTrapReader extends InvisibleJFrame implements MovementReader, MouseListener, MouseMotionListener {
 
+	private final Log log = LogFactory.getLog(MouseTrapReader.class);
+
 	private Point center;
 
 	private Point oldMouseLocation;
@@ -40,7 +44,7 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 	private VirtualScreen virtualScreen;
 
 	@Autowired
-	private GestureRecorder gestureReader;
+	private GestureRecorder gestureRecorder;
 
 	public MouseTrapReader() {
 		super("MouseTrapReader");
@@ -54,7 +58,7 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 		setLocation(bounds.x, bounds.y);
 		setSize(bounds.height, bounds.width);
 
-		timer = new Timer(10, a -> readMove());
+		timer = new Timer(20, a -> readMove());
 
 		addKeyListener(new KeyAdapter() {
 			@Override
@@ -65,9 +69,27 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 				}
 			}
 		});
+		addMouseListener(this);
 	}
 
 	private void readMove() {
+		if ( !reading ) return;
+		Point move = MouseInfo.getPointerInfo().getLocation();
+		move.translate(-center.x, -center.y);
+
+		if ( move.x != 0 || move.y != 0 ) {
+			movementListener.moveMouse(move.x, move.y);
+			log.info(move);
+		}
+		centerPointer();
+	}
+
+	private void centerPointer() {
+		try {
+			new Robot().mouseMove(center.x, center.y);
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -78,8 +100,10 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
 
 		setVisible(true);
+
 		center = getLocation();
 		center.translate(getHeight() / 2, getWidth() / 2);
+		centerPointer();
 
 		timer.start();
 	}
@@ -101,20 +125,20 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent mouseEvent) {
-		virtualScreen.mouseClicked();
+	public void mouseClicked(MouseEvent mouseEvent) {// TODO check
 	}
 
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
-		virtualScreen.mousePressed();
 		if ( mouseEvent.getButton() == BUTTON3 ) {
-			movementListener = gestureReader;
+			gestureRecorder.mousePressed();
+			movementListener = gestureRecorder;
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent mouseEvent) {
+		movementListener.mouseReleased();
 		if ( mouseEvent.getButton() == BUTTON3 ) {
 			movementListener = virtualScreen;
 		}
@@ -131,21 +155,5 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
-		if ( !reading ) return;
-		Point mousePosition = mouseEvent.getLocationOnScreen();
-		int dx = mousePosition.x - center.x;
-		int dy = mousePosition.y - center.y;
-		if ( dx != 0 || dy != 0 ) {
-			movementListener.moveMouse(dx, dy);
-			centerPointer();
-		}
-	}
-
-	private void centerPointer() {
-		try {
-			new Robot().mouseMove(center.x, center.y);
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
 	}
 }

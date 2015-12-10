@@ -12,5 +12,5 @@ public interface Constants {
 
 	double NORM_SIZE = 1000;
 
-	int NORM_LENGTH = 1000;
+	int NORM_LENGTH = 20;
 }

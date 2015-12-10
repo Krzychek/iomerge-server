@@ -1,5 +1,7 @@
 package pl.kbieron.iomerge.server.gesture.model;
 
+import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
+
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -8,34 +10,24 @@ import java.util.List;
 
 public class Input implements Template, Serializable {
 
-	private List<Point> allSegments;
+	private List<Point> points;
 
 	private Input(List<Point> points) {
-		this.allSegments = points;
+		this.points = points;
 	}
 
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	@Override
-	public List<Point> getSegment(int i) {
-		return allSegments.subList(0, i);
+	public static Builder builder(Normalizer normalizer) {
+		return new Builder().withNormalizer(normalizer);
 	}
 
 	@Override
-	public List<Point> getFullSegment() {
-		return allSegments;
+	public List<Point> getPoints() {
+		return points;
 	}
 
 	@Override
 	public int size() {
-		return allSegments.size();
-	}
-
-	@Override
-	public Iterator iterator() {
-		return new Iterator();
+		return points.size();
 	}
 
 	public static class Builder {
@@ -44,10 +36,14 @@ public class Input implements Template, Serializable {
 
 		private Point lastPoint = new Point(0, 0);
 
+		private Normalizer normalizer;
+
 		private Builder() {}
 
 		public Input build() {
-			return new Input(pointList);
+			normalizer.normalizeDimensions(pointList);
+			List<Point> resampled = normalizer.resample(pointList);
+			return new Input(resampled);
 		}
 
 		public void move(int dx, int dy) {
@@ -55,25 +51,10 @@ public class Input implements Template, Serializable {
 			lastPoint = point;
 			pointList.add(point);
 		}
-	}
 
-
-	private class Iterator implements java.util.Iterator<List<Point>> {
-
-		private int i = 0;
-
-		private int lastInd = allSegments.size() - 1;
-
-		private List<Point> segments = allSegments;
-
-		@Override
-		public boolean hasNext() {
-			return lastInd > i;
-		}
-
-		@Override
-		public List<Point> next() {
-			return segments.subList(0, ++i);
+		public Builder withNormalizer(Normalizer normalizer) {
+			this.normalizer = normalizer;
+			return this;
 		}
 	}
 }

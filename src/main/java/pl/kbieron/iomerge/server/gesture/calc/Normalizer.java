@@ -1,16 +1,15 @@
 package pl.kbieron.iomerge.server.gesture.calc;
 
-import org.apache.commons.collections.primitives.ArrayDoubleList;
-import org.apache.commons.collections.primitives.DoubleList;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.springframework.stereotype.Component;
 
 import java.awt.Point;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.IntStream;
 
+import static java.awt.geom.Point2D.distance;
+import static pl.kbieron.iomerge.server.gesture.Constants.NORM_LENGTH;
 import static pl.kbieron.iomerge.server.gesture.Constants.NORM_SIZE;
 
 
@@ -20,8 +19,6 @@ public class Normalizer {
 	private static SplineInterpolator splineInterpolator = new SplineInterpolator();
 
 	public void normalizeDimensions(List<Point> points) {
-		int pointsSize = points.size();
-
 		Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
@@ -35,7 +32,7 @@ public class Normalizer {
 		double xScale = NORM_SIZE / (max.x - min.x);
 		double xTranslate = -min.x * xScale;
 		double yScale = NORM_SIZE / (max.y - min.y);
-		double yTranslate = -min.y * xScale;
+		double yTranslate = -min.y * yScale;
 
 		points.parallelStream().forEach(point -> {
 			point.x = (int) (point.x * xScale + xTranslate);
@@ -43,31 +40,58 @@ public class Normalizer {
 		});
 	}
 
-	public List<Point> resample(List<Point> points, int size) {
-		int inSize = points.size();
-		DoubleList xList = new ArrayDoubleList(inSize);
-		DoubleList yList = new ArrayDoubleList(inSize);
+	public List<Point> resample(List<Point> points) {
 
-		IntStream indRange = IntStream.range(0, inSize);
-		double[] arguments = indRange.asDoubleStream().toArray();
-		points.stream().forEachOrdered(point -> {
-			xList.add(point.x);
-			yList.add(point.y);
-		});
+		double lengthSum = 0.0;
+		Iterator<Point> iterator = points.iterator();
+		Point prevPt = iterator.next();
+		while ( iterator.hasNext() ) {
+			Point nextPt = iterator.next();
+			lengthSum += distance(prevPt.x, prevPt.x, nextPt.x, nextPt.x);
+			prevPt = nextPt;
+		}
 
-		//noinspection SuspiciousNameCombination
-		PolynomialSplineFunction interpolateX = splineInterpolator.interpolate(arguments, xList.toArray());
-		PolynomialSplineFunction interpolateY = splineInterpolator.interpolate(arguments, yList.toArray());
+		double scale = NORM_LENGTH / lengthSum;
 
-		Point[] result = new Point[size];
-		for ( int i = 0; i < size; i++ ) {
-			result[i] = new Point( //
-					(int) interpolateX.value(((double) i) / (inSize - 1)), //
-					(int) interpolateY.value(((double) i) / (inSize - 1)));
+		iterator = points.iterator();
+		Point[] result = new Point[NORM_LENGTH];
 
+		double prevLength = 0.0, length = 0.0;
+		Point previous = iterator.next(), point = null;
+
+		int ind = 0;
+		while ( ind < NORM_LENGTH ) {
+			if ( iterator.hasNext() ) {
+				point = iterator.next();
+
+				double dist = scale * distance(previous.x, previous.x, point.x, point.x);
+				length += dist;
+				while ( ind < length && ind < NORM_LENGTH ) {
+					double diff = ind - prevLength;
+					double percent = diff / dist;
+					result[ind++] = new Point( //
+							(int) (previous.x + (percent * (point.x - previous.x))), //
+							(int) (previous.y + (percent * point.y - previous.y)));
+				}
+
+				previous = point;
+				prevLength = length;
+			} else {
+				prevLength = length;
+				break;
+			}
+		}
+
+		double dist = scale * distance(previous.x, previous.x, point.x, point.x);
+		while ( ind < NORM_LENGTH ) {
+			double diff = ind - prevLength;
+			double percent = diff / dist;
+			result[ind++] = new Point( //
+					(int) (previous.x + (percent * point.x)), //
+					(int) (previous.y + (percent * point.y)));
 		}
 
 		return Arrays.asList(result);
-
 	}
+
 }

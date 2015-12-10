@@ -11,9 +11,9 @@ import pl.kbieron.iomerge.server.utilities.Edge;
 @Component
 public class VirtualScreen implements MovementListener {
 
-	private int width;
+	private int width = 1000;
 
-	private int height;
+	private int height = 1000;
 
 	private Edge edge;
 
@@ -36,7 +36,7 @@ public class VirtualScreen implements MovementListener {
 			if ( state.x > width ) state.x = width;
 			else if ( state.x < 0 ) exit();
 		} else {
-			if ( state.x > width ) exit();
+			if ( state.x < 0 ) exit();
 			else if ( state.x < 0 ) state.x = 0;
 		}
 	}

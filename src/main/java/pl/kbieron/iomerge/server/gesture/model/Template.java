@@ -4,11 +4,9 @@ import java.awt.Point;
 import java.util.List;
 
 
-public interface Template extends Iterable<List<Point>> {
+public interface Template {
 
-	List<Point> getSegment(int i);
-
-	List<Point> getFullSegment();
+	List<Point> getPoints();
 
 	int size();
 }
