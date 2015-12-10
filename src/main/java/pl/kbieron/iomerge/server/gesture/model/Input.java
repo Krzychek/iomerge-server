@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Input implements Serializable {
+public class Input implements Template, Serializable {
 
 	private List<Point> allSegments;
 
@@ -20,8 +20,14 @@ public class Input implements Serializable {
 		return new Builder();
 	}
 
+	@Override
 	public List<Point> getSegment(int i) {
 		return allSegments.subList(0, i);
+	}
+
+	@Override
+	public List<Point> getFullSegment() {
+		return allSegments;
 	}
 
 	public static class Builder {

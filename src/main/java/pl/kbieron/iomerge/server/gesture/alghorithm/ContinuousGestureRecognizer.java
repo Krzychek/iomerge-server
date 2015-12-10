@@ -274,8 +274,8 @@ public class ContinuousGestureRecognizer {
 	public void setTemplateSet(List<Template> templates) {
 		patterns.clear();
 		for ( Template t : templates ) {
-			normalize(t.fullSegment);
-			patterns.add(new Pattern(t, generateEquiDistantProgressiveSubSequences(t.fullSegment, 200)));
+			normalize(t.getFullSegment());
+			patterns.add(new Pattern(t, generateEquiDistantProgressiveSubSequences(t.getFullSegment(), 200)));
 		}
 		for ( Pattern pattern : patterns ) {
 			List<List<Point>> segments = new ArrayList<>();
