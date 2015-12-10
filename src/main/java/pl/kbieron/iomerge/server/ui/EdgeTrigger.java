@@ -45,7 +45,7 @@ public class EdgeTrigger extends InvisibleJFrame {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent mouseEvent) {
-				director.enterRemoteScreen(mouseEvent.getY() / getHeight(), EdgeTrigger.this::releaseMouse);
+				director.enterRemoteScreen(mouseEvent.getY() / getHeight());
 			}
 		});
 	}

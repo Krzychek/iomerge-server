@@ -2,7 +2,6 @@ package pl.kbieron.iomerge.server.ui.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.server.Director;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.ui.InvisibleJFrame;
 
@@ -16,23 +15,27 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import static java.awt.event.MouseEvent.BUTTON1;
+import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends InvisibleJFrame implements MovementReader {
+public class MouseTrapReader extends InvisibleJFrame implements MovementReader, MouseListener, MouseMotionListener {
 
 	private Point center;
 
 	private Point oldMouseLocation;
 
-	private boolean catching;
+	private boolean reading;
 
 	private Timer timer;
 
 	@Autowired
 	private VirtualScreen virtualScreen;
-
-	private Director director;
 
 	public MouseTrapReader() {
 		super("MouseTrapReader");
@@ -59,25 +62,12 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader {
 	}
 
 	private void readMove() {
-		Point mousePosition = MouseInfo.getPointerInfo().getLocation();
-
-		virtualScreen.moveMouse(mousePosition.x - center.x, mousePosition.y - center.y);
-
-		centerPointer();
-	}
-
-	private void centerPointer() {
-		try {
-			new Robot().mouseMove(center.x, center.y);
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	public void startReading() {
-		if ( catching ) return;
-		catching = true;
+		if ( reading ) return;
+		reading = true;
 
 		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
 
@@ -91,14 +81,78 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader {
 	@Override
 	public void stopReading() {
 		timer.stop();
-		setVisible(false);
 		restoreMouseLocation();
-		catching = false;
+		setVisible(false);
+		reading = false;
 	}
 
 	private void restoreMouseLocation() {
 		try {
 			new Robot().mouseMove(oldMouseLocation.x, oldMouseLocation.y);
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent mouseEvent) {
+		virtualScreen.mouseClicked();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent mouseEvent) {
+		switch (mouseEvent.getButton()) {
+			case BUTTON1:
+				virtualScreen.mousePressed();
+				break;
+			case BUTTON3:
+
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent mouseEvent) {
+		switch (mouseEvent.getButton()) {
+			case BUTTON1:
+				virtualScreen.mouseReleased();
+				break;
+			case BUTTON3:
+
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent mouseEvent) {}
+
+	@Override
+	public void mouseExited(MouseEvent mouseEvent) {}
+
+	@Override
+	public void mouseDragged(MouseEvent mouseEvent) {
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent mouseEvent) {
+		if ( !reading ) return;
+		Point mousePosition = mouseEvent.getLocationOnScreen();
+		int dx = mousePosition.x - center.x;
+		int dy = mousePosition.y - center.y;
+		if ( dx != 0 || dy != 0 ) {
+			switch (mouseEvent.getButton()) {
+				case BUTTON1:
+					virtualScreen.moveMouse(dx, dy);
+					break;
+				case BUTTON3:
+					break;
+			}
+			centerPointer();
+		}
+	}
+
+	private void centerPointer() {
+		try {
+			new Robot().mouseMove(center.x, center.y);
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}

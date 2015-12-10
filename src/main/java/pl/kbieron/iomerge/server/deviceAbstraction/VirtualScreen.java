@@ -2,16 +2,13 @@ package pl.kbieron.iomerge.server.deviceAbstraction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.model.DeviceState;
 import pl.kbieron.iomerge.server.Director;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 
 @Component
 public class VirtualScreen {
-
-	private int x;
-
-	private int y;
 
 	private int width;
 
@@ -21,35 +18,49 @@ public class VirtualScreen {
 
 	private boolean active;
 
+	private DeviceState state = new DeviceState();
+
 	@Autowired
 	private Director director;
 
 	public void moveMouse(int dx, int dy) {
-		x += dx;
-		y += dy;
+		state.x += dx;
+		state.y += dy;
 
-		if ( y < 0 ) y = 0;
-		else if ( y < height ) y = height;
+		if ( state.y < 0 ) state.y = 0;
+		else if ( state.y < height ) state.y = height;
 
 		if ( edge == Edge.LEFT ) {
-			if ( x > width ) x = width;
-			else if ( x < 0 ) exit();
+			if ( state.x > width ) state.x = width;
+			else if ( state.x < 0 ) exit();
 		} else {
-			if ( x > width ) exit();
-			else if ( x < 0 ) x = 0;
+			if ( state.x > width ) exit();
+			else if ( state.x < 0 ) state.x = 0;
 		}
 	}
 
 	public void exit() {
 		active = false;
-		director.exitRemote(y / height);
+		director.exitRemote(state.y / height);
 	}
 
 	public void enter(double y) {
 		this.active = true;
 
-		x = edge == Edge.LEFT ? 0 : height;
-		this.y = (int) y * height;
+		state.x = edge == Edge.LEFT ? width : 0;
+		state.y = (int) y * height;
+	}
+
+	public void mouseClicked() {
+		// TODO: implement
+	}
+
+	public void mousePressed() {
+		// TODO: implement
+	}
+
+	public void mouseReleased() {
+		// TODO: implement
 	}
 
 	public VirtualScreen setWidth(int width) {
@@ -63,12 +74,12 @@ public class VirtualScreen {
 	}
 
 	public VirtualScreen setX(int x) {
-		this.x = x;
+		state.x = x;
 		return this;
 	}
 
 	public VirtualScreen setY(int y) {
-		this.y = y;
+		state.y = y;
 		return this;
 	}
 
@@ -82,11 +93,11 @@ public class VirtualScreen {
 	}
 
 	public int getY() {
-		return y;
+		return state.y;
 	}
 
 	public int getX() {
-		return x;
+		return state.x;
 	}
 
 	public int getHeight() {
