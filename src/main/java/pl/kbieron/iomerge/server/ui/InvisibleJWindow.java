@@ -1,7 +1,7 @@
 package pl.kbieron.iomerge.server.ui;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JWindow;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
@@ -9,10 +9,9 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 
-public abstract class InvisibleJFrame extends JFrame {
+public abstract class InvisibleJWindow extends JWindow {
 
-	public InvisibleJFrame(String s) {
-		super(s);
+	public InvisibleJWindow(String s) {
 
 		JPanel jPanel = new JPanel();
 		jPanel.setOpaque(false);
@@ -22,10 +21,10 @@ public abstract class InvisibleJFrame extends JFrame {
 
 		setContentPane(jPanel);
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setUndecorated(true);
+		//		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//		setUndecorated(true);
 		setAlwaysOnTop(true);
-		setResizable(false);
+		//		setResizable(false);
 		setBackground(new Color(0, 0, 0, 0));
 	}
 }

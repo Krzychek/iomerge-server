@@ -2,10 +2,11 @@ package pl.kbieron.iomerge.server.deviceAbstraction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.DeviceState;
 import pl.kbieron.iomerge.server.Director;
-import pl.kbieron.iomerge.server.ui.movementReader.MovementListener;
 import pl.kbieron.iomerge.server.utilities.Edge;
+import pl.kbieron.iomerge.server.utilities.MovementListener;
+
+import java.awt.Point;
 
 
 @Component
@@ -19,38 +20,40 @@ public class VirtualScreen implements MovementListener {
 
 	private boolean active;
 
-	private DeviceState state = new DeviceState();
+	private Point actPosition = new Point();
 
 	@Autowired
 	private Director director;
 
 	@Override
-	public void moveMouse(int dx, int dy) {
-		state.x += dx;
-		state.y += dy;
+	public void move(int dx, int dy) {
+		actPosition.x += dx;
+		actPosition.y += dy;
 
-		if ( state.y < 0 ) state.y = 0;
-		else if ( state.y < height ) state.y = height;
+		if ( actPosition.y < 0 ) actPosition.y = 0;
+		else if ( actPosition.y < height ) actPosition.y = height;
 
 		if ( edge == Edge.LEFT ) {
-			if ( state.x > width ) state.x = width;
-			else if ( state.x < 0 ) exit();
+			if ( actPosition.x > width ) actPosition.x = width;
+			else if ( actPosition.x < 0 ) exit();
 		} else {
-			if ( state.x < 0 ) exit();
-			else if ( state.x < 0 ) state.x = 0;
+			if ( actPosition.x < 0 ) exit();
+			else if ( actPosition.x > width ) actPosition.x = width;
+
 		}
 	}
 
 	public void exit() {
 		active = false;
-		director.exitRemote(state.y / height);
+		director.exitRemote();
 	}
 
-	public void enter(double y) {
+	public void enter(double y, Edge edge) {
 		this.active = true;
 
-		state.x = (edge == Edge.LEFT ? width : 0);
-		state.y = (int) y * height;
+		this.edge = edge;
+		actPosition.x = (edge == Edge.LEFT ? width : 0);
+		actPosition.y = (int) y * height;
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class VirtualScreen implements MovementListener {
 	}
 
 	@Override
-	public void mousePressed() {
+	public void MousePressed() {
 		// TODO: implement
 	}
 
@@ -77,11 +80,11 @@ public class VirtualScreen implements MovementListener {
 	}
 
 	public void setX(int x) {
-		state.x = x;
+		actPosition.x = x;
 	}
 
 	public void setY(int y) {
-		state.y = y;
+		actPosition.y = y;
 	}
 
 	public void setHeight(int height) {
@@ -93,11 +96,11 @@ public class VirtualScreen implements MovementListener {
 	}
 
 	public int getY() {
-		return state.y;
+		return actPosition.y;
 	}
 
 	public int getX() {
-		return state.x;
+		return actPosition.x;
 	}
 
 	public int getHeight() {

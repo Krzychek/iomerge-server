@@ -7,8 +7,9 @@ import net.sf.lipermi.net.Server;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
-import pl.kbieron.iomerge.model.RMIRemote;
-import pl.kbieron.iomerge.model.RMIServerIface;
+import pl.kbieron.iomerge.iLipeRMI.IClient;
+import pl.kbieron.iomerge.iLipeRMI.IServer;
+import pl.kbieron.iomerge.model.ClientAction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -17,18 +18,17 @@ import java.net.Socket;
 
 
 @Service
-public class RMIServer implements RMIServerIface, RMIRemote, IServerListener {
+public class RMIServer implements IServer, IClient, IServerListener {
 
 	private final Log log = LogFactory.getLog(RMIServer.class);
 
 	private Server server;
 
-	private RMIRemote remote;
+	private IClient client;
 
 	private Socket socket;
 
 	public RMIServer() {
-
 		server = new Server();
 		server.addServerListener(this);
 	}
@@ -37,30 +37,13 @@ public class RMIServer implements RMIServerIface, RMIRemote, IServerListener {
 	public void start() {
 		CallHandler callHandler = new CallHandler();
 		try {
-			callHandler.registerGlobal(RMIServerIface.class, this);
+			callHandler.registerGlobal(RMIServer.class, this);
 			server.bind(7777, callHandler);
 			log.info("Server Listening");
 		} catch (LipeRMIException | IOException e) {
 			log.error("failed to start server", e);
 			throw new RuntimeException(e);
 		}
-
-	}
-
-	@Override
-	public void hitBackBtn() {
-		if ( hasConnectedClient() ) remote.hitBackBtn();
-		else log.warn("hitBackBtn while not connected to client");
-	}
-
-	private boolean hasConnectedClient() {
-		return socket != null && socket.isConnected() && remote != null;
-	}
-
-	@Override
-	public void hitHomeBtn() {
-		if ( hasConnectedClient() ) remote.hitHomeBtn();
-		else log.warn("hiHomeBtn while not connected to client");
 	}
 
 	@Override
@@ -79,20 +62,36 @@ public class RMIServer implements RMIServerIface, RMIRemote, IServerListener {
 		}
 	}
 
+	private boolean hasConnectedClient() {
+		return socket != null && socket.isConnected() && client != null;
+	}
+
 	@Override
 	public void clientDisconnected(Socket socket) {
 		log.info("Client Disconnected: " + socket.getInetAddress());
 		this.socket = null;
-		this.remote = null;
+		this.client = null;
 	}
 
 	@Override
-	public void setRemote(RMIRemote rmiRemote) {
-		this.remote = rmiRemote;
+	public void setClient(IClient client, int width, int height) {
+		this.client = client;
+	}
+
+	@Override
+	public void action(ClientAction action) {
+		client.action(action);
+
+	}
+
+	@Override
+	public void moveMouse(int x, int y) {
+		client.moveMouse(x, y);
 	}
 
 	@PreDestroy
 	public void destroy() {
 		server.close();
 	}
+
 }

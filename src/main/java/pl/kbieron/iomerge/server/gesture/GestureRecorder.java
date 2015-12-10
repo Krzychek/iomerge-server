@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
-import pl.kbieron.iomerge.server.ui.movementReader.MovementListener;
+import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 
 @Component
@@ -30,7 +30,7 @@ public class GestureRecorder implements MovementListener {
 	private Input.Builder inputBuilder;
 
 	@Override
-	synchronized public void moveMouse(int dx, int dy) {
+	synchronized public void move(int dx, int dy) {
 		if ( inputBuilder != null ) {
 			inputBuilder.move(dx, dy);
 		} else {
@@ -39,7 +39,7 @@ public class GestureRecorder implements MovementListener {
 	}
 
 	@Override
-	synchronized public void mousePressed() {
+	synchronized public void MousePressed() {
 		inputBuilder = Input.builder(normalizer);
 	}
 
@@ -48,7 +48,10 @@ public class GestureRecorder implements MovementListener {
 		Input input = inputBuilder.build();
 		if ( input.size() > 5 ) {
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
-			log.info(match.getPattern().getName() + ":" + match.getProbability());
+			if ( match.getProbability() < Constants.PROB_THRESHOLD ) {
+
+			}
+			log.info(match.getPattern().getAction() + ":" + match.getProbability());
 
 		}
 		inputBuilder = null;

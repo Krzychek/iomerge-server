@@ -13,4 +13,6 @@ public interface Constants {
 	double NORM_SIZE = 1000;
 
 	int NORM_LENGTH = 20;
+
+	double PROB_THRESHOLD = 0.5d;
 }

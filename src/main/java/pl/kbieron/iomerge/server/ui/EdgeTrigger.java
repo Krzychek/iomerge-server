@@ -1,5 +1,7 @@
 package pl.kbieron.iomerge.server.ui;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.Director;
@@ -7,34 +9,30 @@ import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
-import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Robot;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static pl.kbieron.iomerge.server.utilities.Edge.LEFT;
-
 
 @Component
-public class EdgeTrigger extends InvisibleJFrame {
+public class EdgeTrigger extends InvisibleJWindow {
+
+	private final Log log = LogFactory.getLog(InvisibleJWindow.class);
 
 	@Autowired
 	private Director director;
 
-	@ConfigProperty
-	private Edge edge = LEFT;
+	private Edge edge = Edge.LEFT;
 
 	@ConfigProperty
-	private Integer offset = 0;
+	private Integer offset = 200;
 
 	@ConfigProperty
-	private Integer length = 100;
+	private Integer length = 500;
 
 	@ConfigProperty
-	private Integer thickness = 5;
+	private Integer thickness = 1;
 
 	public EdgeTrigger() {
 		super("Edge Trigger");
@@ -54,7 +52,7 @@ public class EdgeTrigger extends InvisibleJFrame {
 		Rectangle displayRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration().getBounds();
 
-		if ( edge == LEFT ) {
+		if ( edge == Edge.LEFT ) {
 			setSize(thickness, length);
 			setLocation(displayRect.x, displayRect.y + offset);
 		} else {
@@ -63,36 +61,22 @@ public class EdgeTrigger extends InvisibleJFrame {
 		}
 	}
 
-	public void releaseMouse(double yScale) {
-		Point location = getLocation();
-		try {
-			if ( edge == LEFT ) {
-				new Robot().mouseMove(location.x - thickness, (int) yScale * getHeight() + location.y);
-			} else {
-				new Robot().mouseMove(location.x, (int) yScale * getHeight() + location.y);
-			}
-		} catch (AWTException e) {
-			e.printStackTrace(); // TODO
-		}
-
-	}
-
-	public EdgeTrigger setThickness(int thickness) {
+	public InvisibleJWindow setThickness(int thickness) {
 		this.thickness = thickness;
 		return this;
 	}
 
-	public EdgeTrigger setEdge(Edge edge) {
+	public InvisibleJWindow setEdge(Edge edge) {
 		this.edge = edge;
 		return this;
 	}
 
-	public EdgeTrigger setOffset(int offset) {
+	public InvisibleJWindow setOffset(int offset) {
 		this.offset = offset;
 		return this;
 	}
 
-	public EdgeTrigger setLength(int length) {
+	public InvisibleJWindow setLength(int length) {
 		this.length = length;
 		return this;
 	}

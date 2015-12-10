@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.ui.EdgeTrigger;
 import pl.kbieron.iomerge.server.ui.movementReader.MovementReader;
+import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.swing.Timer;
 
@@ -24,21 +25,22 @@ public class Director {
 	private EdgeTrigger edgeTrigger;
 
 	public Director() {
-		delayedTriggerStarer = new Timer(1000, actionEvent -> {
-			edgeTrigger.setVisible(true);
-			edgeTrigger.reposition();
-		});
+		delayedTriggerStarer = new Timer(500, this::start);
 		delayedTriggerStarer.setRepeats(false);
 	}
 
 	public void enterRemoteScreen(double enterPosition) {
-		virtualScreen.enter(enterPosition);
-		movementReader.startReading();
 		edgeTrigger.setVisible(false);
-
+		virtualScreen.enter(enterPosition, Edge.LEFT);
+		movementReader.startReading();
 	}
 
-	public void exitRemote(double exitPosition) {
+	public void start(Object... args) {
+		edgeTrigger.reposition();
+		edgeTrigger.setVisible(true);
+	}
+
+	public void exitRemote() {
 		movementReader.stopReading();
 		delayedTriggerStarer.restart();
 	}
