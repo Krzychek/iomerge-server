@@ -1,13 +1,14 @@
 package pl.kbieron.iomerge.server.gesture.model;
 
 import java.awt.Point;
-import java.io.Serializable;
 import java.util.List;
 
 
-public interface Template extends Serializable {
+public interface Template extends Iterable<List<Point>> {
 
 	List<Point> getSegment(int i);
 
 	List<Point> getFullSegment();
+
+	int size();
 }

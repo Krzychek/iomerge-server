@@ -1,7 +1,5 @@
 package pl.kbieron.iomerge.server.gesture.model;
 
-import pl.kbieron.iomerge.server.gesture.calc.Normalizator;
-
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -30,6 +28,16 @@ public class Input implements Template, Serializable {
 		return allSegments;
 	}
 
+	@Override
+	public int size() {
+		return allSegments.size();
+	}
+
+	@Override
+	public Iterator iterator() {
+		return new Iterator();
+	}
+
 	public static class Builder {
 
 		private List<Point> pointList = new LinkedList<>();
@@ -39,14 +47,33 @@ public class Input implements Template, Serializable {
 		private Builder() {}
 
 		public Input build() {
-			List<Point> normalPts = Normalizator.normalize(pointList);
-			return new Input(normalPts);
+			return new Input(pointList);
 		}
 
 		public void move(int dx, int dy) {
 			Point point = new Point(lastPoint.x + dx, lastPoint.y + dy);
 			lastPoint = point;
 			pointList.add(point);
+		}
+	}
+
+
+	private class Iterator implements java.util.Iterator<List<Point>> {
+
+		private int i = 0;
+
+		private int lastInd = allSegments.size() - 1;
+
+		private List<Point> segments = allSegments;
+
+		@Override
+		public boolean hasNext() {
+			return lastInd > i;
+		}
+
+		@Override
+		public List<Point> next() {
+			return segments.subList(0, ++i);
 		}
 	}
 }

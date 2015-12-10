@@ -81,217 +81,29 @@ public class ContinuousGestureRecognizer {
 
 	private List<Pattern> patterns = new ArrayList<>();
 
-	/**
-	 * Normalizes a point sequence so that it is scaled and centred within a defined box.
-	 * <p/>
-	 * (This method was implemented and exposed in the public interface to ease the
-	 * implementation of the demonstrator. This method is not used by the recognition
-	 * algorithm.)
-	 *
-	 * @param pts    an input point sequence
-	 * @param x      the horizontal component of the upper-left corner of the defined box
-	 * @param y      the vertical component of the upper-left corner of the defined box
-	 * @param width  the width of the defined box
-	 * @param height the height of the defined box
-	 * @return a newly created point sequence that is centred and fits within the defined box
-	 */
-	public static List<Point> normalize(List<Point> pts, int x, int y, int width, int height) {
-		List<Point> outPts = deepCopyPts(pts);
-		scaleTo(outPts, new Rect(0, 0, width - x, height - y));
-		Centroid c = getCentroid(outPts);
-		translate(outPts, -c.x, -c.y);
-		translate(outPts, width - x, height - y);
-		return outPts;
-	}
-
-	private static List<Point> deepCopyPts(List<Point> pts) {
-		List<Point> newPts = new ArrayList<>(pts.size());
-		for ( Point pt : pts ) {
-			newPts.add(new Point(pt.x, pt.y));
-		}
-		return newPts;
-	}
-
-	private static void scaleTo(List<Point> pts, Rect targetBounds) {
-		Rect bounds = getBoundingBox(pts);
-		double a1 = (double) (targetBounds.width);
-		double a2 = (double) (targetBounds.height);
-		double b1 = (double) (bounds.width);
-		double b2 = (double) (bounds.height);
-		double scale = Math.sqrt(a1 * a1 + a2 * a2) / Math.sqrt(b1 * b1 + b2 * b2);
-		scale(pts, scale, scale, bounds.x, bounds.y);
-	}
-
-	private static Centroid getCentroid(List<Point> pts) {
-		double totalMass = pts.size();
-		double xIntegral = 0.0;
-		double yIntegral = 0.0;
-		for ( Point pt : pts ) {
-			xIntegral += pt.x;
-			yIntegral += pt.y;
-		}
-		return new Centroid(xIntegral / totalMass, yIntegral / totalMass);
-	}
-
-	private static void translate(List<Point> pts, double dx, double dy) {
-		for ( Point pt : pts ) {
-			pt.x += Math.floor(dx);
-			pt.y += Math.floor(dy);
-		}
-	}
-
-	private static Rect getBoundingBox(List<Point> pts) {
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
-		int maxX = Integer.MIN_VALUE;
-		int maxY = Integer.MIN_VALUE;
-		for ( Point pt : pts ) {
-			int x = pt.x;
-			int y = pt.y;
-			if ( x < minX ) {
-				minX = x;
-			}
-			if ( x > maxX ) {
-				maxX = x;
-			}
-			if ( y < minY ) {
-				minY = y;
-			}
-			if ( y > maxY ) {
-				maxY = y;
-			}
-		}
-		return new Rect(minX, minY, (maxX - minX), (maxY - minY));
-	}
-
-	private static void scale(List<Point> pts, double sx, double sy, double originX, double originY) {
-		translate(pts, -originX, -originY);
-		scale(pts, sx, sy);
-		translate(pts, originX, originY);
-	}
-
-	private static void scale(List<Point> pts, double sx, double sy) {
-		for ( Point pt : pts ) {
-			pt.x *= sx;
-			pt.y *= sy;
-		}
-	}
-
-	private static void marginalizeIncrementalResults(List<IncrementalResult> results) {
-		double totalMass = 0.0d;
-		for ( IncrementalResult r : results ) {
-			totalMass += r.prob;
-		}
-		for ( IncrementalResult r : results ) {
-			r.prob /= totalMass;
-		}
-	}
-
-	private static IncrementalResult getIncrementalResult(List<Point> unkPts, Pattern pattern, double beta, double lambda, double e_sigma) {
-		List<List<Point>> segments = pattern.segments;
-		double maxProb = 0.0d;
-		int maxIndex = -1;
-		for ( int i = 0, n = segments.size(); i < n; i++ ) {
-			List<Point> pts = segments.get(i);
-			int samplingPtCount = pts.size();
-			List<Point> unkResampledPts = resample(unkPts, samplingPtCount);
-			double prob = getLikelihoodOfMatch(unkResampledPts, pts, e_sigma, e_sigma / beta, lambda);
-			if ( prob > maxProb ) {
-				maxProb = prob;
-				maxIndex = i;
-			}
-		}
-		return new IncrementalResult(pattern, maxProb, maxIndex);
-	}
-
-	private static double getLikelihoodOfMatch(List<Point> pts1, List<Point> pts2, double eSigma, double aSigma, double lambda) {
-		if ( lambda < 0 || lambda > 1 )
-			throw new IllegalArgumentException("lambda must be in the range between zero and one");
-
-		double x_e = getEuclideanDistance(pts1, pts2);
-		double x_a = getTurningAngleDistance(pts1, pts2);
-
-		return Math.exp(-(x_e * x_e / (eSigma * eSigma) * lambda + x_a * x_a / (aSigma * aSigma) * (1 - lambda)));
-	}
-
 	private static double getEuclideanDistance(List<Point> pts1, List<Point> pts2) {
-		if ( pts1.size() != pts2.size() ) {
-			throw new IllegalArgumentException("lists must be of equal lengths, cf. " + pts1.size() + " with " + pts2
-					.size());
-		}
-		int n = pts1.size();
-		double td = 0;
-		for ( int i = 0; i < n; i++ ) {
-			td += getEuclideanDistance(pts1.get(i), pts2.get(i));
-		}
-		return td / n;
+		// XXX done
+		return 0;
 	}
 
 	private static double getTurningAngleDistance(List<Point> pts1, List<Point> pts2) {
-		if ( pts1.size() != pts2.size() ) {
-			throw new IllegalArgumentException("lists must be of equal lengths, cf. " + pts1.size() + " with " + pts2
-					.size());
-		}
-		int n = pts1.size();
-		double td = 0;
-		for ( int i = 0; i < n - 1; i++ ) {
-			td += Math.abs(getTurningAngleDistance(pts1.get(i), pts1.get(i + 1), pts2.get(i), pts2.get(i + 1)));
-		}
-		if ( Double.isNaN(td) ) {
-			return 0.0;
-		}
-		return td / (n - 1);
+		// XXX done
+		return 0;
 	}
 
 	private static double getEuclideanDistance(Point pt1, Point pt2) {
-		return Math.sqrt(getSquaredEuclidenDistance(pt1, pt2));
+		// XXX done
+		return 0;
 	}
 
 	private static double getSquaredEuclidenDistance(Point pt1, Point pt2) {
-		return (pt1.x - pt2.x) * (pt1.x - pt2.x) + (pt1.y - pt2.y) * (pt1.y - pt2.y);
+		// XXX done
+		return 0;
 	}
 
 	private static double getTurningAngleDistance(Point ptA1, Point ptA2, Point ptB1, Point ptB2) {
-		double len_a = getEuclideanDistance(ptA1, ptA2);
-		double len_b = getEuclideanDistance(ptB1, ptB2);
-		if ( len_a == 0 || len_b == 0 ) {
-			return 0.0;
-		} else {
-			float cos = (float) (((ptA1.x - ptA2.x) * (ptB1.x - ptB2.x) + (ptA1.y - ptA2.y) * (ptB1.y - ptB2.y)) / (len_a * len_b));
-			if ( Math.abs(cos) > 1.0 ) {
-				return 0.0;
-			} else {
-				return Math.acos(cos);
-			}
-		}
-	}
-
-	/**
-	 * Sets the set of templates this recognizer will recognize.
-	 *
-	 * @param templates the set of templates this recognizer will recognize
-	 */
-	public void setTemplateSet(List<Template> templates) {
-		patterns.clear();
-		for ( Template t : templates ) {
-			normalize(t.getFullSegment());
-			patterns.add(new Pattern(t, generateEquiDistantProgressiveSubSequences(t.getFullSegment(), 200)));
-		}
-		for ( Pattern pattern : patterns ) {
-			List<List<Point>> segments = new ArrayList<>();
-			for ( List<Point> pts : pattern.segments ) {
-				List<Point> newPts = deepCopyPts(pts);
-				normalize(newPts);
-				//				segments.add(resample(newPts, getResamplingPointCount(newPts, samplePointDistance)));
-			}
-			pattern.segments = segments;
-		}
-	}
-
-	private static void normalize(List<Point> pts) {
-		scaleTo(pts, normalizedSpace);
-		Centroid c = getCentroid(pts);
-		translate(pts, -c.x, -c.y);
+		// xxx done
+		return 0;
 	}
 
 	private static List<List<Point>> generateEquiDistantProgressiveSubSequences(List<Point> pts, int ptSpacing) {
@@ -311,15 +123,8 @@ public class ContinuousGestureRecognizer {
 	}
 
 	private static List<Point> resample(List<Point> points, int numTargetPoints) {
-		List<Point> r = new ArrayList<>();
-		int[] inArray = toArray(points);
-		int[] outArray = new int[numTargetPoints * 2];
-
-		resample(inArray, outArray, points.size(), numTargetPoints);
-		for ( int i = 0, n = outArray.length; i < n; i += 2 ) {
-			r.add(new Point(outArray[i], outArray[i + 1]));
-		}
-		return r;
+		// xxx done
+		return null;
 	}
 
 	private static double getSpatialLength(List<Point> pts) {
@@ -336,6 +141,11 @@ public class ContinuousGestureRecognizer {
 		return len;
 	}
 
+	private static double distance(Point p1, Point p2) {
+		// XXX done
+		return 0;
+	}
+
 	private static int[] toArray(List<Point> points) {
 		int[] out = new int[points.size() * 2];
 		for ( int i = 0, n = points.size() * 2; i < n; i += 2 ) {
@@ -346,70 +156,7 @@ public class ContinuousGestureRecognizer {
 	}
 
 	private static void resample(int[] template, int[] buffer, int n, int numTargetPoints) {
-		int[] segment_buf = new int[MAX_RESAMPLING_PTS];
-
-		double l, segmentLen, horizRest, verticRest, dx, dy;
-		int x1, y1, x2, y2;
-		int i, m, a, segmentPoints, j, maxOutputs, end;
-
-		m = n * 2;
-		l = getSpatialLength(template, n);
-		segmentLen = l / (numTargetPoints - 1);
-		getSegmentPoints(template, n, segmentLen, segment_buf);
-		horizRest = 0.0f;
-		verticRest = 0.0f;
-		x1 = template[0];
-		y1 = template[1];
-		a = 0;
-		maxOutputs = numTargetPoints * 2;
-		for ( i = 2; i < m; i += 2 ) {
-			x2 = template[i];
-			y2 = template[i + 1];
-			segmentPoints = segment_buf[(i / 2) - 1];
-			dx = -1.0f;
-			dy = -1.0f;
-			if ( segmentPoints - 1 <= 0 ) {
-				dx = 0.0f;
-				dy = 0.0f;
-			} else {
-				dx = (x2 - x1) / (double) (segmentPoints);
-				dy = (y2 - y1) / (double) (segmentPoints);
-			}
-			if ( segmentPoints > 0 ) {
-				for ( j = 0; j < segmentPoints; j++ ) {
-					if ( j == 0 ) {
-						if ( a < maxOutputs ) {
-							buffer[a] = (int) (x1 + horizRest);
-							buffer[a + 1] = (int) (y1 + verticRest);
-							horizRest = 0.0;
-							verticRest = 0.0;
-							a += 2;
-						}
-					} else {
-						if ( a < maxOutputs ) {
-							buffer[a] = (int) (x1 + j * dx);
-							buffer[a + 1] = (int) (y1 + j * dy);
-							a += 2;
-						}
-					}
-				}
-			}
-			x1 = x2;
-			y1 = y2;
-		}
-		end = (numTargetPoints * 2) - 2;
-		if ( a < end ) {
-			for ( i = a; i < end; i += 2 ) {
-				buffer[i] = (buffer[i - 2] + template[m - 2]) / 2;
-				buffer[i + 1] = (buffer[i - 1] + template[m - 1]) / 2;
-			}
-		}
-		buffer[maxOutputs - 2] = template[m - 2];
-		buffer[maxOutputs - 1] = template[m - 1];
-	}
-
-	private static double distance(Point p1, Point p2) {
-		return distance(p1.x, p1.y, p2.x, p2.y);
+		// XXX done
 	}
 
 	private static int getSpatialLength(int[] pat, int n) {
@@ -435,45 +182,18 @@ public class ContinuousGestureRecognizer {
 		}
 	}
 
-	private static double getSegmentPoints(int[] pts, int n, double length, int[] buffer) {
-		int i, m;
-		int x1, y1, x2, y2, ps;
-		double rest, currentLen;
-
-		m = n * 2;
-		rest = 0.0f;
-		x1 = pts[0];
-		y1 = pts[1];
-		for ( i = 2; i < m; i += 2 ) {
-			x2 = pts[i];
-			y2 = pts[i + 1];
-			currentLen = distance(x1, y1, x2, y2);
-			currentLen += rest;
-			rest = 0.0f;
-			ps = (int) ((currentLen / length));
-			if ( ps == 0 ) {
-				rest += currentLen;
-			} else {
-				rest += currentLen - (ps * length);
-			}
-			if ( i == 2 && ps == 0 ) {
-				ps = 1;
-			}
-			buffer[(i / 2) - 1] = ps;
-			x1 = x2;
-			y1 = y2;
-		}
-		return rest;
+	private static int distance(int x1, int y1, int x2, int y2) {
+		// xxx done
+		return 0;
 	}
 
-	private static int distance(int x1, int y1, int x2, int y2) {
-		if ( (x2 -= x1) < 0 ) {
-			x2 = -x2;
-		}
-		if ( (y2 -= y1) < 0 ) {
-			y2 = -y2;
-		}
-		return (x2 + y2 - (((x2 > y2) ? y2 : x2) >> 1));
+	/**
+	 * Sets the set of templates this recognizer will recognize.
+	 *
+	 * @param templates the set of templates this recognizer will recognize
+	 */
+	public void setTemplateSet(List<Template> templates) {
+		// TODO a zrób przykładowy set
 	}
 
 	/**
@@ -497,21 +217,9 @@ public class ContinuousGestureRecognizer {
 	 * @return a list of templates and their associated probabilities
 	 */
 	public List<Result> recognize(List<Point> input, double beta, double lambda, double kappa, double e_sigma) {
-		if ( input.size() < 2 ) {
-			throw new IllegalArgumentException("input must consist of at least two points");
-		}
 		List<IncrementalResult> incResults = getIncrementalResults(input, beta, lambda, kappa, e_sigma);
 		List<Result> results = getResults(incResults);
 		//		Collections.sort(results);
-		return results;
-	}
-
-	private List<Result> getResults(List<IncrementalResult> incrementalResults) {
-		List<Result> results = new ArrayList<>(incrementalResults.size());
-		for ( IncrementalResult ir : incrementalResults ) {
-			Result r = new Result(ir.pattern.template, ir.prob, ir.pattern.segments.get(ir.indexOfMostLikelySegment));
-			results.add(r);
-		}
 		return results;
 	}
 
@@ -530,6 +238,39 @@ public class ContinuousGestureRecognizer {
 		}
 		marginalizeIncrementalResults(results);
 		return results;
+	}
+
+	private List<Result> getResults(List<IncrementalResult> incrementalResults) {
+		List<Result> results = new ArrayList<>(incrementalResults.size());
+		for ( IncrementalResult ir : incrementalResults ) {
+			Result r = new Result(ir.pattern.template, ir.prob, ir.pattern.segments.get(ir.indexOfMostLikelySegment));
+			results.add(r);
+		}
+		return results;
+	}
+
+	private static void normalize(List<Point> pts) {
+		// XXX done
+	}
+
+	private static IncrementalResult getIncrementalResult(List<Point> unkPts, Pattern pattern, double beta, double lambda, double e_sigma) {
+		// xxx done
+		return null;
+	}
+
+	private static double getLikelihoodOfMatch(List<Point> pts1, List<Point> pts2, double eSigma, double aSigma, double lambda) {
+		// xxx done
+		return 0;
+	}
+
+	private static void marginalizeIncrementalResults(List<IncrementalResult> results) {
+		double totalMass = 0.0d;
+		for ( IncrementalResult r : results ) {
+			totalMass += r.prob;
+		}
+		for ( IncrementalResult r : results ) {
+			r.prob /= totalMass;
+		}
 	}
 
 	/**
