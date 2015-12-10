@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.DeviceState;
 import pl.kbieron.iomerge.server.Director;
+import pl.kbieron.iomerge.server.ui.movementReader.MovementListener;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 
 @Component
-public class VirtualScreen {
+public class VirtualScreen implements MovementListener {
 
 	private int width;
 
@@ -23,6 +24,7 @@ public class VirtualScreen {
 	@Autowired
 	private Director director;
 
+	@Override
 	public void moveMouse(int dx, int dy) {
 		state.x += dx;
 		state.y += dy;
@@ -47,45 +49,43 @@ public class VirtualScreen {
 	public void enter(double y) {
 		this.active = true;
 
-		state.x = edge == Edge.LEFT ? width : 0;
+		state.x = (edge == Edge.LEFT ? width : 0);
 		state.y = (int) y * height;
 	}
 
+	@Override
 	public void mouseClicked() {
 		// TODO: implement
 	}
 
+	@Override
 	public void mousePressed() {
 		// TODO: implement
 	}
 
+	@Override
 	public void mouseReleased() {
 		// TODO: implement
 	}
 
-	public VirtualScreen setWidth(int width) {
+	public void setWidth(int width) {
 		this.width = width;
-		return this;
 	}
 
-	public VirtualScreen setEdge(Edge edge) {
+	public void setEdge(Edge edge) {
 		this.edge = edge;
-		return this;
 	}
 
-	public VirtualScreen setX(int x) {
+	public void setX(int x) {
 		state.x = x;
-		return this;
 	}
 
-	public VirtualScreen setY(int y) {
+	public void setY(int y) {
 		state.y = y;
-		return this;
 	}
 
-	public VirtualScreen setHeight(int height) {
+	public void setHeight(int height) {
 		this.height = height;
-		return this;
 	}
 
 	public boolean isActive() {

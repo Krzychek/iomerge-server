@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture;
+package pl.kbieron.iomerge.server.gesture.calc;
 
 import java.awt.Point;
 import java.util.List;

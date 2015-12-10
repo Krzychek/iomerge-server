@@ -1,8 +1,9 @@
-package pl.kbieron.iomerge.server.gesture;
+package pl.kbieron.iomerge.server.gesture.model;
+
+import pl.kbieron.iomerge.server.gesture.calc.Normalizator;
 
 import java.awt.Point;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class Input implements Serializable {
 		this.allSegments = points;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	public List<Point> getSegment(int i) {
 		return allSegments.subList(0, i);
 	}
@@ -25,8 +30,11 @@ public class Input implements Serializable {
 
 		private Point lastPoint = new Point(0, 0);
 
+		private Builder() {}
+
 		public Input build() {
-			return new Input(new ArrayList<>(pointList));
+			List<Point> normalPts = Normalizator.normalize(pointList);
+			return new Input(normalPts);
 		}
 
 		public void move(int dx, int dy) {

@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture;
+package pl.kbieron.iomerge.server.gesture.model;
 
 import java.awt.Point;
 import java.io.Serializable;

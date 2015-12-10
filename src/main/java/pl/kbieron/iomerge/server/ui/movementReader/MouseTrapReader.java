@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server.ui.movementReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
+import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 import pl.kbieron.iomerge.server.ui.InvisibleJFrame;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +20,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import static java.awt.event.MouseEvent.BUTTON1;
 import static java.awt.event.MouseEvent.BUTTON3;
 
 
@@ -34,8 +34,13 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 
 	private Timer timer;
 
+	private MovementListener movementListener;
+
 	@Autowired
 	private VirtualScreen virtualScreen;
+
+	@Autowired
+	private GestureRecorder gestureReader;
 
 	public MouseTrapReader() {
 		super("MouseTrapReader");
@@ -43,6 +48,7 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 
 	@PostConstruct
 	public void init() {
+		movementListener = virtualScreen;
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration().getBounds();
 		setLocation(bounds.x, bounds.y);
@@ -101,23 +107,16 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
-		switch (mouseEvent.getButton()) {
-			case BUTTON1:
-				virtualScreen.mousePressed();
-				break;
-			case BUTTON3:
-
+		virtualScreen.mousePressed();
+		if ( mouseEvent.getButton() == BUTTON3 ) {
+			movementListener = gestureReader;
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent mouseEvent) {
-		switch (mouseEvent.getButton()) {
-			case BUTTON1:
-				virtualScreen.mouseReleased();
-				break;
-			case BUTTON3:
-
+		if ( mouseEvent.getButton() == BUTTON3 ) {
+			movementListener = virtualScreen;
 		}
 	}
 
@@ -128,9 +127,7 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 	public void mouseExited(MouseEvent mouseEvent) {}
 
 	@Override
-	public void mouseDragged(MouseEvent mouseEvent) {
-
-	}
+	public void mouseDragged(MouseEvent mouseEvent) {}
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
@@ -139,13 +136,7 @@ public class MouseTrapReader extends InvisibleJFrame implements MovementReader, 
 		int dx = mousePosition.x - center.x;
 		int dy = mousePosition.y - center.y;
 		if ( dx != 0 || dy != 0 ) {
-			switch (mouseEvent.getButton()) {
-				case BUTTON1:
-					virtualScreen.moveMouse(dx, dy);
-					break;
-				case BUTTON3:
-					break;
-			}
+			movementListener.moveMouse(dx, dy);
 			centerPointer();
 		}
 	}

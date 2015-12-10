@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pl.kbieron.iomerge.server.network.RMIServer;
+import pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader;
 
 
 public class Bootstrap {
@@ -12,9 +13,8 @@ public class Bootstrap {
 
 		RMIServer object = context.getBean(RMIServer.class);
 
-		while ( true ) {
-			object.hitBackBtn();
-			Thread.sleep(1000);
-		}
+		MouseTrapReader mouseTrapReader = context.getBean(MouseTrapReader.class);
+
+		mouseTrapReader.startReading();
 	}
 }

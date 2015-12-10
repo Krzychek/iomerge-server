@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture;/*
+package pl.kbieron.iomerge.server.gesture.alghorithm;/*
  * Continuous Recognition and Visualization of Pen Strokes and Touch-Screen Gestures
  * Version: 2.0
  *
@@ -28,6 +28,8 @@ package pl.kbieron.iomerge.server.gesture;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+import pl.kbieron.iomerge.server.gesture.model.Template;
 
 import java.awt.Point;
 import java.util.ArrayList;
