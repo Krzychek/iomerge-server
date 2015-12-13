@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
+import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 
@@ -17,6 +18,9 @@ public class GestureRecorder implements MovementListener {
 
 	@Autowired
 	private TemplateMatcher templateMatcher;
+
+	@Autowired
+	private EventServer eventServer;
 
 	@Autowired
 	private Normalizer normalizer;
@@ -45,14 +49,18 @@ public class GestureRecorder implements MovementListener {
 
 	@Override
 	synchronized public void mouseReleased() {
-		Input input = inputBuilder.build();
-		if ( input.size() > 5 ) {
+		if ( inputBuilder.isEnough() ) {
+			Input input = inputBuilder.build();
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
-			if ( match.getProbability() < Constants.PROB_THRESHOLD ) {
+			if ( match.getProbability() > Constants.PROB_THRESHOLD ) {
+				eventServer.sendToClient(match.getPattern().getAction());
 
+				log.info(String.format("Pattern match: %s at %1.2f", //
+						match.getPattern().getAction(), //
+						match.getProbability()));
 			}
-			log.info(match.getPattern().getAction() + ":" + match.getProbability());
-
+		} else {
+			log.info("gesture too short");
 		}
 		inputBuilder = null;
 	}

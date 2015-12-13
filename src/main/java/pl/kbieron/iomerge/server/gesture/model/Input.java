@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Input implements Template, Serializable {
 
+	public static final int MIN_POINTS = 5;
+
 	private List<Point> points;
 
 	private Input(List<Point> points) {
@@ -43,7 +45,11 @@ public class Input implements Template, Serializable {
 		public Input build() {
 			normalizer.normalizeDimensions(pointList);
 			List<Point> resampled = normalizer.resample(pointList);
-			return new Input(resampled);
+			return isEnough() ? new Input(resampled) : null;
+		}
+
+		public boolean isEnough() {
+			return pointList.size() >= MIN_POINTS;
 		}
 
 		public void move(int dx, int dy) {

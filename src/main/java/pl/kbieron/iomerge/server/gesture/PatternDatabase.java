@@ -13,7 +13,7 @@ import java.util.List;
 public class PatternDatabase {
 
 	private List<Pattern> patterns = Arrays.asList( //
-			new Pattern(Arrays.asList( // left
+			new Pattern(Arrays.asList( // down
 					new Point(0, 950), //
 					new Point(0, 900), //
 					new Point(0, 850), //
@@ -33,7 +33,7 @@ public class PatternDatabase {
 					new Point(0, 150), //
 					new Point(0, 100), //
 					new Point(0, 50), //
-					new Point(0, 0)), RemoteActionType.KEY_PRESS), // todo !!!!!!!!!!!!!!!!!!!
+					new Point(0, 0)), RemoteActionType.HOME_BTN_CLICK), //
 			new Pattern(Arrays.asList( // left
 					new Point(950, 0), //
 					new Point(900, 0), //
@@ -54,7 +54,7 @@ public class PatternDatabase {
 					new Point(150, 0), //
 					new Point(100, 0), //
 					new Point(50, 0), //
-					new Point(0, 0)), RemoteActionType.KEY_PRESS), //
+					new Point(0, 0)), RemoteActionType.BACK_BTN_CLICK), //
 			new Pattern(Arrays.asList( // circle
 					new Point(65, 0), //
 					new Point(179, 0), //
@@ -75,7 +75,7 @@ public class PatternDatabase {
 					new Point(99, 734), //
 					new Point(15, 269), //
 					new Point(129, 292), //
-					new Point(244, 238)), RemoteActionType.KEY_PRESS) //
+					new Point(244, 238)), RemoteActionType.MENU_BTN_CLICK) //
 	);
 
 	public List<Pattern> getPatterns() {

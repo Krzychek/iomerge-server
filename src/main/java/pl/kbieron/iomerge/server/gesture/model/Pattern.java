@@ -1,7 +1,5 @@
 package pl.kbieron.iomerge.server.gesture.model;
 
-import pl.kbieron.iomerge.model.RemoteActionType;
-
 import java.awt.Point;
 import java.util.List;
 
@@ -10,9 +8,9 @@ public class Pattern implements Template {
 
 	List<Point> points;
 
-	private RemoteActionType action;
+	private byte action;
 
-	public Pattern(List<Point> points, RemoteActionType action) {
+	public Pattern(List<Point> points, byte action) {
 		this.points = points;
 		this.action = action;
 	}
@@ -27,7 +25,7 @@ public class Pattern implements Template {
 		return points.size();
 	}
 
-	public RemoteActionType getAction() {
+	public byte getAction() {
 		return action;
 	}
 }

@@ -6,11 +6,13 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
 import javax.annotation.PostConstruct;
+import javax.swing.Timer;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 
 @Component
@@ -28,13 +30,18 @@ public class EventServer {
 	private int port = 7698;
 
 	public void close() {
+		disconnectClient();
 		try {
-			clientSocket.close();
+			serverSocket.close();
 		} catch (IOException e) {
 			log.error(e);
 		}
+	}
+
+	private void disconnectClient() {
 		try {
-			serverSocket.close();
+			clientSocket.close();
+			clientSocket = null;
 		} catch (IOException e) {
 			log.error(e);
 		}
@@ -54,9 +61,10 @@ public class EventServer {
 		while ( serverSocket.isBound() ) {
 			try {
 				Socket newClient = serverSocket.accept();
-				if ( clientSocket == null || !clientSocket.isConnected() ) {
+				if ( clientSocket == null ) {
 					clientSocket = newClient;
 					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+					new Timer(500, this::sendHeartBeat);
 					log.info("client connected");
 				} else {
 					newClient.close();
@@ -68,11 +76,18 @@ public class EventServer {
 		}
 	}
 
-	public void sendToClient(byte[] bytes) {
+	@SuppressWarnings( "UnusedParameters" )
+	public void sendHeartBeat(Object ignored) {
+		sendToClient((byte) 0xff);
+	}
+
+	public void sendToClient(byte... bytes) {
 		try {
-			if ( !clientSocket.isOutputShutdown() ) {
+			if ( clientSocket != null ) {
 				clientOutputStream.writeObject(bytes);
 			}
+		} catch (SocketException e) {
+			disconnectClient();
 		} catch (IOException e) {
 			log.error(e);
 		}

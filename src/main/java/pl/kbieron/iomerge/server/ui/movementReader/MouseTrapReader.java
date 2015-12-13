@@ -17,8 +17,8 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,7 +27,8 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener {
+public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener,
+		KeyListener {
 
 	private final Log log = LogFactory.getLog(MouseTrapReader.class);
 
@@ -67,21 +68,13 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 		setLocation(bounds.x, bounds.y);
 		setSize(bounds.height, bounds.width);
 
-		timer = new Timer(0, a -> readMove());
+		timer = new Timer(0, this::readMove);
 
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent keyEvent) {
-				switch (keyEvent.getKeyCode()) {
-					case KeyEvent.VK_ESCAPE:
-						virtualScreen.exit();
-				}
-			}
-		});
+		addKeyListener(this);
 		addMouseListener(this);
 	}
 
-	synchronized private void readMove() {
+	synchronized private void readMove(Object ignored) {
 		if ( !reading ) return;
 		Point move = MouseInfo.getPointerInfo().getLocation();
 		move.translate(-center.x, -center.y);
@@ -152,6 +145,16 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	}
 
 	@Override
+	public void keyPressed(KeyEvent keyEvent) {
+		//TODO
+	}
+
+	@Override
+	public void keyReleased(KeyEvent keyEvent) {
+		//TODO
+	}
+
+	@Override
 	public void mouseEntered(MouseEvent mouseEvent) {}
 
 	@Override
@@ -162,4 +165,8 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {}
+
+	@Override
+	public void keyTyped(KeyEvent keyEvent) {}
+
 }
