@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.server.ui.InvisibleJWindow;
+import pl.kbieron.iomerge.server.ui.EdgeTrigger;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +15,7 @@ import java.awt.Color;
 public class Bootstrap {
 
 	@Autowired
-	InvisibleJWindow edgeTrigger;
+	EdgeTrigger edgeTrigger;
 
 	@Autowired
 	private Director director;

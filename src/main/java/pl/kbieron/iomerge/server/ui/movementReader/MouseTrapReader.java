@@ -67,7 +67,7 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 		setLocation(bounds.x, bounds.y);
 		setSize(bounds.height, bounds.width);
 
-		timer = new Timer(20, a -> readMove());
+		timer = new Timer(0, a -> readMove());
 
 		addKeyListener(new KeyAdapter() {
 			@Override

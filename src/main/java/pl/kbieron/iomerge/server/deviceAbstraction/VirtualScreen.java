@@ -2,7 +2,9 @@ package pl.kbieron.iomerge.server.deviceAbstraction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.model.RemoteActionFactory;
 import pl.kbieron.iomerge.server.Director;
+import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.utilities.Edge;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
@@ -25,6 +27,9 @@ public class VirtualScreen implements MovementListener {
 	@Autowired
 	private Director director;
 
+	@Autowired
+	private EventServer server;
+
 	@Override
 	public void move(int dx, int dy) {
 		actPosition.x += dx;
@@ -41,6 +46,9 @@ public class VirtualScreen implements MovementListener {
 			else if ( actPosition.x > width ) actPosition.x = width;
 
 		}
+		byte[] mouseSync = RemoteActionFactory.createMouseSync((short) actPosition.x, (short) actPosition.y);
+		server.sendToClient(mouseSync);
+
 	}
 
 	public void exit() {

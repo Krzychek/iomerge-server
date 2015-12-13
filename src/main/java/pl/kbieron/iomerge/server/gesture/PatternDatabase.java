@@ -1,7 +1,7 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.ClientAction;
+import pl.kbieron.iomerge.model.RemoteActionType;
 import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 import java.awt.Point;
@@ -33,7 +33,7 @@ public class PatternDatabase {
 					new Point(0, 150), //
 					new Point(0, 100), //
 					new Point(0, 50), //
-					new Point(0, 0)), ClientAction.HOME_BTN), //
+					new Point(0, 0)), RemoteActionType.KEY_PRESS), // todo !!!!!!!!!!!!!!!!!!!
 			new Pattern(Arrays.asList( // left
 					new Point(950, 0), //
 					new Point(900, 0), //
@@ -54,7 +54,7 @@ public class PatternDatabase {
 					new Point(150, 0), //
 					new Point(100, 0), //
 					new Point(50, 0), //
-					new Point(0, 0)), ClientAction.BACK_BTN), //
+					new Point(0, 0)), RemoteActionType.KEY_PRESS), //
 			new Pattern(Arrays.asList( // circle
 					new Point(65, 0), //
 					new Point(179, 0), //
@@ -75,7 +75,7 @@ public class PatternDatabase {
 					new Point(99, 734), //
 					new Point(15, 269), //
 					new Point(129, 292), //
-					new Point(244, 238)), ClientAction.MENU_BTN) //
+					new Point(244, 238)), RemoteActionType.KEY_PRESS) //
 	);
 
 	public List<Pattern> getPatterns() {
