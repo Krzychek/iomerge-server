@@ -81,14 +81,15 @@ public class Normalizer {
 				break;
 			}
 		}
-
-		double dist = scale * distance(previous.x, previous.x, point.x, point.x);
-		while ( ind < NORM_LENGTH ) {
-			double diff = ind - prevLength;
-			double percent = diff / dist;
-			result[ind++] = new Point( //
-					(int) (previous.x + (percent * point.x)), //
-					(int) (previous.y + (percent * point.y)));
+		if ( point != null ) {
+			double dist = scale * distance(previous.x, previous.x, point.x, point.x);
+			while ( ind < NORM_LENGTH ) {
+				double diff = ind - prevLength;
+				double percent = diff / dist;
+				result[ind++] = new Point( //
+						(int) (previous.x + (percent * point.x)), //
+						(int) (previous.y + (percent * point.y)));
+			}
 		}
 
 		return Arrays.asList(result);

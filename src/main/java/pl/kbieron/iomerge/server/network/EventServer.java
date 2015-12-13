@@ -70,9 +70,11 @@ public class EventServer {
 
 	public void sendToClient(byte[] bytes) {
 		try {
-			clientOutputStream.writeObject(bytes);
+			if ( !clientSocket.isOutputShutdown() ) {
+				clientOutputStream.writeObject(bytes);
+			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 

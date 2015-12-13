@@ -39,7 +39,7 @@ public class GestureRecorder implements MovementListener {
 	}
 
 	@Override
-	synchronized public void MousePressed() {
+	synchronized public void mousePressed() {
 		inputBuilder = Input.builder(normalizer);
 	}
 

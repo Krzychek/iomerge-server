@@ -137,8 +137,10 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	public void mousePressed(MouseEvent mouseEvent) {
 		if ( mouseEvent.getButton() == BUTTON3 ) {
 			movementListener = gestureRecorder;
-			gestureRecorder.MousePressed();
+			gestureRecorder.mousePressed();
 		}
+		movementListener.mousePressed();
+
 	}
 
 	@Override

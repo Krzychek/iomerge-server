@@ -8,21 +8,21 @@ import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.utilities.Edge;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
-import java.awt.Point;
-
 
 @Component
 public class VirtualScreen implements MovementListener {
 
-	private int width = 1000;
+	private short width = 1000;
 
-	private int height = 1000;
+	private short height = 1000;
 
 	private Edge edge;
 
 	private boolean active;
 
-	private Point actPosition = new Point();
+	private short positionX;
+
+	private short positionY;
 
 	@Autowired
 	private Director director;
@@ -32,21 +32,22 @@ public class VirtualScreen implements MovementListener {
 
 	@Override
 	public void move(int dx, int dy) {
-		actPosition.x += dx;
-		actPosition.y += dy;
+		positionX += dx;
+		positionY += dy;
 
-		if ( actPosition.y < 0 ) actPosition.y = 0;
-		else if ( actPosition.y < height ) actPosition.y = height;
+		if ( positionY < 0 ) positionY = 0;
+		else if ( positionY < height ) positionY = height;
 
 		if ( edge == Edge.LEFT ) {
-			if ( actPosition.x > width ) actPosition.x = width;
-			else if ( actPosition.x < 0 ) exit();
+			if ( positionX > width ) positionX = width;
+			else if ( positionX < 0 ) exit();
 		} else {
-			if ( actPosition.x < 0 ) exit();
-			else if ( actPosition.x > width ) actPosition.x = width;
+			if ( positionX < 0 ) exit();
+			else if ( positionX > width ) positionX = width;
 
 		}
-		byte[] mouseSync = RemoteActionFactory.createMouseSync((short) actPosition.x, (short) actPosition.y);
+		// TODO replace with position
+		byte[] mouseSync = RemoteActionFactory.createMouseSync((short) dx, (short) dy);
 		server.sendToClient(mouseSync);
 
 	}
@@ -60,26 +61,23 @@ public class VirtualScreen implements MovementListener {
 		this.active = true;
 
 		this.edge = edge;
-		actPosition.x = (edge == Edge.LEFT ? width : 0);
-		actPosition.y = (int) y * height;
+		positionX = (edge == Edge.LEFT ? width : 0);
+		positionY = (short) (y * height);
 	}
 
 	@Override
-	public void mouseClicked() {
-		// TODO: implement
-	}
-
-	@Override
-	public void MousePressed() {
-		// TODO: implement
+	public void mousePressed() {
+		byte[] mousePress = RemoteActionFactory.createMousePress();
+		server.sendToClient(mousePress);
 	}
 
 	@Override
 	public void mouseReleased() {
-		// TODO: implement
+		byte[] mousePress = RemoteActionFactory.createMouseRelease();
+		server.sendToClient(mousePress);
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(short width) {
 		this.width = width;
 	}
 
@@ -87,28 +85,12 @@ public class VirtualScreen implements MovementListener {
 		this.edge = edge;
 	}
 
-	public void setX(int x) {
-		actPosition.x = x;
-	}
-
-	public void setY(int y) {
-		actPosition.y = y;
-	}
-
-	public void setHeight(int height) {
+	public void setHeight(short height) {
 		this.height = height;
 	}
 
 	public boolean isActive() {
 		return active;
-	}
-
-	public int getY() {
-		return actPosition.y;
-	}
-
-	public int getX() {
-		return actPosition.x;
 	}
 
 	public int getHeight() {

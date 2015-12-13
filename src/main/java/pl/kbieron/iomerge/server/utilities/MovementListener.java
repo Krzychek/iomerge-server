@@ -4,9 +4,7 @@ public interface MovementListener {
 
 	void move(int dx, int dy);
 
-	default void mouseClicked() {}
-
-	default void MousePressed() {}
+	default void mousePressed() {}
 
 	default void mouseReleased() {}
 
