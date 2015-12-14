@@ -1,8 +1,8 @@
 package pl.kbieron.iomerge.server.ui;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
@@ -10,7 +10,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 
-public abstract class InvisibleJWindow extends JWindow {
+public abstract class InvisibleJWindow extends JFrame {
 
 	private final JComponent rootComponent;
 
@@ -23,6 +23,7 @@ public abstract class InvisibleJWindow extends JWindow {
 		rootComponent.setCursor(blankCursor);
 		setContentPane(rootComponent);
 		setAlwaysOnTop(true);
+		setUndecorated(true);
 		setBackground(new Color(0, 0, 0, 0));
 	}
 }
