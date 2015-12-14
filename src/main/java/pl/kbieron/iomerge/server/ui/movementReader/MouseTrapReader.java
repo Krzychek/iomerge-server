@@ -56,7 +56,7 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 			robot = new Robot();
 		} catch (AWTException e) {
 			log.error("failed to create robot: ", e);
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		movementListener = virtualScreen;
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
