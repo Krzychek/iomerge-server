@@ -34,12 +34,8 @@ public class EdgeTrigger extends InvisibleJWindow {
 	@ConfigProperty
 	private Integer thickness = 1;
 
-	public EdgeTrigger() {
-		super("Edge Trigger");
-	}
-
 	@PostConstruct
-	public void init() {
+	private void init() {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent mouseEvent) {

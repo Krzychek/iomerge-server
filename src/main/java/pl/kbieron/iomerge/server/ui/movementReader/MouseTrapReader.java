@@ -50,24 +50,19 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 	private Robot robot;
 
-	public MouseTrapReader() {
-		super("MouseTrapReader");
+	@PostConstruct
+	private void init() {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
 			log.error("failed to create robot: ", e);
 			throw new RuntimeException();
 		}
-	}
-
-	@PostConstruct
-	public void init() {
 		movementListener = virtualScreen;
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration().getBounds();
 		setLocation(bounds.x, bounds.y);
 		setSize(bounds.height, bounds.width);
-
 		timer = new Timer(0, this::readMove);
 
 		addKeyListener(this);
@@ -146,11 +141,13 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
+		keyEvent.getKeyCode();
 		//TODO
 	}
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent) {
+		keyEvent.getKeyCode();
 		//TODO
 	}
 
