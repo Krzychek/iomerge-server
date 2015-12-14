@@ -8,9 +8,12 @@ import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.utilities.Edge;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 
 @Component
-public class VirtualScreen implements MovementListener {
+public class VirtualScreen implements MovementListener, KeyListener {
 
 	private short width = 1000;
 
@@ -95,5 +98,18 @@ public class VirtualScreen implements MovementListener {
 
 	public int getHeight() {
 		return height;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent keyEvent) {}
+
+	@Override
+	public void keyPressed(KeyEvent keyEvent) {
+		server.sendToClient(RemoteActionFactory.createKeyPress(keyEvent.getKeyCode()));
+	}
+
+	@Override
+	public void keyReleased(KeyEvent keyEvent) {
+		server.sendToClient(RemoteActionFactory.createKeyRelease(keyEvent.getKeyCode()));
 	}
 }

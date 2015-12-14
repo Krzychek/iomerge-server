@@ -7,5 +7,4 @@ public interface MovementListener {
 	default void mousePressed() {}
 
 	default void mouseReleased() {}
-
 }

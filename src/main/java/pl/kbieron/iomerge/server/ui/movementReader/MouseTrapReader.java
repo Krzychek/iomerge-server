@@ -17,8 +17,6 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,8 +25,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener,
-		KeyListener {
+public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener {
 
 	private final Log log = LogFactory.getLog(MouseTrapReader.class);
 
@@ -59,13 +56,14 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 			throw new RuntimeException(e);
 		}
 		movementListener = virtualScreen;
+		// TODO get biggest device
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration().getBounds();
 		setLocation(bounds.x, bounds.y);
 		setSize(bounds.width, bounds.height);
 		timer = new Timer(0, this::readMove);
 
-		addKeyListener(this);
+		addKeyListener(virtualScreen);
 		addMouseListener(this);
 	}
 
@@ -140,18 +138,6 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	}
 
 	@Override
-	public void keyPressed(KeyEvent keyEvent) {
-		keyEvent.getKeyCode();
-		//TODO
-	}
-
-	@Override
-	public void keyReleased(KeyEvent keyEvent) {
-		keyEvent.getKeyCode();
-		//TODO
-	}
-
-	@Override
 	public void mouseEntered(MouseEvent mouseEvent) {}
 
 	@Override
@@ -162,8 +148,5 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {}
-
-	@Override
-	public void keyTyped(KeyEvent keyEvent) {}
 
 }

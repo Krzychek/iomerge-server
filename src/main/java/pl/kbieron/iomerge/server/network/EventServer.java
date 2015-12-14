@@ -61,6 +61,7 @@ public class EventServer {
 		while ( serverSocket.isBound() ) {
 			try {
 				Socket newClient = serverSocket.accept();
+				sendHeartBeat(null);
 				if ( clientSocket == null ) {
 					clientSocket = newClient;
 					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
