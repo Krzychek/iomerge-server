@@ -62,7 +62,7 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration().getBounds();
 		setLocation(bounds.x, bounds.y);
-		setSize(bounds.height, bounds.width);
+		setSize(bounds.width, bounds.height);
 		timer = new Timer(0, this::readMove);
 
 		addKeyListener(this);
