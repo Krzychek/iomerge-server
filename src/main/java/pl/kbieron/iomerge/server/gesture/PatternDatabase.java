@@ -13,7 +13,7 @@ import java.util.List;
 public class PatternDatabase {
 
 	private List<Pattern> patterns = Arrays.asList( //
-			new Pattern(Arrays.asList( // down
+			new Pattern(Arrays.asList( // up
 					new Point(0, 950), //
 					new Point(0, 900), //
 					new Point(0, 850), //
@@ -33,7 +33,7 @@ public class PatternDatabase {
 					new Point(0, 150), //
 					new Point(0, 100), //
 					new Point(0, 50), //
-					new Point(0, 0)), RemoteActionType.HOME_BTN_CLICK), //
+					new Point(0, 0)), RemoteActionType.HOME_BTN_CLICK, "up"), //
 			new Pattern(Arrays.asList( // left
 					new Point(950, 0), //
 					new Point(900, 0), //
@@ -54,28 +54,28 @@ public class PatternDatabase {
 					new Point(150, 0), //
 					new Point(100, 0), //
 					new Point(50, 0), //
-					new Point(0, 0)), RemoteActionType.BACK_BTN_CLICK), //
+					new Point(0, 0)), RemoteActionType.BACK_BTN_CLICK, "left"), //
 			new Pattern(Arrays.asList( // circle
-					new Point(65, 0), //
-					new Point(179, 0), //
-					new Point(294, 0), //
-					new Point(408, 3), //
-					new Point(523, 13), //
-					new Point(637, 30), //
-					new Point(752, 59), //
-					new Point(867, 151), //
-					new Point(918, 108), //
-					new Point(901, 525), //
-					new Point(786, 151), //
-					new Point(672, 866), //
-					new Point(557, 799), //
-					new Point(443, 489), //
-					new Point(328, 775), //
-					new Point(213, 534), //
-					new Point(99, 734), //
-					new Point(15, 269), //
-					new Point(129, 292), //
-					new Point(244, 238)), RemoteActionType.MENU_BTN_CLICK) //
+					new Point(195, 0),  //
+					new Point(286, 20),  //
+					new Point(378, 1),  //
+					new Point(470, 0),  //
+					new Point(562, 0),  //
+					new Point(654, 0),  //
+					new Point(746, 2),  //
+					new Point(838, 34),  //
+					new Point(930, 7),  //
+					new Point(977, 284),  //
+					new Point(886, 343),  //
+					new Point(794, 265),  //
+					new Point(702, 455),  //
+					new Point(610, 591),  //
+					new Point(518, 50),  //
+					new Point(426, 53),  //
+					new Point(334, 237),  //
+					new Point(242, 349),  //
+					new Point(150, 28),  //
+					new Point(58, 1)), RemoteActionType.MENU_BTN_CLICK, "circle") //
 	);
 
 	public List<Pattern> getPatterns() {

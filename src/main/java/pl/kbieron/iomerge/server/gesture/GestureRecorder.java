@@ -52,13 +52,14 @@ public class GestureRecorder implements MovementListener {
 		if ( inputBuilder.isEnough() ) {
 			Input input = inputBuilder.build();
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
+
 			if ( match.getProbability() > Constants.PROB_THRESHOLD ) {
 				eventServer.sendToClient(match.getPattern().getAction());
-
-				log.info(String.format("Pattern match: %s at %1.2f", //
-						match.getPattern().getAction(), //
-						match.getProbability()));
 			}
+
+			log.info(String.format("Best match: %s at %2d%%", //
+					match.getPattern().getName(), //
+					(int) (match.getProbability() * 100)));
 		} else {
 			log.info("gesture too short");
 		}

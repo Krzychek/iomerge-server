@@ -10,9 +10,12 @@ public class Pattern implements Template {
 
 	private byte action;
 
-	public Pattern(List<Point> points, byte action) {
+	private String name;
+
+	public Pattern(List<Point> points, byte action, String name) {
 		this.points = points;
 		this.action = action;
+		this.name = name;
 	}
 
 	@Override
@@ -27,5 +30,9 @@ public class Pattern implements Template {
 
 	public byte getAction() {
 		return action;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

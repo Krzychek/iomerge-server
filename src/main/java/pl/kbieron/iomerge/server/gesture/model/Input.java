@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import static pl.kbieron.iomerge.server.gesture.Constants.MIN_POINTS;
+
 
 public class Input implements Template, Serializable {
-
-	public static final int MIN_POINTS = 5;
 
 	private List<Point> points;
 
@@ -43,9 +43,7 @@ public class Input implements Template, Serializable {
 		private Builder() {}
 
 		public Input build() {
-			normalizer.normalizeDimensions(pointList);
-			List<Point> resampled = normalizer.resample(pointList);
-			return isEnough() ? new Input(resampled) : null;
+			return isEnough() ? new Input(normalizer.normalize(pointList)) : null;
 		}
 
 		public boolean isEnough() {

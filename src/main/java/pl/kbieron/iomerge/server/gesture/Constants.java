@@ -15,4 +15,6 @@ public interface Constants {
 	int NORM_LENGTH = 20;
 
 	double PROB_THRESHOLD = 0.5d;
+
+	int MIN_POINTS = 3;
 }
