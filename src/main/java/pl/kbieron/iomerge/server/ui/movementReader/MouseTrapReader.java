@@ -8,10 +8,11 @@ import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.appState.StateType;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
-import pl.kbieron.iomerge.server.ui.InvisibleJWindow;
+import pl.kbieron.iomerge.server.ui.UIHelper;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import javax.annotation.PostConstruct;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
@@ -29,7 +30,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener,
+public class MouseTrapReader extends JFrame implements MovementReader, MouseListener, MouseMotionListener,
 		MouseWheelListener {
 
 	private final Log log = LogFactory.getLog(MouseTrapReader.class);
@@ -54,6 +55,7 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 	@PostConstruct
 	private void init() {
+		UIHelper.makeInvisible(this);
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {

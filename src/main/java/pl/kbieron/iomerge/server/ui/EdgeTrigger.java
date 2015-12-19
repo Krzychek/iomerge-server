@@ -11,6 +11,7 @@ import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
+import javax.swing.JWindow;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -19,9 +20,9 @@ import java.awt.event.MouseEvent;
 
 
 @Component
-public class EdgeTrigger extends InvisibleJWindow implements StateObserver {
+public class EdgeTrigger extends JWindow implements StateObserver {
 
-	private final Log log = LogFactory.getLog(InvisibleJWindow.class);
+	private final Log log = LogFactory.getLog(EdgeTrigger.class);
 
 	@Autowired
 	private AppStateManager appAppStateManager;
@@ -36,6 +37,7 @@ public class EdgeTrigger extends InvisibleJWindow implements StateObserver {
 
 	@PostConstruct
 	private void init() {
+		UIHelper.makeInvisible(this);
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent mouseEvent) {
@@ -44,17 +46,17 @@ public class EdgeTrigger extends InvisibleJWindow implements StateObserver {
 		});
 	}
 
-	public InvisibleJWindow setEdge(Edge edge) {
+	public EdgeTrigger setEdge(Edge edge) {
 		this.edge = edge;
 		return this;
 	}
 
-	public InvisibleJWindow setOffset(int offset) {
+	public EdgeTrigger setOffset(int offset) {
 		this.offset = offset;
 		return this;
 	}
 
-	public InvisibleJWindow setLength(int length) {
+	public EdgeTrigger setLength(int length) {
 		this.length = length;
 		return this;
 	}
