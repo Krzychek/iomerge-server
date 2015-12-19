@@ -20,12 +20,15 @@ import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener {
+public class MouseTrapReader extends InvisibleJWindow implements MovementReader, MouseListener, MouseMotionListener,
+		MouseWheelListener {
 
 	private final Log log = LogFactory.getLog(MouseTrapReader.class);
 
@@ -65,6 +68,7 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 
 		addKeyListener(virtualScreen);
 		addMouseListener(this);
+		addMouseWheelListener(this);
 	}
 
 	synchronized private void readMove(Object ignored) {
@@ -117,7 +121,9 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent mouseEvent) {}
+	public void mouseClicked(MouseEvent mouseEvent) {
+		mouseEvent.getButton();
+	}
 
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
@@ -149,4 +155,9 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {}
 
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
+		movementListener.mouseWheelMoved(mouseWheelEvent.getWheelRotation());
+
+	}
 }

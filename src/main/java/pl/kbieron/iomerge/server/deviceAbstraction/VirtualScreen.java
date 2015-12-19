@@ -11,6 +11,10 @@ import pl.kbieron.iomerge.server.utilities.MovementListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import static pl.kbieron.iomerge.model.RemoteActionFactory.createMousePress;
+import static pl.kbieron.iomerge.model.RemoteActionFactory.createMouseRelease;
+import static pl.kbieron.iomerge.model.RemoteActionFactory.createMouseWheelEvent;
+
 
 @Component
 public class VirtualScreen implements MovementListener, KeyListener {
@@ -20,8 +24,6 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	private short height = 1000;
 
 	private Edge edge;
-
-	private boolean active;
 
 	private short positionX;
 
@@ -43,26 +45,19 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 		if ( edge == Edge.LEFT ) {
 			if ( positionX > width ) positionX = width;
-			else if ( positionX < 0 ) exit();
+			else if ( positionX < 0 ) director.exitRemote();
 		} else {
-			if ( positionX < 0 ) exit();
+			if ( positionX < 0 ) director.exitRemote();
 			else if ( positionX > width ) positionX = width;
-
 		}
+
 		// TODO replace with position
 		byte[] mouseSync = RemoteActionFactory.createMouseSync((short) dx, (short) dy);
 		server.sendToClient(mouseSync);
 
 	}
 
-	public void exit() {
-		active = false;
-		director.exitRemote();
-	}
-
 	public void enter(double y, Edge edge) {
-		this.active = true;
-
 		this.edge = edge;
 		positionX = (edge == Edge.LEFT ? width : 0);
 		positionY = (short) (y * height);
@@ -70,14 +65,17 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 	@Override
 	public void mousePressed() {
-		byte[] mousePress = RemoteActionFactory.createMousePress();
-		server.sendToClient(mousePress);
+		server.sendToClient(createMousePress());
 	}
 
 	@Override
 	public void mouseReleased() {
-		byte[] mousePress = RemoteActionFactory.createMouseRelease();
-		server.sendToClient(mousePress);
+		server.sendToClient(createMouseRelease());
+	}
+
+	@Override
+	public void mouseWheelMoved(int wheelRotation) {
+		server.sendToClient(createMouseWheelEvent(wheelRotation));
 	}
 
 	public void setWidth(short width) {
@@ -90,10 +88,6 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 	public void setHeight(short height) {
 		this.height = height;
-	}
-
-	public boolean isActive() {
-		return active;
 	}
 
 	public int getHeight() {

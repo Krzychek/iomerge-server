@@ -7,4 +7,6 @@ public interface MovementListener {
 	default void mousePressed() {}
 
 	default void mouseReleased() {}
+
+	void mouseWheelMoved(int wheelRotation);
 }
