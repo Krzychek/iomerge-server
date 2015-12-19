@@ -2,7 +2,9 @@ package pl.kbieron.iomerge.server.network;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,9 @@ public class EventServer {
 
 	private final Log log = LogFactory.getLog(EventServer.class);
 
+	@Autowired
+	AppStateManager appStateManager;
+
 	private ServerSocket serverSocket;
 
 	private Socket clientSocket;
@@ -28,6 +33,8 @@ public class EventServer {
 
 	@ConfigProperty
 	private int port = 7698;
+
+	private Timer heartBeetTimer;
 
 	public void close() {
 		disconnectClient();
@@ -39,11 +46,14 @@ public class EventServer {
 	}
 
 	private void disconnectClient() {
+		heartBeetTimer.stop();
 		try {
 			clientSocket.close();
 			clientSocket = null;
 		} catch (IOException e) {
 			log.error(e);
+		} finally {
+			appStateManager.disconnected();
 		}
 	}
 
@@ -65,7 +75,9 @@ public class EventServer {
 				if ( clientSocket == null ) {
 					clientSocket = newClient;
 					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-					new Timer(500, this::sendHeartBeat);
+					heartBeetTimer = new Timer(500, this::sendHeartBeat);
+					heartBeetTimer.start();
+					appStateManager.connected();
 					log.info("client connected");
 				} else {
 					newClient.close();

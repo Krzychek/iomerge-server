@@ -3,7 +3,10 @@ package pl.kbieron.iomerge.server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.appState.AppStateManager;
+import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.ui.EdgeTrigger;
+import pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +19,13 @@ public class Bootstrap {
 	EdgeTrigger edgeTrigger;
 
 	@Autowired
-	private Director director;
+	VirtualScreen virtualScreen;
+
+	@Autowired
+	MouseTrapReader mouseTrapReader;
+
+	@Autowired
+	private AppStateManager appStateManager;
 
 	public static void main(String... args) throws InterruptedException {
 		new ClassPathXmlApplicationContext("/spring.xml");
@@ -26,6 +35,6 @@ public class Bootstrap {
 	void init() {
 		edgeTrigger.setEdge(Edge.RIGHT);
 
-		director.start();
+		appStateManager.addObservers(mouseTrapReader, edgeTrigger, virtualScreen);
 	}
 }

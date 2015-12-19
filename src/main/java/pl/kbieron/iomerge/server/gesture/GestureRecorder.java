@@ -65,5 +65,4 @@ public class GestureRecorder implements MovementListener {
 		}
 		inputBuilder = null;
 	}
-
 }

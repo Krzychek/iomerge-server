@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.appState.AppStateManager;
+import pl.kbieron.iomerge.server.appState.StateType;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 import pl.kbieron.iomerge.server.ui.InvisibleJWindow;
@@ -89,38 +91,6 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	}
 
 	@Override
-	synchronized public void startReading() {
-		if ( reading ) return;
-		reading = true;
-
-		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
-
-		setVisible(true);
-
-		Point location = getLocation();
-		robot.mouseMove(location.x + getWidth() - 1, location.y + getHeight() - 1);
-
-		location.translate(getHeight() / 2, getWidth() / 2);
-		center = location;
-
-		centerPointer();
-
-		timer.start();
-	}
-
-	@Override
-	synchronized public void stopReading() {
-		timer.stop();
-		restoreMouseLocation();
-		setVisible(false);
-		reading = false;
-	}
-
-	private void restoreMouseLocation() {
-		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent mouseEvent) {
 		mouseEvent.getButton();
 	}
@@ -159,5 +129,44 @@ public class MouseTrapReader extends InvisibleJWindow implements MovementReader,
 	public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
 		movementListener.mouseWheelMoved(mouseWheelEvent.getWheelRotation());
 
+	}
+
+	@Override
+	public void update(AppStateManager appStateManager) {
+		if ( appStateManager.getStateType() == StateType.ON_REMOTE ) startReading();
+		else stopReading();
+	}
+
+	@Override
+	synchronized public void startReading() {
+		if ( reading ) return;
+		reading = true;
+
+		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
+
+		setVisible(true);
+
+		Point location = getLocation();
+		robot.mouseMove(location.x + getWidth() - 1, location.y + getHeight() - 1);
+
+		location.translate(getHeight() / 2, getWidth() / 2);
+		center = location;
+
+		centerPointer();
+
+		timer.start();
+	}
+
+	@Override
+	synchronized public void stopReading() {
+		if ( !reading ) return;
+		timer.stop();
+		restoreMouseLocation();
+		setVisible(false);
+		reading = false;
+	}
+
+	private void restoreMouseLocation() {
+		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
 	}
 }

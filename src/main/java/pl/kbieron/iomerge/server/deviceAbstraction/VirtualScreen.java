@@ -2,22 +2,19 @@ package pl.kbieron.iomerge.server.deviceAbstraction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.RemoteActionFactory;
-import pl.kbieron.iomerge.server.Director;
-import pl.kbieron.iomerge.server.network.EventServer;
+import pl.kbieron.iomerge.server.appState.AppStateManager;
+import pl.kbieron.iomerge.server.appState.StateObserver;
+import pl.kbieron.iomerge.server.appState.StateType;
+import pl.kbieron.iomerge.server.network.RemoteActionDispatcher;
 import pl.kbieron.iomerge.server.utilities.Edge;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static pl.kbieron.iomerge.model.RemoteActionFactory.createMousePress;
-import static pl.kbieron.iomerge.model.RemoteActionFactory.createMouseRelease;
-import static pl.kbieron.iomerge.model.RemoteActionFactory.createMouseWheelEvent;
-
 
 @Component
-public class VirtualScreen implements MovementListener, KeyListener {
+public class VirtualScreen implements MovementListener, KeyListener, StateObserver {
 
 	private short width = 1000;
 
@@ -30,10 +27,10 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	private short positionY;
 
 	@Autowired
-	private Director director;
+	private AppStateManager appStateManager;
 
 	@Autowired
-	private EventServer server;
+	private RemoteActionDispatcher actionDispatcher;
 
 	@Override
 	public void move(int dx, int dy) {
@@ -45,37 +42,30 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 		if ( edge == Edge.LEFT ) {
 			if ( positionX > width ) positionX = width;
-			else if ( positionX < 0 ) director.exitRemote();
+			else if ( positionX < 0 ) appStateManager.exitRemote();
 		} else {
-			if ( positionX < 0 ) director.exitRemote();
+			if ( positionX < 0 ) appStateManager.exitRemote();
 			else if ( positionX > width ) positionX = width;
 		}
 
 		// TODO replace with position
-		byte[] mouseSync = RemoteActionFactory.createMouseSync((short) dx, (short) dy);
-		server.sendToClient(mouseSync);
+		actionDispatcher.dispatchMouseSync((short) dx, (short) dy);
 
-	}
-
-	public void enter(double y, Edge edge) {
-		this.edge = edge;
-		positionX = (edge == Edge.LEFT ? width : 0);
-		positionY = (short) (y * height);
 	}
 
 	@Override
 	public void mousePressed() {
-		server.sendToClient(createMousePress());
+		actionDispatcher.dispatchMousePress();
 	}
 
 	@Override
 	public void mouseReleased() {
-		server.sendToClient(createMouseRelease());
+		actionDispatcher.dispatchMouseRelease();
 	}
 
 	@Override
 	public void mouseWheelMoved(int wheelRotation) {
-		server.sendToClient(createMouseWheelEvent(wheelRotation));
+		actionDispatcher.dispatchMouseWheelEvent(wheelRotation);
 	}
 
 	public void setWidth(short width) {
@@ -99,11 +89,23 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
-		server.sendToClient(RemoteActionFactory.createKeyPress(keyEvent.getKeyCode()));
+		actionDispatcher.dispatchKeyPress(keyEvent.getKeyCode());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent) {
-		server.sendToClient(RemoteActionFactory.createKeyRelease(keyEvent.getKeyCode()));
+		actionDispatcher.dispatchKeyRelease(keyEvent.getKeyCode());
+	}
+
+	@Override
+	public void update(AppStateManager appStateManager) {
+		if ( appStateManager.getStateType() == StateType.ON_REMOTE ) {
+			enter(appStateManager.getEnterPosition());
+		}
+	}
+
+	public void enter(double y) {
+		positionX = (edge == Edge.LEFT ? width : 0);
+		positionY = (short) (y * height);
 	}
 }
