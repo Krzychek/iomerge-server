@@ -4,11 +4,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
 import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
+
+import javax.swing.Timer;
 
 
 @Component
@@ -25,11 +28,10 @@ public class GestureRecorder implements MovementListener {
 	@Autowired
 	private Normalizer normalizer;
 
-	private int width;
+	@Autowired
+	private AppStateManager appStateManager;
 
-	private int height;
-
-	private boolean active;
+	private boolean enoughTime = false;
 
 	private Input.Builder inputBuilder;
 
@@ -45,11 +47,16 @@ public class GestureRecorder implements MovementListener {
 	@Override
 	synchronized public void mousePressed() {
 		inputBuilder = Input.builder(normalizer);
+
+		enoughTime = false;
+		Timer timer = new Timer(200, actionEvent -> enoughTime = true);
+		timer.setRepeats(false);
+		timer.start();
 	}
 
 	@Override
 	synchronized public void mouseReleased() {
-		if ( inputBuilder.isEnough() ) {
+		if ( enoughTime && inputBuilder.isEnough() ) {
 			Input input = inputBuilder.build();
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
 
@@ -57,11 +64,12 @@ public class GestureRecorder implements MovementListener {
 				eventServer.sendToClient(match.getPattern().getAction());
 			}
 
-			log.info(String.format("Best match: %s at %2d%%", //
+			log.info(String.format("Best gesture match: %s at %2d%%", //
 					match.getPattern().getName(), //
 					(int) (match.getProbability() * 100)));
 		} else {
-			log.info("gesture too short");
+			log.info("Gesture too short, exiting remote");
+			appStateManager.exitRemote();
 		}
 		inputBuilder = null;
 	}
