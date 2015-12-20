@@ -12,6 +12,7 @@ import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JWindow;
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -50,7 +51,14 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 
 	@Override
 	public void update(AppStateManager appStateManager) {
-		setVisible(StateType.CONNECTED == appStateManager.getStateChange());
+		boolean visible = StateType.CONNECTED == appStateManager.getStateChange();
+		if ( !visible ) {
+			setVisible(false);
+		} else {
+			Timer timer = new Timer(500, actionEvent -> setVisible(true));
+			timer.setRepeats(false);
+			timer.start();
+		}
 	}
 
 	@Override
