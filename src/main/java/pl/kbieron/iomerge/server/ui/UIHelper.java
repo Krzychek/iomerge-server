@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -30,7 +31,7 @@ public class UIHelper {
 	private static void makeWindowInvisible(Window window) {
 
 		window.setAlwaysOnTop(true);
-		//		window.setBackground(new Color(0, 0, 0, 0));
+		window.setBackground(new Color(0, 0, 0, 0));
 	}
 
 	private static void setInvisibleContentPane(RootPaneContainer container) {
