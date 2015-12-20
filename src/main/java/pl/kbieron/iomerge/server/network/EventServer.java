@@ -63,6 +63,7 @@ public class EventServer {
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
 
+		heartBeetTimer = new Timer(500, e -> sendToClient((byte) 0xff));
 		new Thread(this::acceptListener, String.format("acceptListener at :%d", port)) //
 				.start();
 	}
@@ -71,11 +72,9 @@ public class EventServer {
 		while ( serverSocket.isBound() ) {
 			try {
 				Socket newClient = serverSocket.accept();
-				sendHeartBeat(null);
 				if ( clientSocket == null ) {
 					clientSocket = newClient;
 					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-					heartBeetTimer = new Timer(500, this::sendHeartBeat);
 					heartBeetTimer.start();
 					appStateManager.connected();
 					log.info("client connected");
@@ -88,12 +87,6 @@ public class EventServer {
 			}
 		}
 	}
-
-	@SuppressWarnings( "UnusedParameters" )
-	public void sendHeartBeat(Object ignored) {
-		sendToClient((byte) 0xff);
-	}
-
 	void sendToClient(byte... bytes) {
 		try {
 			if ( clientSocket != null ) {
