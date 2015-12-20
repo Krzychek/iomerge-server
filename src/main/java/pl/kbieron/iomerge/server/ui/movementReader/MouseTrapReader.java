@@ -59,29 +59,32 @@ public class MouseTrapReader extends JFrame //
 	private Robot robot;
 
 	@PostConstruct
-	private void init() {
-		UIHelper.makeInvisible(this);
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			log.error("failed to create robot: ", e);
-			throw new RuntimeException(e);
-		}
+	private void init() throws AWTException {
+		// set fields
+		robot = new Robot();
+		timer = new Timer(0, this::readMove);
 		movementListener = virtualScreen;
-		// TODO get biggest device
+		// UI stuff
+		UIHelper.makeInvisible(this);
+		reposition();
+		addListeners();
+		// register state observer
+		appStateManager.addObserver(this);
+	}
+
+	private void addListeners() {
+		addKeyListener(virtualScreen);
+		addMouseListener(this);
+		addMouseWheelListener(this);
+	}
+
+	private void reposition() {
 		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
 				.map(screen -> screen.getDefaultConfiguration().getBounds()) //
 				.max((a, b) -> a.x * a.y - b.x * b.y) //
 				.get();
 		setLocation(displayRect.x, displayRect.y);
 		setSize(displayRect.width, displayRect.height);
-		timer = new Timer(0, this::readMove);
-
-		addKeyListener(virtualScreen);
-		addMouseListener(this);
-		addMouseWheelListener(this);
-
-		appStateManager.addObserver(this);
 	}
 
 	synchronized private void readMove(Object ignored) {
