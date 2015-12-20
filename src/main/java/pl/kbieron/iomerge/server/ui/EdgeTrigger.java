@@ -24,13 +24,13 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	@Autowired
 	private AppStateManager appStateManager;
 
-	@ConfigProperty
+	@ConfigProperty( "Edge" )
 	private Edge edge = Edge.LEFT;
 
-	@ConfigProperty
+	@ConfigProperty( "EdgeTriggerOffset" )
 	private Integer offset = 200;
 
-	@ConfigProperty
+	@ConfigProperty( "EdgeTriggerLength" )
 	private Integer length = 500;
 
 	@PostConstruct

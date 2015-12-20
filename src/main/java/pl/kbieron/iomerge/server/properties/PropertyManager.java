@@ -20,8 +20,9 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -48,12 +49,12 @@ public class PropertyManager {
 			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
 
 				Object owner = context.getBean(field.getDeclaringClass());
-				String serialized = properties.getProperty(getPropertyFullName(field, owner));
+				String serialized = properties.getProperty(getPropertyName(field));
 
-				if ( serialized != null && Serializable.class.isAssignableFrom(field.getType()) ) {
-					Object value = deserializeFromBase64String(serialized, field.getType());
+				Optional value = deserializeFromBase64String(serialized, field.getType());
+				if ( value.isPresent() ) {
 					field.setAccessible(true);
-					if ( value != null ) field.set(owner, value);
+					field.set(owner, value.get());
 				}
 			}
 		} catch (IOException | IllegalAccessException e) {
@@ -62,37 +63,29 @@ public class PropertyManager {
 
 	}
 
-	private String getPropertyFullName(Field field, Object owner) {
-		return owner.getClass().getName() + '#' + field.getName();
+	private String getPropertyName(Field field) {
+		String value = field.getAnnotation(ConfigProperty.class).value();
+		return !value.isEmpty() ? value : field.getDeclaringClass().getName() + '#' + field.getName();
 	}
 
-	private Object deserializeFromBase64String(String value, Class<?> type) throws IOException {
-		if ( String.class.equals(type) ) {
-			return value;
-		}
-		if ( Integer.class.equals(type) ) {
-			return Integer.parseInt(value);
-		}
-		if ( Double.class.equals(type) ) {
-			return Double.parseDouble(value);
-		}
+	private Optional deserializeFromBase64String(String value, Class<?> type) throws IOException {
+		if ( value == null ) return Optional.empty();
+		if ( String.class.equals(type) ) return Optional.of(value);
+		if ( Integer.class.equals(type) ) return Optional.of(Integer.parseInt(value));
+		if ( Double.class.equals(type) ) return Optional.of(Double.parseDouble(value));
 		if ( type.isEnum() ) {
-
-			for ( Object o : type.getEnumConstants() ) {
-				if ( o instanceof Enum && ((Enum) o).name().equalsIgnoreCase(value) ) {
-					return o;
-				}
-			}
-			return null;
+			return Arrays.stream(type.getEnumConstants()).map(o -> (Enum) o) //
+					.filter(e -> e.name().equalsIgnoreCase(value)) //
+					.findAny();
 		}
 
 		InputStream base64Stream = new ByteArrayInputStream(value.getBytes());
 		InputStream inputStream = new Base64InputStream(base64Stream);
 		ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 		try {
-			return objectInputStream.readObject();
+			return Optional.of(objectInputStream.readObject());
 		} catch (ClassNotFoundException e) {
-			return null;
+			return Optional.empty();
 		}
 	}
 
@@ -106,7 +99,7 @@ public class PropertyManager {
 				field.setAccessible(true);
 				Object value = field.get(owner);
 				if ( value != null ) {
-					properties.setProperty(getPropertyFullName(field, owner), getSerialized(value));
+					properties.setProperty(getPropertyName(field), getSerialized(value));
 				}
 			}
 

@@ -34,7 +34,7 @@ public class EventServer {
 
 	private ObjectOutputStream clientOutputStream;
 
-	@ConfigProperty
+	@ConfigProperty( "ServerPort" )
 	private Integer port = 7698;
 
 	private Timer heartBeetTimer;
