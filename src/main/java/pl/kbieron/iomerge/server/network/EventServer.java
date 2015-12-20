@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
-import javax.annotation.PostConstruct;
 import javax.swing.Timer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -52,7 +51,6 @@ public class EventServer {
 		}
 	}
 
-	@PostConstruct
 	public void start() throws IOException {
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
