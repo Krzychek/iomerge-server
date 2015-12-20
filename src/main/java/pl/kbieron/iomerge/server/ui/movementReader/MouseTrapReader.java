@@ -26,6 +26,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Arrays;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 
@@ -68,10 +69,12 @@ public class MouseTrapReader extends JFrame //
 		}
 		movementListener = virtualScreen;
 		// TODO get biggest device
-		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDefaultConfiguration().getBounds();
-		setLocation(bounds.x, bounds.y);
-		setSize(bounds.width, bounds.height);
+		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
+				.map(screen -> screen.getDefaultConfiguration().getBounds()) //
+				.max((a, b) -> a.x * a.y - b.x * b.y) //
+				.get();
+		setLocation(displayRect.x, displayRect.y);
+		setSize(displayRect.width, displayRect.height);
 		timer = new Timer(0, this::readMove);
 
 		addKeyListener(virtualScreen);
@@ -156,7 +159,7 @@ public class MouseTrapReader extends JFrame //
 		Point location = getLocation();
 		robot.mouseMove(location.x + getWidth() - 1, location.y + getHeight() - 1);
 
-		location.translate(getHeight() / 2, getWidth() / 2);
+		location.translate(getWidth() / 2, getHeight() / 2);
 		center = location;
 
 		centerPointer();
