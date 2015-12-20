@@ -23,9 +23,9 @@ public class UIHelper {
 
 	public static void makeInvisible(JFrame frame) {
 
+		frame.setUndecorated(true);
 		makeWindowInvisible(frame);
 		setInvisibleContentPane(frame);
-		frame.setUndecorated(true);
 	}
 
 	private static void makeWindowInvisible(Window window) {

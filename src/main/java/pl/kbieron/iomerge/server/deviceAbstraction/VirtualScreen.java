@@ -9,6 +9,7 @@ import pl.kbieron.iomerge.server.network.RemoteActionDispatcher;
 import pl.kbieron.iomerge.server.utilities.Edge;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
+import javax.annotation.PostConstruct;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -20,7 +21,7 @@ public class VirtualScreen implements MovementListener, KeyListener, StateObserv
 
 	private short height = 1000;
 
-	private Edge edge;
+	private Edge edge = Edge.LEFT;
 
 	private short positionX;
 
@@ -32,17 +33,22 @@ public class VirtualScreen implements MovementListener, KeyListener, StateObserv
 	@Autowired
 	private RemoteActionDispatcher actionDispatcher;
 
+	@PostConstruct
+	private void init() {
+		appStateManager.addObserver(this);
+	}
+
 	@Override
 	public void move(int dx, int dy) {
 		positionX += dx;
 		positionY += dy;
 
 		if ( positionY < 0 ) positionY = 0;
-		else if ( positionY < height ) positionY = height;
+		else if ( positionY > height ) positionY = height;
 
 		if ( edge == Edge.LEFT ) {
-			if ( positionX > width ) positionX = width;
-			else if ( positionX < 0 ) appStateManager.exitRemote();
+			if ( positionX < 0 ) positionX = 0;
+			else if ( positionX > width ) appStateManager.exitRemote();
 		} else {
 			if ( positionX < 0 ) appStateManager.exitRemote();
 			else if ( positionX > width ) positionX = width;
@@ -99,8 +105,8 @@ public class VirtualScreen implements MovementListener, KeyListener, StateObserv
 
 	@Override
 	public void update(AppStateManager appStateManager) {
-		if ( appStateManager.getStateType() == StateType.ON_REMOTE ) {
-			enter(appStateManager.getEnterPosition());
+		if ( appStateManager.getStateChange() == StateType.ON_REMOTE ) {
+			enter(appStateManager.getPosition());
 		}
 	}
 

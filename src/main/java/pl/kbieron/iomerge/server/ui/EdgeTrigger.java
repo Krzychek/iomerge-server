@@ -17,6 +17,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 
 @Component
@@ -25,7 +26,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	private final Log log = LogFactory.getLog(EdgeTrigger.class);
 
 	@Autowired
-	private AppStateManager appAppStateManager;
+	private AppStateManager appStateManager;
 
 	private Edge edge = Edge.LEFT;
 
@@ -41,9 +42,10 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent mouseEvent) {
-				appAppStateManager.enterRemoteScreen(mouseEvent.getY() / getHeight());
+				appStateManager.enterRemoteScreen(mouseEvent.getY() / getHeight());
 			}
 		});
+		appStateManager.addObserver(this);
 	}
 
 	public EdgeTrigger setEdge(Edge edge) {
@@ -63,26 +65,40 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 
 	@Override
 	public void update(AppStateManager appStateManager) {
-		setVisible(StateType.CONNECTED == appStateManager.getStateType());
+		setVisible(StateType.CONNECTED == appStateManager.getStateChange());
 	}
 
 	@Override
 	public void setVisible(boolean visible) {
-		if ( !isVisible() ) reposition();
+		if ( isVisible() ) return;
+		reposition();
 		setBackground(Color.BLUE);
 		super.setVisible(visible);
 	}
 
 	public void reposition() {
-		Rectangle displayRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDefaultConfiguration().getBounds();
-
-		setSize(1, length);
 		if ( edge == Edge.LEFT ) {
+
+			Rectangle displayRect = Arrays
+					.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
+					.map(screen -> screen.getDefaultConfiguration().getBounds()) //
+					.min((a, b) -> a.x - b.x) //
+					.get();
+
 			setLocation(displayRect.x, displayRect.y + offset);
+
 		} else {
+
+			Rectangle displayRect = Arrays
+					.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
+					.map(screen -> screen.getDefaultConfiguration().getBounds()) //
+					.max((a, b) -> a.x - b.x) //
+					.get();
+
 			setLocation(displayRect.x + displayRect.width - getWidth(), displayRect.y + offset);
 		}
+
+		setSize(1, length);
 	}
 
 }

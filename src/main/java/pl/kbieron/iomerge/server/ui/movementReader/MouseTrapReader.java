@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
+import pl.kbieron.iomerge.server.appState.StateObserver;
 import pl.kbieron.iomerge.server.appState.StateType;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
@@ -30,8 +31,8 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends JFrame implements MovementReader, MouseListener, MouseMotionListener,
-		MouseWheelListener {
+public class MouseTrapReader extends JFrame //
+		implements MouseListener, MouseMotionListener, MouseWheelListener, StateObserver {
 
 	private final Log log = LogFactory.getLog(MouseTrapReader.class);
 
@@ -47,6 +48,9 @@ public class MouseTrapReader extends JFrame implements MovementReader, MouseList
 
 	@Autowired
 	private VirtualScreen virtualScreen;
+
+	@Autowired
+	private AppStateManager appStateManager;
 
 	@Autowired
 	private GestureRecorder gestureRecorder;
@@ -73,6 +77,8 @@ public class MouseTrapReader extends JFrame implements MovementReader, MouseList
 		addKeyListener(virtualScreen);
 		addMouseListener(this);
 		addMouseWheelListener(this);
+
+		appStateManager.addObserver(this);
 	}
 
 	synchronized private void readMove(Object ignored) {
@@ -134,13 +140,12 @@ public class MouseTrapReader extends JFrame implements MovementReader, MouseList
 	}
 
 	@Override
-	public void update(AppStateManager appStateManager) {
-		if ( appStateManager.getStateType() == StateType.ON_REMOTE ) startReading();
+	public synchronized void update(AppStateManager appStateManager) {
+		if ( appStateManager.getStateChange() == StateType.ON_REMOTE ) startReading();
 		else stopReading();
 	}
 
-	@Override
-	synchronized public void startReading() {
+	private void startReading() {
 		if ( reading ) return;
 		reading = true;
 
@@ -159,13 +164,12 @@ public class MouseTrapReader extends JFrame implements MovementReader, MouseList
 		timer.start();
 	}
 
-	@Override
-	synchronized public void stopReading() {
+	private void stopReading() {
 		if ( !reading ) return;
+		reading = false;
 		timer.stop();
 		restoreMouseLocation();
 		setVisible(false);
-		reading = false;
 	}
 
 	private void restoreMouseLocation() {

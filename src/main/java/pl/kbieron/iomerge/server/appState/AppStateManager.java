@@ -3,52 +3,45 @@ package pl.kbieron.iomerge.server.appState;
 import org.springframework.stereotype.Component;
 
 import java.util.Observable;
-import java.util.Observer;
 
 
 @Component
 public class AppStateManager extends Observable {
 
-	private StateType stateType;
+	private StateType stateChange;
 
-	private double enterPosition;
+	private double position;
 
-	public void enterRemoteScreen(double enterPosition) {
-		this.enterPosition = enterPosition;
-		stateType = StateType.ON_REMOTE;
-		setChanged();
-		notifyObservers();
+	public synchronized void enterRemoteScreen(double enterPosition) {
+		this.position = enterPosition;
+		setNewState(StateType.ON_REMOTE);
 	}
 
-	public void exitRemote() {
-		stateType = StateType.CONNECTED;
-		setChanged();
-		notifyObservers();
+	public synchronized void exitRemote() {
+		setNewState(StateType.CONNECTED);
 	}
 
-	public StateType getStateType() {
-		return stateType;
+	public synchronized StateType getStateChange() {
+		return stateChange;
 	}
 
-	public double getEnterPosition() {
-		return enterPosition;
+	public synchronized double getPosition() {
+		return position;
 	}
 
-	public void addObservers(Observer... observers) {
-		for ( Observer observer : observers ) {
-			addObserver(observer);
+	public synchronized void connected() {
+		setNewState(StateType.CONNECTED);
+	}
+
+	public synchronized void disconnected() {
+		setNewState(StateType.DISCONNECTED);
+	}
+
+	private void setNewState(StateType newState) {
+		if ( stateChange != newState ) {
+			stateChange = newState;
+			setChanged();
+			notifyObservers();
 		}
-	}
-
-	public void connected() {
-		stateType = StateType.CONNECTED;
-		setChanged();
-		notifyObservers();
-	}
-
-	public void disconnected() {
-		stateType = StateType.DISCONNECTED;
-		setChanged();
-		notifyObservers();
 	}
 }
