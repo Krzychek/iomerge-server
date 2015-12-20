@@ -68,8 +68,7 @@ public class GestureRecorder implements MovementListener {
 					match.getPattern().getName(), //
 					(int) (match.getProbability() * 100)));
 		} else {
-			log.info("Gesture too short, exiting remote");
-			appStateManager.exitRemote();
+			log.info("Gesture too short");
 		}
 		inputBuilder = null;
 	}

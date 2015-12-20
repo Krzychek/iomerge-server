@@ -87,14 +87,10 @@ public class EventServer {
 	private void startReading() {
 		try {
 			ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-			byte[] msg;
+			//noinspection InfiniteLoopStatement
 			while ( true ) {
 				try {
-					msg = (byte[]) objectInputStream.readObject();
-
-					if ( msg != null ) {
-						msgProcessor.process(msg);
-					} else break;
+					msgProcessor.process((byte[]) objectInputStream.readObject());
 				} catch (ClassNotFoundException e) {
 					log.warn(e);
 				}
