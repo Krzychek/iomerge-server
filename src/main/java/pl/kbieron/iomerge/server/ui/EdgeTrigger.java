@@ -48,21 +48,6 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		appStateManager.addObserver(this);
 	}
 
-	public EdgeTrigger setEdge(Edge edge) {
-		this.edge = edge;
-		return this;
-	}
-
-	public EdgeTrigger setOffset(int offset) {
-		this.offset = offset;
-		return this;
-	}
-
-	public EdgeTrigger setLength(int length) {
-		this.length = length;
-		return this;
-	}
-
 	@Override
 	public void update(AppStateManager appStateManager) {
 		setVisible(StateType.CONNECTED == appStateManager.getStateChange());
@@ -70,7 +55,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 
 	@Override
 	public void setVisible(boolean visible) {
-		if ( isVisible() ) return;
+		if ( visible && isVisible() ) return;
 		reposition();
 		setBackground(Color.BLUE);
 		super.setVisible(visible);
