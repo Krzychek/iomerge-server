@@ -8,6 +8,7 @@ import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.appState.StateObserver;
 import pl.kbieron.iomerge.server.appState.StateType;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
+import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
 import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +17,6 @@ import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 
@@ -40,12 +39,10 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	@PostConstruct
 	private void init() {
 		UIHelper.makeInvisible(this);
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent mouseEvent) {
-				appStateManager.enterRemoteScreen(mouseEvent.getY() / getHeight());
-			}
-		});
+
+		addMouseListener((MouseEnteredAdapter) event //
+				-> appStateManager.enterRemoteScreen(event.getY() / getHeight()));
+
 		appStateManager.addObserver(this);
 	}
 
