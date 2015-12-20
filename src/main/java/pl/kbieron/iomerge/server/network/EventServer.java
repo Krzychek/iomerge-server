@@ -36,7 +36,7 @@ public class EventServer {
 	private ObjectOutputStream clientOutputStream;
 
 	@ConfigProperty
-	private int port = 7698;
+	private Integer port = 7698;
 
 	private Timer heartBeetTimer;
 
@@ -53,7 +53,7 @@ public class EventServer {
 	}
 
 	@PostConstruct
-	private void bind() throws IOException {
+	public void start() throws IOException {
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));

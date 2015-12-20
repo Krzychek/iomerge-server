@@ -19,7 +19,7 @@ public class AppStateManager extends Observable {
 	}
 
 	public synchronized void exitRemote() {
-		setNewState(StateType.CONNECTED);
+		setNewState(StateType.ON_LOCAL);
 	}
 
 	public synchronized StateType getStateChange() {
@@ -27,7 +27,7 @@ public class AppStateManager extends Observable {
 	}
 
 	public synchronized void connected() {
-		setNewState(StateType.CONNECTED);
+		setNewState(StateType.ON_LOCAL);
 	}
 
 	public synchronized void disconnected() {

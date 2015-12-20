@@ -24,6 +24,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	@Autowired
 	private AppStateManager appStateManager;
 
+	@ConfigProperty
 	private Edge edge = Edge.LEFT;
 
 	@ConfigProperty
@@ -44,7 +45,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 
 	@Override
 	public void update(AppStateManager appStateManager) {
-		boolean visible = StateType.CONNECTED == appStateManager.getStateChange();
+		boolean visible = StateType.ON_LOCAL == appStateManager.getStateChange();
 		if ( !visible ) {
 			setVisible(false);
 		} else {

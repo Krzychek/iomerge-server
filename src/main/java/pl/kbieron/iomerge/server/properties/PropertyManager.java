@@ -2,11 +2,15 @@ package pl.kbieron.iomerge.server.properties;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -24,29 +28,36 @@ import java.util.Properties;
 @Component
 public class PropertyManager {
 
+	private final Log log = LogFactory.getLog(PropertyManager.class);
+
 	@Autowired
 	private ApplicationContext context;
 
-	public void readPropertiesFromFile(String fileName) throws IOException {
-		Reflections reflections = new Reflections("pl.kbieron.iomerge.server");
+	private Reflections reflections;
 
+	@PostConstruct
+	private void init() {
+		reflections = new Reflections("pl.kbieron.iomerge.server", new FieldAnnotationsScanner());
+	}
+
+	public void readPropertiesFromFile(String fileName) {
 		Properties properties = new Properties();
 		try ( FileInputStream propertiesFile = new FileInputStream(fileName) ) {
 			properties.load(propertiesFile);
-		}
 
-		for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
+			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
 
-			Object owner = context.getBean(field.getDeclaringClass());
-			String value = properties.getProperty(getPropertyFullName(field, owner));
+				Object owner = context.getBean(field.getDeclaringClass());
+				String serialized = properties.getProperty(getPropertyFullName(field, owner));
 
-			if ( Serializable.class.isAssignableFrom(field.getDeclaringClass()) ) {
-				field.setAccessible(true);
-
-				try {
-					field.set(owner, deserializeFromBase64String(value));
-				} catch (IllegalAccessException ignored) {}
+				if ( serialized != null && Serializable.class.isAssignableFrom(field.getType()) ) {
+					Object value = deserializeFromBase64String(serialized, field.getType());
+					field.setAccessible(true);
+					if ( value != null ) field.set(owner, value);
+				}
 			}
+		} catch (IOException | IllegalAccessException e) {
+			log.warn(e);
 		}
 
 	}
@@ -55,8 +66,27 @@ public class PropertyManager {
 		return owner.getClass().getName() + '#' + field.getName();
 	}
 
-	private Object deserializeFromBase64String(String string) throws IOException {
-		InputStream base64Stream = new ByteArrayInputStream(string.getBytes());
+	private Object deserializeFromBase64String(String value, Class<?> type) throws IOException {
+		if ( String.class.equals(type) ) {
+			return value;
+		}
+		if ( Integer.class.equals(type) ) {
+			return Integer.parseInt(value);
+		}
+		if ( Double.class.equals(type) ) {
+			return Double.parseDouble(value);
+		}
+		if ( type.isEnum() ) {
+
+			for ( Object o : type.getEnumConstants() ) {
+				if ( o instanceof Enum && ((Enum) o).name().equalsIgnoreCase(value) ) {
+					return o;
+				}
+			}
+			return null;
+		}
+
+		InputStream base64Stream = new ByteArrayInputStream(value.getBytes());
 		InputStream inputStream = new Base64InputStream(base64Stream);
 		ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 		try {
@@ -66,28 +96,38 @@ public class PropertyManager {
 		}
 	}
 
-	public void savePropertiesToFile(String fileName) throws IOException {
-		Properties properties = new Properties();
+	public void savePropertiesToFile(String fileName) {
+		try ( FileOutputStream propertiesFile = new FileOutputStream(fileName) ) {
+			Properties properties = new Properties();
 
-		Reflections reflections = new Reflections("pl.kbieron.iomerge.server");
-		for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
+			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
 
-			Object owner = context.getBean(field.getDeclaringClass());
-			field.setAccessible(true);
-			try {
+				Object owner = context.getBean(field.getDeclaringClass());
+				field.setAccessible(true);
 				Object value = field.get(owner);
 				if ( value != null ) {
-					properties.setProperty(getPropertyFullName(field, owner), serializeToBase64String(value));
+					properties.setProperty(getPropertyFullName(field, owner), getSerialized(value));
 				}
-			} catch (IllegalAccessException ignored) {}
-		}
+			}
 
-		FileOutputStream propertiesFile = new FileOutputStream(fileName);
-		properties.store(propertiesFile, "comment");
-		propertiesFile.close();
+			properties.store(propertiesFile, "IOMerge properties");
+			propertiesFile.close();
+		} catch (IOException | IllegalAccessException e) {
+			log.error(e);
+		}
 	}
 
-	private String serializeToBase64String(Object obj) throws IOException {
+	private String getSerialized(Object obj) throws IOException {
+		if ( obj instanceof String ) {
+			return (String) obj;
+		}
+		if ( obj instanceof Integer || obj instanceof Double ) {
+			return obj.toString();
+		}
+		if ( obj.getClass().isEnum() ) {
+			return ((Enum) obj).name();
+		}
+
 		OutputStream byteStream = new ByteArrayOutputStream();
 		OutputStream base64Stream = new Base64OutputStream(byteStream);
 		ObjectOutputStream outputStream = new ObjectOutputStream(base64Stream);
