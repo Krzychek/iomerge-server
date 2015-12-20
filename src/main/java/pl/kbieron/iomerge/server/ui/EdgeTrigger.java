@@ -1,7 +1,5 @@
 package pl.kbieron.iomerge.server.ui;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -23,8 +21,6 @@ import java.util.Arrays;
 @Component
 public class EdgeTrigger extends JWindow implements StateObserver {
 
-	private final Log log = LogFactory.getLog(EdgeTrigger.class);
-
 	@Autowired
 	private AppStateManager appStateManager;
 
@@ -41,7 +37,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		UIHelper.makeInvisible(this);
 
 		addMouseListener((MouseEnteredAdapter) event //
-				-> appStateManager.enterRemoteScreen(event.getY() / getHeight()));
+				-> appStateManager.enterRemoteScreen());
 
 		appStateManager.addObserver(this);
 	}
@@ -66,7 +62,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		super.setVisible(visible);
 	}
 
-	public void reposition() {
+	private void reposition() {
 		if ( edge == Edge.LEFT ) {
 
 			Rectangle displayRect = Arrays

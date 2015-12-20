@@ -6,9 +6,9 @@ import java.util.List;
 
 class MeanDistances {
 
-	public double euclidean;
+	public final double euclidean;
 
-	public double turningAngle;
+	public final double turningAngle;
 
 	private MeanDistances(double euclidean, double turningAngle) {
 		this.euclidean = euclidean;

@@ -25,9 +25,9 @@ public class TemplateMatcher {
 
 	public static class MatchResult implements Comparable<MatchResult> {
 
-		private double probability;
+		private final double probability;
 
-		private Pattern pattern;
+		private final Pattern pattern;
 
 		public MatchResult(Pattern pattern, double probability) {
 			this.pattern = pattern;

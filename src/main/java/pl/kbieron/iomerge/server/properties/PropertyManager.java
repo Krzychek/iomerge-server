@@ -55,7 +55,7 @@ public class PropertyManager {
 		return owner.getClass().getName() + '#' + field.getName();
 	}
 
-	public Object deserializeFromBase64String(String string) throws IOException {
+	private Object deserializeFromBase64String(String string) throws IOException {
 		InputStream base64Stream = new ByteArrayInputStream(string.getBytes());
 		InputStream inputStream = new Base64InputStream(base64Stream);
 		ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
@@ -87,7 +87,7 @@ public class PropertyManager {
 		propertiesFile.close();
 	}
 
-	public String serializeToBase64String(Object obj) throws IOException {
+	private String serializeToBase64String(Object obj) throws IOException {
 		OutputStream byteStream = new ByteArrayOutputStream();
 		OutputStream base64Stream = new Base64OutputStream(byteStream);
 		ObjectOutputStream outputStream = new ObjectOutputStream(base64Stream);

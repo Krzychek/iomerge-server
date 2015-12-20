@@ -1,7 +1,5 @@
 package pl.kbieron.iomerge.server.ui.movementReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -34,8 +32,6 @@ import static java.awt.event.MouseEvent.BUTTON3;
 @Component
 public class MouseTrapReader extends JFrame //
 		implements MouseListener, MouseMotionListener, MouseWheelListener, StateObserver {
-
-	private final Log log = LogFactory.getLog(MouseTrapReader.class);
 
 	private Point center;
 
@@ -87,6 +83,7 @@ public class MouseTrapReader extends JFrame //
 		setSize(displayRect.width, displayRect.height);
 	}
 
+	@SuppressWarnings( "UnusedParameters" )
 	synchronized private void readMove(Object ignored) {
 		if ( !reading ) return;
 		Point move = MouseInfo.getPointerInfo().getLocation();

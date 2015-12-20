@@ -10,9 +10,9 @@ import java.util.List;
 import static pl.kbieron.iomerge.server.gesture.Constants.MIN_POINTS;
 
 
-public class Input implements Template, Serializable {
+public class Input implements Serializable {
 
-	private List<Point> points;
+	private final List<Point> points;
 
 	private Input(List<Point> points) {
 		this.points = points;
@@ -22,19 +22,13 @@ public class Input implements Template, Serializable {
 		return new Builder().withNormalizer(normalizer);
 	}
 
-	@Override
 	public List<Point> getPoints() {
 		return points;
 	}
 
-	@Override
-	public int size() {
-		return points.size();
-	}
-
 	public static class Builder {
 
-		private List<Point> pointList = new LinkedList<>();
+		private final List<Point> pointList = new LinkedList<>();
 
 		private Point lastPoint = new Point(0, 0);
 

@@ -8,8 +8,6 @@ public interface Constants {
 
 	double LAMBDA = 0.4;
 
-	double DEFAULT_KAPPA = 1.0;
-
 	double NORM_SIZE = 1000;
 
 	int NORM_LENGTH = 20;

@@ -4,13 +4,13 @@ import java.awt.Point;
 import java.util.List;
 
 
-public class Pattern implements Template {
+public class Pattern {
 
-	List<Point> points;
+	private final List<Point> points;
 
-	private byte action;
+	private final byte action;
 
-	private String name;
+	private final String name;
 
 	public Pattern(List<Point> points, byte action, String name) {
 		this.points = points;
@@ -18,14 +18,8 @@ public class Pattern implements Template {
 		this.name = name;
 	}
 
-	@Override
 	public List<Point> getPoints() {
 		return points;
-	}
-
-	@Override
-	public int size() {
-		return points.size();
 	}
 
 	public byte getAction() {

@@ -1,6 +1,5 @@
 package pl.kbieron.iomerge.server.gesture.calc;
 
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.springframework.stereotype.Component;
 
 import java.awt.Point;
@@ -16,8 +15,6 @@ import static pl.kbieron.iomerge.server.gesture.Constants.NORM_SIZE;
 
 @Component
 public class Normalizer {
-
-	private static SplineInterpolator splineInterpolator = new SplineInterpolator();
 
 	public List<Point> normalize(List<Point> points) {
 		if ( points.size() < MIN_POINTS ) throw new IllegalArgumentException("too few points provided");
