@@ -3,7 +3,7 @@ package pl.kbieron.iomerge.server.deviceAbstraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.network.RemoteActionDispatcher;
+import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import java.awt.event.KeyEvent;
@@ -17,7 +17,7 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	private AppStateManager appStateManager;
 
 	@Autowired
-	private RemoteActionDispatcher actionDispatcher;
+	private RemoteMsgDispatcher actionDispatcher;
 
 	@Override
 	public void move(int dx, int dy) {

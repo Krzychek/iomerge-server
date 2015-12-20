@@ -8,7 +8,7 @@ import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
-import pl.kbieron.iomerge.server.network.EventServer;
+import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import javax.swing.Timer;
@@ -23,7 +23,7 @@ public class GestureRecorder implements MovementListener {
 	private TemplateMatcher templateMatcher;
 
 	@Autowired
-	private EventServer eventServer;
+	private RemoteMsgDispatcher remoteMsgDispatcher;
 
 	@Autowired
 	private Normalizer normalizer;
@@ -61,7 +61,7 @@ public class GestureRecorder implements MovementListener {
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
 
 			if ( match.getProbability() > Constants.PROB_THRESHOLD ) {
-				eventServer.sendToClient(match.getPattern().getAction());
+				remoteMsgDispatcher.dispatchCustomMsg(match.getPattern().getAction());
 			}
 
 			log.info(String.format("Best gesture match: %s at %2d%%", //

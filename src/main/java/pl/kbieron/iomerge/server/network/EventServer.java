@@ -94,7 +94,7 @@ public class EventServer {
 		sendToClient((byte) 0xff);
 	}
 
-	public void sendToClient(byte... bytes) {
+	void sendToClient(byte... bytes) {
 		try {
 			if ( clientSocket != null ) {
 				clientOutputStream.writeObject(bytes);
