@@ -10,6 +10,7 @@ import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import javax.annotation.PostConstruct;
 import javax.swing.Timer;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -23,7 +24,10 @@ public class EventServer {
 	private final Log log = LogFactory.getLog(EventServer.class);
 
 	@Autowired
-	AppStateManager appStateManager;
+	private AppStateManager appStateManager;
+
+	@Autowired
+	private RemoteMsgProcessor msgProcessor;
 
 	private ServerSocket serverSocket;
 
@@ -35,15 +39,6 @@ public class EventServer {
 	private int port = 7698;
 
 	private Timer heartBeetTimer;
-
-	public void close() {
-		disconnectClient();
-		try {
-			serverSocket.close();
-		} catch (IOException e) {
-			log.error(e);
-		}
-	}
 
 	private void disconnectClient() {
 		heartBeetTimer.stop();
@@ -58,7 +53,7 @@ public class EventServer {
 	}
 
 	@PostConstruct
-	public void bind() throws IOException {
+	private void bind() throws IOException {
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
@@ -77,6 +72,7 @@ public class EventServer {
 					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 					heartBeetTimer.start();
 					appStateManager.connected();
+					startReading();
 					log.info("client connected");
 				} else {
 					newClient.close();
@@ -87,6 +83,27 @@ public class EventServer {
 			}
 		}
 	}
+
+	private void startReading() {
+		try {
+			ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+			byte[] msg;
+			while ( true ) {
+				try {
+					msg = (byte[]) objectInputStream.readObject();
+
+					if ( msg != null ) {
+						msgProcessor.process(msg);
+					} else break;
+				} catch (ClassNotFoundException e) {
+					log.warn(e);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	void sendToClient(byte... bytes) {
 		try {
 			if ( clientSocket != null ) {
