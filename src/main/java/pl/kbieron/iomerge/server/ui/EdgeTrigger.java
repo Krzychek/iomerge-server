@@ -12,7 +12,6 @@ import pl.kbieron.iomerge.server.utilities.Edge;
 import javax.annotation.PostConstruct;
 import javax.swing.JWindow;
 import javax.swing.Timer;
-import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.Arrays;
@@ -37,10 +36,7 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	private void init() {
 		UIHelper.makeInvisible(this);
 
-		addMouseListener((MouseEnteredAdapter) event //
-				-> appStateManager.enterRemoteScreen());
-
-		appStateManager.addObserver(this);
+		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen());
 	}
 
 	@Override
@@ -59,7 +55,6 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 	public void setVisible(boolean visible) {
 		if ( visible && isVisible() ) return;
 		reposition();
-		setBackground(Color.BLUE);
 		super.setVisible(visible);
 	}
 

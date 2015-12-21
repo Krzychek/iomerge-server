@@ -47,9 +47,6 @@ public class MouseTrapReader extends JFrame //
 	private VirtualScreen virtualScreen;
 
 	@Autowired
-	private AppStateManager appStateManager;
-
-	@Autowired
 	private GestureRecorder gestureRecorder;
 
 	private Robot robot;
@@ -64,8 +61,6 @@ public class MouseTrapReader extends JFrame //
 		UIHelper.makeInvisible(this);
 		reposition();
 		addListeners();
-		// register state observer
-		appStateManager.addObserver(this);
 	}
 
 	private void addListeners() {
