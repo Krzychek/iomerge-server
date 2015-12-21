@@ -1,10 +1,11 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.appState.StateObserver;
-import pl.kbieron.iomerge.server.appState.StateType;
+import pl.kbieron.iomerge.server.appState.AppStateUpdateEvent;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
 import pl.kbieron.iomerge.server.utilities.Edge;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 
 
 @Component
-public class EdgeTrigger extends JWindow implements StateObserver {
+public class EdgeTrigger extends JWindow implements ApplicationListener<AppStateUpdateEvent> {
 
 	@Autowired
 	private AppStateManager appStateManager;
@@ -37,18 +38,6 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		UIHelper.makeInvisible(this);
 
 		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen());
-	}
-
-	@Override
-	public void update(AppStateManager appStateManager) {
-		boolean visible = StateType.ON_LOCAL == appStateManager.getStateChange();
-		if ( !visible ) {
-			setVisible(false);
-		} else {
-			Timer timer = new Timer(500, actionEvent -> setVisible(true));
-			timer.setRepeats(false);
-			timer.start();
-		}
 	}
 
 	@Override
@@ -83,4 +72,15 @@ public class EdgeTrigger extends JWindow implements StateObserver {
 		setSize(1, length);
 	}
 
+	@Override
+	public void onApplicationEvent(AppStateUpdateEvent appStateUpdateEvent) {
+		boolean visible = AppState.ON_LOCAL == appStateUpdateEvent.getStateChange();
+		if ( !visible ) {
+			setVisible(false);
+		} else {
+			Timer timer = new Timer(500, actionEvent -> setVisible(true));
+			timer.setRepeats(false);
+			timer.start();
+		}
+	}
 }

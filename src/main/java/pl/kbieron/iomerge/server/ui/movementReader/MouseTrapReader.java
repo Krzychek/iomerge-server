@@ -1,10 +1,10 @@
 package pl.kbieron.iomerge.server.ui.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.appState.StateObserver;
-import pl.kbieron.iomerge.server.appState.StateType;
+import pl.kbieron.iomerge.server.appState.AppState;
+import pl.kbieron.iomerge.server.appState.AppStateUpdateEvent;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 import pl.kbieron.iomerge.server.ui.UIHelper;
@@ -31,7 +31,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 @Component
 public class MouseTrapReader extends JFrame //
-		implements MouseListener, MouseMotionListener, MouseWheelListener, StateObserver {
+		implements MouseListener, MouseMotionListener, MouseWheelListener, ApplicationListener<AppStateUpdateEvent> {
 
 	private Point center;
 
@@ -137,12 +137,6 @@ public class MouseTrapReader extends JFrame //
 
 	}
 
-	@Override
-	public synchronized void update(AppStateManager appStateManager) {
-		if ( appStateManager.getStateChange() == StateType.ON_REMOTE ) startReading();
-		else stopReading();
-	}
-
 	private void startReading() {
 		if ( reading ) return;
 		reading = true;
@@ -172,5 +166,11 @@ public class MouseTrapReader extends JFrame //
 
 	private void restoreMouseLocation() {
 		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
+	}
+
+	@Override
+	public void onApplicationEvent(AppStateUpdateEvent appStateUpdateEvent) {
+		if ( AppState.ON_REMOTE == appStateUpdateEvent.getStateChange() ) startReading();
+		else stopReading();
 	}
 }
