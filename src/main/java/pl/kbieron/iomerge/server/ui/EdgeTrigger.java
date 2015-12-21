@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.appState.AppStateUpdateEvent;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
 import pl.kbieron.iomerge.server.utilities.Edge;
@@ -19,7 +18,7 @@ import java.util.Arrays;
 
 
 @Component
-public class EdgeTrigger extends JWindow implements ApplicationListener<AppStateUpdateEvent> {
+public class EdgeTrigger extends JWindow implements ApplicationListener<AppState.UpdateEvent> {
 
 	@Autowired
 	private AppStateManager appStateManager;
@@ -73,7 +72,7 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 	}
 
 	@Override
-	public void onApplicationEvent(AppStateUpdateEvent appStateUpdateEvent) {
+	public void onApplicationEvent(AppState.UpdateEvent appStateUpdateEvent) {
 		boolean visible = AppState.ON_LOCAL == appStateUpdateEvent.getStateChange();
 		if ( !visible ) {
 			setVisible(false);
