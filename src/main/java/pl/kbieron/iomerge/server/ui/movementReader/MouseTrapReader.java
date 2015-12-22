@@ -58,6 +58,7 @@ public class MouseTrapReader extends JFrame //
 		movementListener = virtualScreen;
 		// UI stuff
 		UIHelper.makeInvisible(this);
+		setAutoRequestFocus(true);
 		reposition();
 		addListeners();
 	}
@@ -90,9 +91,7 @@ public class MouseTrapReader extends JFrame //
 	}
 
 	private void centerPointer() {
-		if ( reading ) {
-			robot.mouseMove(center.x, center.y);
-		}
+		robot.mouseMove(center.x, center.y);
 	}
 
 	@Override
@@ -136,7 +135,7 @@ public class MouseTrapReader extends JFrame //
 
 	}
 
-	private void startReading() {
+	synchronized private void startReading() {
 		if ( reading ) return;
 		reading = true;
 
@@ -155,7 +154,7 @@ public class MouseTrapReader extends JFrame //
 		timer.start();
 	}
 
-	private void stopReading() {
+	synchronized private void stopReading() {
 		if ( !reading ) return;
 		reading = false;
 		timer.stop();
