@@ -43,10 +43,10 @@ public class EventServer {
 		heartBeetTimer.stop();
 		try {
 			clientSocket.close();
-			clientSocket = null;
 		} catch (IOException e) {
 			log.error(e);
 		} finally {
+			clientSocket = null;
 			appStateManager.disconnected();
 		}
 	}
@@ -66,35 +66,37 @@ public class EventServer {
 			try {
 				Socket newClient = serverSocket.accept();
 				if ( clientSocket == null ) {
-					clientSocket = newClient;
-					clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-					heartBeetTimer.start();
-					appStateManager.connected();
-					startReading();
+					setupClientSocket(newClient);
 					log.info("client connected");
+					startReading();
 				} else {
 					newClient.close();
 					log.warn("another client, closing connection");
 				}
+			} catch (SocketException e) {
+				disconnectClient();
 			} catch (IOException e) {
 				log.error(e);
 			}
 		}
 	}
 
-	private void startReading() {
-		try {
-			ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-			//noinspection InfiniteLoopStatement
-			while ( true ) {
-				try {
-					msgProcessor.process((byte[]) objectInputStream.readObject());
-				} catch (ClassNotFoundException e) {
-					log.warn(e);
-				}
+	private void setupClientSocket(Socket newClient) throws IOException {
+		clientSocket = newClient;
+		clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+		heartBeetTimer.start();
+		appStateManager.connected();
+	}
+
+	private void startReading() throws IOException {
+		ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+		//noinspection InfiniteLoopStatement
+		while ( true ) {
+			try {
+				msgProcessor.process((byte[]) objectInputStream.readObject());
+			} catch (ClassNotFoundException e) {
+				log.warn(e);
 			}
-		} catch (IOException e) {
-			log.error(e);
 		}
 	}
 
