@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.appState;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppStateManager implements ApplicationEventPublisherAware {
 
-	private final Log log = LogFactory.getLog(AppStateManager.class);
+	private final Logger log = Logger.getLogger(AppStateManager.class);
 
 	private AppState state;
 
@@ -34,7 +33,7 @@ public class AppStateManager implements ApplicationEventPublisherAware {
 
 	private void setNewState(AppState newState) {
 		if ( state != newState ) {
-			log.info("state change:" + state + " to:" + newState);
+			log.info("state: " + newState);
 			state = newState;
 			eventPublisher.publishEvent(newState.getUpdateEvent());
 		}

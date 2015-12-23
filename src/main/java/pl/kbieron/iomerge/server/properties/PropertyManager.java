@@ -2,8 +2,7 @@ package pl.kbieron.iomerge.server.properties;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import java.util.Properties;
 @Component
 public class PropertyManager {
 
-	private final Log log = LogFactory.getLog(PropertyManager.class);
+	private final Logger log = Logger.getLogger(PropertyManager.class);
 
 	@Autowired
 	private ApplicationContext context;

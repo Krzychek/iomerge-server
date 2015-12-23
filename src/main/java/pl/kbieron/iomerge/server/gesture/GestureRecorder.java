@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.gesture;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -17,7 +16,7 @@ import javax.swing.Timer;
 @Component
 public class GestureRecorder implements MovementListener {
 
-	private final Log log = LogFactory.getLog(MovementListener.class);
+	private final Logger log = Logger.getLogger(MovementListener.class);
 
 	@Autowired
 	private TemplateMatcher templateMatcher;

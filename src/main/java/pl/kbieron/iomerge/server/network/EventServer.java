@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -20,7 +19,7 @@ import java.net.SocketException;
 @Component
 public class EventServer {
 
-	private final Log log = LogFactory.getLog(EventServer.class);
+	private final Logger log = Logger.getLogger(EventServer.class);
 
 	@Autowired
 	private AppStateManager appStateManager;
@@ -44,11 +43,16 @@ public class EventServer {
 		try {
 			clientSocket.close();
 		} catch (IOException e) {
-			log.error(e);
-		} finally {
-			clientSocket = null;
-			appStateManager.disconnected();
+			log.warn(e);
 		}
+		try {
+			clientOutputStream.close();
+		} catch (IOException e) {
+			log.warn(e);
+		}
+		clientSocket = null;
+		clientOutputStream = null;
+		appStateManager.disconnected();
 	}
 
 	public void start() throws IOException {
@@ -74,6 +78,7 @@ public class EventServer {
 					log.warn("another client, closing connection");
 				}
 			} catch (SocketException e) {
+				log.debug(e);
 				disconnectClient();
 			} catch (IOException e) {
 				log.error(e);
@@ -102,10 +107,11 @@ public class EventServer {
 
 	void sendToClient(byte... bytes) {
 		try {
-			if ( clientSocket != null ) {
+			if ( clientOutputStream != null ) {
 				clientOutputStream.writeObject(bytes);
 			}
 		} catch (SocketException e) {
+			log.debug(e);
 			disconnectClient();
 		} catch (IOException e) {
 			log.error(e);
