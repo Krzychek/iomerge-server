@@ -27,10 +27,10 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 	private Edge edge = Edge.LEFT;
 
 	@ConfigProperty( "EdgeTriggerOffset" )
-	private Integer offset = 200;
+	private int offset = 200;
 
 	@ConfigProperty( "EdgeTriggerLength" )
-	private Integer length = 500;
+	private int length = 500;
 
 	@PostConstruct
 	private void init() {

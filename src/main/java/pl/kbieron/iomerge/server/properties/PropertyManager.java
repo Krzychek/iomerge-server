@@ -70,8 +70,8 @@ public class PropertyManager {
 	private Optional deserializeFromBase64String(String value, Class<?> type) throws IOException {
 		if ( value == null ) return Optional.empty();
 		if ( String.class.equals(type) ) return Optional.of(value);
-		if ( Integer.class.equals(type) ) return Optional.of(Integer.parseInt(value));
-		if ( Double.class.equals(type) ) return Optional.of(Double.parseDouble(value));
+		if ( Integer.class.equals(type) || int.class.equals(type) ) return Optional.of(Integer.parseInt(value));
+		if ( Double.class.equals(type) || double.class.equals(type) ) return Optional.of(Double.parseDouble(value));
 		if ( type.isEnum() ) {
 			return Arrays.stream(type.getEnumConstants()).map(o -> (Enum) o) //
 					.filter(e -> e.name().equalsIgnoreCase(value)) //

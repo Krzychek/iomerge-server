@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server.network;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.model.RemoteMsgTypes;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
@@ -34,9 +35,12 @@ public class EventServer {
 	private ObjectOutputStream clientOutputStream;
 
 	@ConfigProperty( "ServerPort" )
-	private Integer port = 7698;
+	private int port = 7698;
 
 	private Timer heartBeetTimer;
+
+	@ConfigProperty( "SendBufferSize" )
+	private int sendBufferSize = 512;
 
 	private void disconnectClient() {
 		heartBeetTimer.stop();
@@ -60,7 +64,7 @@ public class EventServer {
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
 
-		heartBeetTimer = new Timer(500, e -> sendToClient((byte) 0xff));
+		heartBeetTimer = new Timer(2000, e -> sendToClient(RemoteMsgTypes.HEARTBEAT));
 		new Thread(this::acceptListener, String.format("acceptListener at :%d", port)) //
 				.start();
 	}
@@ -88,6 +92,7 @@ public class EventServer {
 
 	private void setupClientSocket(Socket newClient) throws IOException {
 		clientSocket = newClient;
+		clientSocket.setSendBufferSize(sendBufferSize);
 		clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 		heartBeetTimer.start();
 		appStateManager.connected();

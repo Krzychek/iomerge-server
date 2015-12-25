@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
+import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import java.awt.event.KeyEvent;
@@ -19,9 +20,20 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	@Autowired
 	private RemoteMsgDispatcher actionDispatcher;
 
+	@ConfigProperty( "MovementScale" )
+	private double movementScale = 1.5;
+
+	private double unusedXMove = 0.0;
+
+	private double unusedYMove = 0.0;
+
 	@Override
 	public void move(int dx, int dy) {
-		actionDispatcher.dispatchMouseSync((short) dx, (short) dy);
+		unusedYMove += dy * movementScale;
+		unusedXMove += dx * movementScale;
+		actionDispatcher.dispatchMouseSync((short) unusedXMove, (short) unusedYMove);
+		unusedXMove %= 1.0;
+		unusedYMove %= 1.0;
 	}
 
 	@Override
