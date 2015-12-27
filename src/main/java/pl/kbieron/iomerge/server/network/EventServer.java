@@ -43,6 +43,7 @@ public class EventServer {
 	private int sendBufferSize = 512;
 
 	private void disconnectClient() {
+		log.info("disconnecting");
 		heartBeetTimer.stop();
 		try {
 			clientSocket.close();
@@ -60,6 +61,7 @@ public class EventServer {
 	}
 
 	public void start() throws IOException {
+		log.info("starting server");
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
@@ -72,27 +74,27 @@ public class EventServer {
 	private void acceptListener() {
 		while ( serverSocket.isBound() ) {
 			try {
-				Socket newClient = serverSocket.accept();
-				if ( clientSocket == null ) {
-					setupClientSocket(newClient);
-					log.info("client connected");
-					startReading();
-				} else {
-					newClient.close();
-					log.warn("another client, closing connection");
-				}
+				Socket clientSocket = serverSocket.accept();
+				log.info("socket client accepted");
+				setupClientSocket(clientSocket);
+				log.info("client connected");
+				startReading();
 			} catch (SocketException e) {
-				log.debug(e);
-				disconnectClient();
+				log.debug("SocketException in client connection", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("Problem with connection", e);
+			} finally {
+				disconnectClient();
 			}
 		}
 	}
 
 	private void setupClientSocket(Socket newClient) throws IOException {
+		if ( clientSocket != null ) {
+			clientSocket.close();
+		}
+		newClient.setSendBufferSize(sendBufferSize);
 		clientSocket = newClient;
-		clientSocket.setSendBufferSize(sendBufferSize);
 		clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 		heartBeetTimer.start();
 		appStateManager.connected();
