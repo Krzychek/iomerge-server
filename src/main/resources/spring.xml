@@ -8,4 +8,12 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="pl.kbieron.iomerge.server"/>
+
+    <bean id="defaultToolkit"
+          class="java.awt.Toolkit"
+          factory-method="getDefaultToolkit"/>
+
+    <bean id="clipboard"
+          factory-bean="defaultToolkit"
+          factory-method="getSystemClipboard"/>
 </beans>

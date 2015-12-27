@@ -50,6 +50,14 @@ public class RemoteMsgDispatcher {
 				.array());
 	}
 
+	public void dispatchClipboardSync(String msg) {
+		byte[] msgBytes = msg.getBytes();
+		eventServer.sendToClient(ByteBuffer.allocate(msgBytes.length + 1) //
+				.put(RemoteMsgTypes.CLIPBOARD_SYNC) //
+				.put(msgBytes) //
+				.array());
+	}
+
 	public void dispatchCustomMsg(byte... msg) {
 		eventServer.sendToClient(msg);
 	}
