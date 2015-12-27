@@ -7,6 +7,7 @@ import pl.kbieron.iomerge.server.network.EventServer;
 import pl.kbieron.iomerge.server.properties.PropertyManager;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 
@@ -30,10 +31,9 @@ public class Bootstrap {
 		propertyManager.readPropertiesFromFile(SETTINGS_FILE);
 
 		eventServer.start();
-
-		Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 	}
 
+	@PreDestroy
 	private void shutdown() {
 		propertyManager.savePropertiesToFile(SETTINGS_FILE);
 	}

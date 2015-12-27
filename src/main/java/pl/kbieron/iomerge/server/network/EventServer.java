@@ -7,6 +7,7 @@ import pl.kbieron.iomerge.model.RemoteMsgTypes;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
+import javax.annotation.PreDestroy;
 import javax.swing.Timer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -123,6 +124,12 @@ public class EventServer {
 		} catch (IOException e) {
 			log.error(e);
 		}
+	}
+
+	@PreDestroy
+	private void destroy() {
+		disconnectClient();
+		heartBeetTimer.stop();
 	}
 
 }

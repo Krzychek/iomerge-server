@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -28,23 +27,19 @@ import java.util.Properties;
 @Component
 public class PropertyManager {
 
+	public static final String PACKAGE_NAME = "pl.kbieron.iomerge.server";
+
 	private final Logger log = Logger.getLogger(PropertyManager.class);
 
 	@Autowired
 	private ApplicationContext context;
-
-	private Reflections reflections;
-
-	@PostConstruct
-	private void init() {
-		reflections = new Reflections("pl.kbieron.iomerge.server", new FieldAnnotationsScanner());
-	}
 
 	public void readPropertiesFromFile(String fileName) {
 		Properties properties = new Properties();
 		try ( FileInputStream propertiesFile = new FileInputStream(fileName) ) {
 			properties.load(propertiesFile);
 
+			Reflections reflections = new Reflections(PACKAGE_NAME, new FieldAnnotationsScanner());
 			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
 
 				Object owner = context.getBean(field.getDeclaringClass());
@@ -92,6 +87,7 @@ public class PropertyManager {
 		try ( FileOutputStream propertiesFile = new FileOutputStream(fileName) ) {
 			Properties properties = new Properties();
 
+			Reflections reflections = new Reflections(PACKAGE_NAME, new FieldAnnotationsScanner());
 			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
 
 				Object owner = context.getBean(field.getDeclaringClass());
