@@ -65,4 +65,12 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	public void keyReleased(KeyEvent keyEvent) {
 		actionDispatcher.dispatchKeyRelease(keyEvent.getKeyCode());
 	}
+
+	public double getMovementScale() {
+		return movementScale;
+	}
+
+	public void setMovementScale(double movementScale) {
+		this.movementScale = movementScale;
+	}
 }

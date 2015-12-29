@@ -20,10 +20,13 @@ public class TrayManager {
 
 	private static final Logger log = Logger.getLogger(TrayManager.class);
 
-	SystemTray tray;
+	private SystemTray tray;
 
 	@Autowired
 	private ConfigurableApplicationContext context;
+
+	@Autowired
+	private SettingsWindow settingsWindow;
 
 	private TrayIcon trayIcon;
 
@@ -48,7 +51,7 @@ public class TrayManager {
 		tray.remove(trayIcon);
 
 		PopupMenu popup = new PopupMenu();
-		popup.add(new MenuItem("Settings"));
+		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.setVisible(true));
 		popup.add(new MenuItem("Exit")).addActionListener(e -> {
 			context.close();
 			System.exit(0);

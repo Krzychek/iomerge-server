@@ -44,7 +44,7 @@ public class EventServer {
 	private int sendBufferSize = 512;
 
 	private void disconnectClient() {
-		log.info("disconnecting");
+		log.info("disconnecting from client");
 		heartBeetTimer.stop();
 		try {
 			if ( clientSocket != null ) clientSocket.close();
@@ -61,6 +61,19 @@ public class EventServer {
 		appStateManager.disconnected();
 	}
 
+	@PreDestroy
+	private void shutdown() {
+		log.info("shutting down server");
+		disconnectClient();
+		if ( serverSocket != null ) try {
+			serverSocket.close();
+		} catch (IOException e) {
+			log.warn(e);
+		}
+		if ( heartBeetTimer != null ) heartBeetTimer.stop();
+		appStateManager.disconnected();
+	}
+
 	public void start() throws IOException {
 		log.info("starting server");
 		serverSocket = new ServerSocket();
@@ -68,12 +81,22 @@ public class EventServer {
 		serverSocket.bind(new InetSocketAddress(port));
 
 		heartBeetTimer = new Timer(2000, e -> sendToClient(RemoteMsgTypes.HEARTBEAT));
-		new Thread(this::acceptListener, String.format("acceptListener at :%d", port)) //
-				.start();
+		new Thread(this::acceptListener, "acceptListener at: " + port).start();
+	}
+
+	private void restart() {
+		log.info("restarting server");
+		shutdown();
+		try {
+			start();
+		} catch (IOException e) {
+			log.error(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void acceptListener() {
-		while ( serverSocket.isBound() ) {
+		while ( !serverSocket.isClosed() ) {
 			try {
 				Socket clientSocket = serverSocket.accept();
 				log.info("socket client accepted");
@@ -83,7 +106,7 @@ public class EventServer {
 			} catch (SocketException e) {
 				log.debug("SocketException in client connection", e);
 			} catch (IOException e) {
-				log.error("Problem with connection", e);
+				log.warn("Problem with connection", e);
 			} finally {
 				disconnectClient();
 			}
@@ -126,10 +149,12 @@ public class EventServer {
 		}
 	}
 
-	@PreDestroy
-	private void destroy() {
-		disconnectClient();
-		heartBeetTimer.stop();
+	public int getPort() {
+		return port;
 	}
 
+	public void setPort(int port) {
+		this.port = port;
+		if ( serverSocket != null && serverSocket.isBound() ) restart();
+	}
 }

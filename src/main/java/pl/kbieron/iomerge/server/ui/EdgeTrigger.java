@@ -47,27 +47,26 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 	}
 
 	private void reposition() {
-		if ( edge == Edge.LEFT ) {
+		Rectangle displayRect;
+		switch (edge) {
+			case LEFT:
+				displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
+						.map(screen -> screen.getDefaultConfiguration().getBounds()) //
+						.min((a, b) -> a.x - b.x) //
+						.get();
+				displayRect.translate(0, offset);
+				break;
 
-			Rectangle displayRect = Arrays
-					.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
-					.map(screen -> screen.getDefaultConfiguration().getBounds()) //
-					.min((a, b) -> a.x - b.x) //
-					.get();
-
-			setLocation(displayRect.x, displayRect.y + offset);
-
-		} else {
-
-			Rectangle displayRect = Arrays
-					.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
-					.map(screen -> screen.getDefaultConfiguration().getBounds()) //
-					.max((a, b) -> a.x - b.x) //
-					.get();
-
-			setLocation(displayRect.x + displayRect.width - getWidth(), displayRect.y + offset);
+			case RIGHT:
+			default:
+				displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
+						.map(screen -> screen.getDefaultConfiguration().getBounds()) //
+						.max((a, b) -> a.x - b.x) //
+						.get();
+				displayRect.translate(displayRect.width - getWidth(), offset);
 		}
 
+		setLocation(displayRect.x, displayRect.y);
 		setSize(1, length);
 	}
 
@@ -81,5 +80,32 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 			timer.setRepeats(false);
 			timer.start();
 		}
+	}
+
+	public Edge getEdge() {
+		return edge;
+	}
+
+	public void setEdge(Edge edge) {
+		this.edge = edge;
+		reposition();
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+		reposition();
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+		reposition();
 	}
 }
