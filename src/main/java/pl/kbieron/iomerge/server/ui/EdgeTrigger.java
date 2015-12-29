@@ -3,14 +3,15 @@ package pl.kbieron.iomerge.server.ui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
+import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
-import pl.kbieron.iomerge.server.utilities.Edge;
 
 import javax.annotation.PostConstruct;
-import javax.swing.JWindow;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -18,10 +19,13 @@ import java.util.Arrays;
 
 
 @Component
-public class EdgeTrigger extends JWindow implements ApplicationListener<AppState.UpdateEvent> {
+public class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateEvent> {
 
 	@Autowired
 	private AppStateManager appStateManager;
+
+	@Autowired
+	private RemoteMsgDispatcher remoteMsgDispatcher;
 
 	@ConfigProperty( "Edge" )
 	private Edge edge = Edge.LEFT;
@@ -37,13 +41,6 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 		UIHelper.makeInvisible(this);
 
 		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen());
-	}
-
-	@Override
-	public void setVisible(boolean visible) {
-		if ( visible && isVisible() ) return;
-		reposition();
-		super.setVisible(visible);
 	}
 
 	private void reposition() {
@@ -66,19 +63,26 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 				displayRect.translate(displayRect.width - getWidth(), offset);
 		}
 
+		boolean wasVisible = isVisible();
+		setVisible(false);
+
 		setLocation(displayRect.x, displayRect.y);
 		setSize(1, length);
+
+		setVisible(wasVisible);
 	}
 
 	@Override
 	public void onApplicationEvent(AppState.UpdateEvent appStateUpdateEvent) {
-		boolean visible = AppState.ON_LOCAL == appStateUpdateEvent.getStateChange();
-		if ( !visible ) {
-			setVisible(false);
-		} else {
-			Timer timer = new Timer(500, actionEvent -> setVisible(true));
+		AppState stateChange = appStateUpdateEvent.getStateChange();
+		if ( AppState.ON_LOCAL == stateChange ) {
+			remoteMsgDispatcher.dispatchEdgeSync(edge);
+			reposition();
+			Timer timer = new Timer(50, actionEvent -> setVisible(true));
 			timer.setRepeats(false);
 			timer.start();
+		} else {
+			setVisible(false);
 		}
 	}
 
@@ -88,6 +92,7 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 			this.offset = offset;
 			this.length = length;
 			reposition();
+			remoteMsgDispatcher.dispatchEdgeSync(edge);
 		}
 	}
 

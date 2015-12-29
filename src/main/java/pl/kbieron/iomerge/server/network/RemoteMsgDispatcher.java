@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server.network;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.RemoteMsgTypes;
 
 import java.nio.ByteBuffer;
@@ -56,6 +57,10 @@ public class RemoteMsgDispatcher {
 				.put(RemoteMsgTypes.CLIPBOARD_SYNC) //
 				.put(msgBytes) //
 				.array());
+	}
+
+	public void dispatchEdgeSync(Edge edge) {
+		eventServer.sendToClient(RemoteMsgTypes.EDGE_SYNC, (byte) edge.ordinal());
 	}
 
 	public void dispatchCustomMsg(byte... msg) {

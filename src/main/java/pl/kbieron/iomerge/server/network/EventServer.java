@@ -58,6 +58,7 @@ public class EventServer {
 		}
 		clientSocket = null;
 		clientOutputStream = null;
+		appStateManager.disconnected();
 	}
 
 	@PreDestroy
