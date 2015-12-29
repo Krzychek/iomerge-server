@@ -47,12 +47,12 @@ public class EventServer {
 		log.info("disconnecting");
 		heartBeetTimer.stop();
 		try {
-			clientSocket.close();
+			if ( clientSocket != null ) clientSocket.close();
 		} catch (IOException e) {
 			log.warn(e);
 		}
 		try {
-			clientOutputStream.close();
+			if ( clientOutputStream != null ) clientOutputStream.close();
 		} catch (IOException e) {
 			log.warn(e);
 		}
