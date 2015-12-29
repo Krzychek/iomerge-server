@@ -105,11 +105,12 @@ public class SettingsWindow extends JFrame {
 	}
 
 	private void saveValues() {
-		edgeTrigger.setEdge((Edge) edge.getSelectedItem());
-		edgeTrigger.setLength((Integer) triggerLength.getValue());
-		edgeTrigger.setOffset((Integer) triggerOffset.getValue());
-		eventServer.setPort((Integer) port.getValue());
-		virtualScreen.setMovementScale((Double) moveScale.getValue());
+		edgeTrigger.setProperties( //
+				(Edge) edge.getSelectedItem(), //
+				(int) triggerLength.getValue(), //
+				(int) triggerOffset.getValue());
+		eventServer.setPort((int) port.getValue());
+		virtualScreen.setMovementScale((double) moveScale.getValue());
 	}
 
 	private void createFields() {

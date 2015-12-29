@@ -82,30 +82,24 @@ public class EdgeTrigger extends JWindow implements ApplicationListener<AppState
 		}
 	}
 
-	public Edge getEdge() {
-		return edge;
+	public void setProperties(Edge edge, int length, int offset) {
+		if ( edge != this.edge || length != this.length || offset != this.offset ) {
+			this.edge = edge;
+			this.offset = offset;
+			this.length = length;
+			reposition();
+		}
 	}
 
-	public void setEdge(Edge edge) {
-		this.edge = edge;
-		reposition();
+	public Edge getEdge() {
+		return edge;
 	}
 
 	public int getOffset() {
 		return offset;
 	}
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-		reposition();
-	}
-
 	public int getLength() {
 		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-		reposition();
 	}
 }
