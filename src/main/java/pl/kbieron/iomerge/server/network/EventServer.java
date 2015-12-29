@@ -58,13 +58,11 @@ public class EventServer {
 		}
 		clientSocket = null;
 		clientOutputStream = null;
-		appStateManager.disconnected();
 	}
 
 	@PreDestroy
 	private void shutdown() {
 		log.info("shutting down server");
-		disconnectClient();
 		if ( serverSocket != null ) try {
 			serverSocket.close();
 		} catch (IOException e) {
@@ -103,8 +101,7 @@ public class EventServer {
 				setupClientSocket(clientSocket);
 				log.info("client connected");
 				startReading();
-			} catch (SocketException e) {
-				log.debug("SocketException in client connection", e);
+			} catch (SocketException ignored) {
 			} catch (IOException e) {
 				log.warn("Problem with connection", e);
 			} finally {
@@ -154,6 +151,7 @@ public class EventServer {
 	}
 
 	public void setPort(int port) {
+		if ( this.port == port ) return;
 		this.port = port;
 		if ( serverSocket != null && serverSocket.isBound() ) restart();
 	}
