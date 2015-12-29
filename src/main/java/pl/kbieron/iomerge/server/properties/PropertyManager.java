@@ -7,7 +7,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,28 +18,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
 
-@Component
 public class PropertyManager {
 
-	public static final String PACKAGE_NAME = "pl.kbieron.iomerge.server";
+	private static final Logger log = Logger.getLogger(PropertyManager.class);
 
-	private final Logger log = Logger.getLogger(PropertyManager.class);
+	private final Set<Field> propertiesFields;
 
 	@Autowired
 	private ApplicationContext context;
+
+	public PropertyManager(String packageName) {
+		Reflections reflections = new Reflections(packageName, new FieldAnnotationsScanner());
+		propertiesFields = reflections.getFieldsAnnotatedWith(ConfigProperty.class);
+	}
 
 	public void readPropertiesFromFile(String fileName) {
 		Properties properties = new Properties();
 		try ( FileInputStream propertiesFile = new FileInputStream(fileName) ) {
 			properties.load(propertiesFile);
 
-			Reflections reflections = new Reflections(PACKAGE_NAME, new FieldAnnotationsScanner());
-			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
+			for ( Field field : propertiesFields ) {
 
 				Object owner = context.getBean(field.getDeclaringClass());
 				String serialized = properties.getProperty(getPropertyName(field));
@@ -85,10 +92,9 @@ public class PropertyManager {
 
 	public void savePropertiesToFile(String fileName) {
 		try ( FileOutputStream propertiesFile = new FileOutputStream(fileName) ) {
-			Properties properties = new Properties();
+			Properties properties = new SortedProperties();
 
-			Reflections reflections = new Reflections(PACKAGE_NAME, new FieldAnnotationsScanner());
-			for ( Field field : reflections.getFieldsAnnotatedWith(ConfigProperty.class) ) {
+			for ( Field field : propertiesFields ) {
 
 				Object owner = context.getBean(field.getDeclaringClass());
 				field.setAccessible(true);
@@ -124,4 +130,14 @@ public class PropertyManager {
 		return byteStream.toString();
 	}
 
+	private class SortedProperties extends Properties {
+
+		@SuppressWarnings( "unchecked" )
+		public Enumeration keys() {
+			List<String> keyList = new ArrayList<>(super.size());
+			keyList.addAll((Set<String>) (Set<?>) super.keySet());
+			Collections.sort(keyList);
+			return Collections.enumeration(keyList);
+		}
+	}
 }
