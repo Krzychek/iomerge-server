@@ -38,7 +38,7 @@ public class TrayManager {
 		}
 		tray = SystemTray.getSystemTray();
 		try {
-			trayIcon = new TrayIcon(ImageIO.read(context.getResource("icon.gif").getFile()));
+			trayIcon = new TrayIcon(ImageIO.read(context.getResource("icon.gif").getURL()));
 			trayIcon.setImageAutoSize(true);
 		} catch (IOException e) {
 			log.error("filed to load tray icon", e);
