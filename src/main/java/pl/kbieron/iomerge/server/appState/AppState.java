@@ -15,7 +15,7 @@ public enum AppState {
 	public class UpdateEvent extends ApplicationEvent {
 
 		private UpdateEvent() {
-			super(AppState.this);
+			super(AppState.class);
 		}
 
 		public AppState getStateChange() {
