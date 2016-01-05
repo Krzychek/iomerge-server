@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
+import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
@@ -17,7 +18,7 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 
-class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateEvent> {
+class EdgeTrigger extends JFrame implements AppStateListener {
 
 	@Autowired
 	private AppStateManager appStateManager;

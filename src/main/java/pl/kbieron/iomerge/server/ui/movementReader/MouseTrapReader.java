@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server.ui.movementReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import pl.kbieron.iomerge.server.appState.AppState;
+import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 import pl.kbieron.iomerge.server.ui.UIHelper;
@@ -28,7 +29,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 class MouseTrapReader extends JFrame //
-		implements MouseListener, MouseMotionListener, MouseWheelListener, ApplicationListener<AppState.UpdateEvent> {
+		implements MouseListener, MouseMotionListener, MouseWheelListener, AppStateListener {
 
 	private Point center;
 

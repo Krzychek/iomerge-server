@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import pl.kbieron.iomerge.server.appState.AppState;
+import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
 import java.awt.datatransfer.Clipboard;
@@ -15,7 +16,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 
-public class ClipboardManager implements ApplicationListener<AppState.UpdateEvent>, ClipboardOwner {
+public class ClipboardManager implements AppStateListener, ClipboardOwner {
 
 	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
