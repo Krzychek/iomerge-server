@@ -1,13 +1,11 @@
 package pl.kbieron.iomerge.server.gesture.calc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.gesture.PatternDatabase;
 import pl.kbieron.iomerge.server.gesture.model.Input;
 import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 
-@Component
 public class TemplateMatcher {
 
 	@Autowired

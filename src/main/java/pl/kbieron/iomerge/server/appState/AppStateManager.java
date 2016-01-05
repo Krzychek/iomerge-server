@@ -3,10 +3,8 @@ package pl.kbieron.iomerge.server.appState;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Component;
 
 
-@Component
 public class AppStateManager implements ApplicationEventPublisherAware {
 
 	private final Logger log = Logger.getLogger(AppStateManager.class);

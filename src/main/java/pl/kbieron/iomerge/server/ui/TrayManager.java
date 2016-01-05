@@ -3,7 +3,6 @@ package pl.kbieron.iomerge.server.ui;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
@@ -15,7 +14,6 @@ import java.awt.TrayIcon;
 import java.io.IOException;
 
 
-@Component
 class TrayManager {
 
 	private static final Logger log = Logger.getLogger(TrayManager.class);

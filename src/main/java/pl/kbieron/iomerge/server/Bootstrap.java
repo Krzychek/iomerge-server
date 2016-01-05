@@ -11,7 +11,6 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 
-@Component
 class Bootstrap {
 
 	private final String SETTINGS_FILE = "settings.properties";

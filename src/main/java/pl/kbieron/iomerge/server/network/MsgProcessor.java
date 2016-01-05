@@ -1,14 +1,12 @@
 package pl.kbieron.iomerge.server.network;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.MessageProcessorAdapter;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.utilities.ClipboardManager;
 
 
-@Component
-class RemoteMsgProcessorAdapter extends MessageProcessorAdapter {
+class MsgProcessor extends MessageProcessorAdapter {
 
 	@Autowired
 	private AppStateManager appStateManager;

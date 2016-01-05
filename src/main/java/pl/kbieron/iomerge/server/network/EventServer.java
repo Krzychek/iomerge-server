@@ -2,7 +2,6 @@ package pl.kbieron.iomerge.server.network;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.misc.Heartbeat;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -19,7 +18,6 @@ import java.net.Socket;
 import java.net.SocketException;
 
 
-@Component
 public class EventServer {
 
 	private final Logger log = Logger.getLogger(EventServer.class);
@@ -28,7 +26,7 @@ public class EventServer {
 	private AppStateManager appStateManager;
 
 	@Autowired
-	private RemoteMsgProcessorAdapter msgProcessor;
+	private MsgProcessor msgProcessor;
 
 	private ServerSocket serverSocket;
 

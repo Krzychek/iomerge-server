@@ -2,11 +2,10 @@ package pl.kbieron.iomerge.server.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
+import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
 
@@ -18,14 +17,13 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 
-@Component
 class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateEvent> {
 
 	@Autowired
 	private AppStateManager appStateManager;
 
 	@Autowired
-	private RemoteMsgDispatcher remoteMsgDispatcher;
+	private MsgDispatcher msgDispatcher;
 
 	@ConfigProperty( "Edge" )
 	private Edge edge = Edge.LEFT;
@@ -76,7 +74,7 @@ class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateE
 	public void onApplicationEvent(AppState.UpdateEvent appStateUpdateEvent) {
 		AppState stateChange = appStateUpdateEvent.getStateChange();
 		if ( AppState.ON_LOCAL == stateChange ) {
-			remoteMsgDispatcher.dispatchEdgeSync(edge);
+			msgDispatcher.dispatchEdgeSync(edge);
 			reposition();
 			Timer timer = new Timer(50, actionEvent -> setVisible(true));
 			timer.setRepeats(false);
@@ -92,7 +90,7 @@ class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateE
 			this.offset = offset;
 			this.length = length;
 			reposition();
-			remoteMsgDispatcher.dispatchEdgeSync(edge);
+			msgDispatcher.dispatchEdgeSync(edge);
 		}
 	}
 

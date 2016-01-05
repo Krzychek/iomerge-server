@@ -2,18 +2,16 @@ package pl.kbieron.iomerge.server.gesture;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
-import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
+import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import javax.swing.Timer;
 
 
-@Component
 public class GestureRecorder implements MovementListener {
 
 	private final Logger log = Logger.getLogger(MovementListener.class);
@@ -22,7 +20,7 @@ public class GestureRecorder implements MovementListener {
 	private TemplateMatcher templateMatcher;
 
 	@Autowired
-	private RemoteMsgDispatcher remoteMsgDispatcher;
+	private MsgDispatcher msgDispatcher;
 
 	@Autowired
 	private Normalizer normalizer;
@@ -60,7 +58,7 @@ public class GestureRecorder implements MovementListener {
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
 
 			if ( match.getProbability() > Constants.PROB_THRESHOLD ) {
-				remoteMsgDispatcher.dispatchCustomMsg(match.getPattern().getAction());
+				msgDispatcher.dispatchCustomMsg(match.getPattern().getAction());
 			}
 
 			log.info(String.format("Best gesture match: %s at %2d%%", //

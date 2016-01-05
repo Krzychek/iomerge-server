@@ -2,7 +2,6 @@ package pl.kbieron.iomerge.server.ui.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
@@ -28,7 +27,6 @@ import java.util.Arrays;
 import static java.awt.event.MouseEvent.BUTTON3;
 
 
-@Component
 class MouseTrapReader extends JFrame //
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ApplicationListener<AppState.UpdateEvent> {
 

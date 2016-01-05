@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.network.EventServer;
@@ -17,7 +16,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 
-@Component
 class SettingsWindow extends JFrame {
 
 	@Autowired

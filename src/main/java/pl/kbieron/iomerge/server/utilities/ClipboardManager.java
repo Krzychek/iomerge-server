@@ -3,9 +3,8 @@ package pl.kbieron.iomerge.server.utilities;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
-import pl.kbieron.iomerge.server.network.RemoteMsgDispatcher;
+import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -16,13 +15,12 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 
-@Component
 public class ClipboardManager implements ApplicationListener<AppState.UpdateEvent>, ClipboardOwner {
 
 	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
 	@Autowired
-	private RemoteMsgDispatcher remoteMsgDispatcher;
+	private MsgDispatcher msgDispatcher;
 
 	@Autowired
 	private Clipboard systemClipboard;
@@ -38,7 +36,7 @@ public class ClipboardManager implements ApplicationListener<AppState.UpdateEven
 				String data = (String) systemClipboard.getContents(this).getTransferData(DataFlavor.stringFlavor);
 
 				if ( data != null && !data.equals(sentData) ) {
-					remoteMsgDispatcher.dispatchClipboardSync(data);
+					msgDispatcher.dispatchClipboardSync(data);
 					sentData = data;
 				}
 

@@ -7,14 +7,38 @@
 	        http://www.springframework.org/schema/context
 	        http://www.springframework.org/schema/context/spring-context.xsd">
 
-
-    <context:component-scan base-package="pl.kbieron.iomerge.server"/>
+    <!-- config -->
     <context:annotation-config/>
 
-    <bean id="propertyManager"
-          class="pl.kbieron.iomerge.server.properties.PropertyManager"
-          c:packageName="pl.kbieron.iomerge.server"/>
+    <!-- general -->
+    <bean class="pl.kbieron.iomerge.server.properties.PropertyManager" c:packageName="pl.kbieron.iomerge.server"/>
+    <bean class="pl.kbieron.iomerge.server.appState.AppStateManager"/>
+    <bean class="pl.kbieron.iomerge.server.Bootstrap"/>
 
+    <bean class="pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen"/>
+
+    <!-- UI -->
+    <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>
+    <bean class="pl.kbieron.iomerge.server.ui.SettingsWindow"/>
+    <bean class="pl.kbieron.iomerge.server.ui.TrayManager"/>
+    <bean class="pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader"/>
+
+    <!-- network -->
+    <bean class="pl.kbieron.iomerge.server.network.EventServer"/>
+    <bean class="pl.kbieron.iomerge.server.network.MsgDispatcher"/>
+    <bean class="pl.kbieron.iomerge.server.network.MsgProcessor"/>
+
+    <!-- gestures -->
+    <bean class="pl.kbieron.iomerge.server.gesture.GestureRecorder"/>
+    <bean class="pl.kbieron.iomerge.server.gesture.PatternDatabase"/>
+    <bean class="pl.kbieron.iomerge.server.gesture.calc.LikelihoodCalculator"/>
+    <bean class="pl.kbieron.iomerge.server.gesture.calc.Normalizer"/>
+    <bean class="pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher"/>
+
+    <!-- utilities -->
+    <bean class="pl.kbieron.iomerge.server.utilities.ClipboardManager"/>
+
+    <!-- java platform utilities -->
     <bean id="defaultToolkit"
           class="java.awt.Toolkit"
           factory-method="getDefaultToolkit"/>
@@ -22,4 +46,5 @@
     <bean id="clipboard"
           factory-bean="defaultToolkit"
           factory-method="getSystemClipboard"/>
+
 </beans>

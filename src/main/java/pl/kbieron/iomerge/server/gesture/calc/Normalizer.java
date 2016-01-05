@@ -1,7 +1,5 @@
 package pl.kbieron.iomerge.server.gesture.calc;
 
-import org.springframework.stereotype.Component;
-
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,7 +11,6 @@ import static pl.kbieron.iomerge.server.gesture.Constants.NORM_LENGTH;
 import static pl.kbieron.iomerge.server.gesture.Constants.NORM_SIZE;
 
 
-@Component
 public class Normalizer {
 
 	public List<Point> normalize(List<Point> points) {

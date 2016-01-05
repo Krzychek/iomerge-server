@@ -15,7 +15,7 @@ import pl.kbieron.iomerge.model.message.mouse.MouseWheel;
 
 
 @Component
-public class RemoteMsgDispatcher {
+public class MsgDispatcher {
 
 	@Autowired
 	EventServer eventServer;
