@@ -3,7 +3,6 @@ package pl.kbieron.iomerge.server.ui;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,12 +13,6 @@ import java.awt.image.BufferedImage;
 
 
 public class UIHelper {
-
-	public static void makeInvisible(JWindow window) {
-
-		makeWindowInvisible(window);
-		setInvisibleContentPane(window);
-	}
 
 	public static void makeInvisible(JFrame frame) {
 

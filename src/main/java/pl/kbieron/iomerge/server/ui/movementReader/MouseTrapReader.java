@@ -29,7 +29,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 
 @Component
-public class MouseTrapReader extends JFrame //
+class MouseTrapReader extends JFrame //
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ApplicationListener<AppState.UpdateEvent> {
 
 	private Point center;

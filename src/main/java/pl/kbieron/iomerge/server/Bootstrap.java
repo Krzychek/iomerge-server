@@ -12,7 +12,7 @@ import java.io.IOException;
 
 
 @Component
-public class Bootstrap {
+class Bootstrap {
 
 	private final String SETTINGS_FILE = "settings.properties";
 

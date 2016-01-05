@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 
 @Component
-public class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateEvent> {
+class EdgeTrigger extends JFrame implements ApplicationListener<AppState.UpdateEvent> {
 
 	@Autowired
 	private AppStateManager appStateManager;

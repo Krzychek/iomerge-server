@@ -11,7 +11,7 @@ import static pl.kbieron.iomerge.server.gesture.Constants.LAMBDA;
 
 
 @Component
-public class LikelihoodCalculator {
+class LikelihoodCalculator {
 
 	public double getLikelihood(List<Point> sequence, List<Point> pattern) {
 		MeanDistances d = MeanDistances.getMeanDistances(sequence, pattern);

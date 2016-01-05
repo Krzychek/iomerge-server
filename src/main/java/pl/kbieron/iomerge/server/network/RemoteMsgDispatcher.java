@@ -3,9 +3,15 @@ package pl.kbieron.iomerge.server.network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
-import pl.kbieron.iomerge.model.RemoteMsgTypes;
-
-import java.nio.ByteBuffer;
+import pl.kbieron.iomerge.model.message.Message;
+import pl.kbieron.iomerge.model.message.keyboard.KeyPress;
+import pl.kbieron.iomerge.model.message.keyboard.KeyRelease;
+import pl.kbieron.iomerge.model.message.misc.ClipboardSync;
+import pl.kbieron.iomerge.model.message.misc.EdgeSync;
+import pl.kbieron.iomerge.model.message.mouse.MousePress;
+import pl.kbieron.iomerge.model.message.mouse.MouseRelease;
+import pl.kbieron.iomerge.model.message.mouse.MouseSync;
+import pl.kbieron.iomerge.model.message.mouse.MouseWheel;
 
 
 @Component
@@ -15,55 +21,38 @@ public class RemoteMsgDispatcher {
 	EventServer eventServer;
 
 	public void dispatchMouseSync(short x, short y) {
-		eventServer.sendToClient(ByteBuffer.allocate(5) //
-				.put(RemoteMsgTypes.MOUSE_SYNC) //
-				.putShort(x) //
-				.putShort(y) //
-				.array());
+		eventServer.sendToClient(new MouseSync(x, y));
 	}
 
 	public void dispatchMousePress() {
-		eventServer.sendToClient(RemoteMsgTypes.MOUSE_PRESS);
+		eventServer.sendToClient(new MousePress());
 	}
 
 	public void dispatchMouseRelease() {
-		eventServer.sendToClient(RemoteMsgTypes.MOUSE_RELEASE);
+		eventServer.sendToClient(new MouseRelease());
 	}
 
 	public void dispatchKeyPress(int keyCode) {
-		eventServer.sendToClient(ByteBuffer.allocate(5) //
-				.put(RemoteMsgTypes.KEY_PRESS) //
-				.putInt(keyCode) //
-				.array());
+		eventServer.sendToClient(new KeyPress(keyCode));
 	}
 
 	public void dispatchKeyRelease(int keyCode) {
-		eventServer.sendToClient(ByteBuffer.allocate(5) //
-				.put(RemoteMsgTypes.KEY_RELEASE) //
-				.putInt(keyCode) //
-				.array());
+		eventServer.sendToClient(new KeyRelease(keyCode));
 	}
 
 	public void dispatchMouseWheelEvent(int wheelRotation) {
-		eventServer.sendToClient(ByteBuffer.allocate(5) //
-				.put(RemoteMsgTypes.MOUSE_WHEEL) //
-				.putInt(wheelRotation) //
-				.array());
+		eventServer.sendToClient(new MouseWheel(wheelRotation));
 	}
 
 	public void dispatchClipboardSync(String msg) {
-		byte[] msgBytes = msg.getBytes();
-		eventServer.sendToClient(ByteBuffer.allocate(msgBytes.length + 1) //
-				.put(RemoteMsgTypes.CLIPBOARD_SYNC) //
-				.put(msgBytes) //
-				.array());
+		eventServer.sendToClient(new ClipboardSync(msg));
 	}
 
 	public void dispatchEdgeSync(Edge edge) {
-		eventServer.sendToClient(RemoteMsgTypes.EDGE_SYNC, (byte) edge.ordinal());
+		eventServer.sendToClient(new EdgeSync(edge));
 	}
 
-	public void dispatchCustomMsg(byte... msg) {
+	public void dispatchCustomMsg(Message msg) {
 		eventServer.sendToClient(msg);
 	}
 }

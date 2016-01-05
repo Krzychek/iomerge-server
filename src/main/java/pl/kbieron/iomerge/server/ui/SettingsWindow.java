@@ -18,7 +18,7 @@ import java.awt.GridBagLayout;
 
 
 @Component
-public class SettingsWindow extends JFrame {
+class SettingsWindow extends JFrame {
 
 	@Autowired
 	private EventServer eventServer;

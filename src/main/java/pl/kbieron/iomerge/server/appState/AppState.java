@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEvent;
 public enum AppState {
 	ON_REMOTE, ON_LOCAL, DISCONNECTED;
 
-	private UpdateEvent updateEvent = new UpdateEvent();
+	private final UpdateEvent updateEvent = new UpdateEvent();
 
 	UpdateEvent getUpdateEvent() {
 		return updateEvent;

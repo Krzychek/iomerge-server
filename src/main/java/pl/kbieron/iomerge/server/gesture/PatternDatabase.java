@@ -1,7 +1,9 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.RemoteMsgTypes;
+import pl.kbieron.iomerge.model.message.keyboard.BackBtnClick;
+import pl.kbieron.iomerge.model.message.keyboard.HomeBtnClick;
+import pl.kbieron.iomerge.model.message.keyboard.MenuBtnClick;
 import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 import java.awt.Point;
@@ -12,7 +14,7 @@ import java.util.List;
 @Component
 public class PatternDatabase {
 
-	private List<Pattern> patterns = Arrays.asList( //
+	private final List<Pattern> patterns = Arrays.asList( //
 			new Pattern(Arrays.asList( // up
 					new Point(0, 950), //
 					new Point(0, 900), //
@@ -33,7 +35,7 @@ public class PatternDatabase {
 					new Point(0, 150), //
 					new Point(0, 100), //
 					new Point(0, 50), //
-					new Point(0, 0)), RemoteMsgTypes.HOME_BTN_CLICK, "up"), //
+					new Point(0, 0)), new HomeBtnClick(), "up"), //
 			new Pattern(Arrays.asList( // left
 					new Point(950, 0), //
 					new Point(900, 0), //
@@ -54,7 +56,7 @@ public class PatternDatabase {
 					new Point(150, 0), //
 					new Point(100, 0), //
 					new Point(50, 0), //
-					new Point(0, 0)), RemoteMsgTypes.BACK_BTN_CLICK, "left"), //
+					new Point(0, 0)), new BackBtnClick(), "left"), //
 			new Pattern(Arrays.asList( // circle
 					new Point(195, 0),  //
 					new Point(286, 20),  //
@@ -75,7 +77,7 @@ public class PatternDatabase {
 					new Point(334, 237),  //
 					new Point(242, 349),  //
 					new Point(150, 28),  //
-					new Point(58, 1)), RemoteMsgTypes.MENU_BTN_CLICK, "circle") //
+					new Point(58, 1)), new MenuBtnClick(), "circle") //
 	);
 
 	public List<Pattern> getPatterns() {

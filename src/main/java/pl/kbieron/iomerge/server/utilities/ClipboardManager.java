@@ -19,7 +19,7 @@ import java.io.IOException;
 @Component
 public class ClipboardManager implements ApplicationListener<AppState.UpdateEvent>, ClipboardOwner {
 
-	private static Logger log = Logger.getLogger(ClipboardManager.class);
+	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
 	@Autowired
 	private RemoteMsgDispatcher remoteMsgDispatcher;

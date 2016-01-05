@@ -3,7 +3,8 @@ package pl.kbieron.iomerge.server.network;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.RemoteMsgTypes;
+import pl.kbieron.iomerge.model.message.Message;
+import pl.kbieron.iomerge.model.message.misc.Heartbeat;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
@@ -27,7 +28,7 @@ public class EventServer {
 	private AppStateManager appStateManager;
 
 	@Autowired
-	private RemoteMsgProcessor msgProcessor;
+	private RemoteMsgProcessorAdapter msgProcessor;
 
 	private ServerSocket serverSocket;
 
@@ -40,6 +41,7 @@ public class EventServer {
 
 	private Timer heartBeetTimer;
 
+	@SuppressWarnings( {"FieldCanBeLocal", "CanBeFinal"} )
 	@ConfigProperty( "SendBufferSize" )
 	private int sendBufferSize = 512;
 
@@ -79,7 +81,7 @@ public class EventServer {
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
 
-		heartBeetTimer = new Timer(2000, e -> sendToClient(RemoteMsgTypes.HEARTBEAT));
+		heartBeetTimer = new Timer(2000, e -> sendToClient(new Heartbeat()));
 		new Thread(this::acceptListener, "acceptListener at: " + port).start();
 	}
 
@@ -127,17 +129,17 @@ public class EventServer {
 		//noinspection InfiniteLoopStatement
 		while ( true ) {
 			try {
-				msgProcessor.process((byte[]) objectInputStream.readObject());
+				((Message) objectInputStream.readObject()).process(msgProcessor);
 			} catch (ClassNotFoundException e) {
 				log.warn(e);
 			}
 		}
 	}
 
-	void sendToClient(byte... bytes) {
+	void sendToClient(Message msg) {
 		try {
 			if ( clientOutputStream != null ) {
-				clientOutputStream.writeObject(bytes);
+				clientOutputStream.writeObject(msg);
 			}
 		} catch (SocketException e) {
 			log.debug(e);

@@ -16,7 +16,7 @@ import java.io.IOException;
 
 
 @Component
-public class TrayManager {
+class TrayManager {
 
 	private static final Logger log = Logger.getLogger(TrayManager.class);
 
