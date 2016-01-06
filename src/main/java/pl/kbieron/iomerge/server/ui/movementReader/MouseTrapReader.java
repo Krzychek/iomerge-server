@@ -26,8 +26,7 @@ import java.util.Arrays;
 import static java.awt.event.MouseEvent.BUTTON3;
 
 
-class MouseTrapReader extends JFrame //
-		implements MouseListener, MouseMotionListener, MouseWheelListener, AppStateListener {
+class MouseTrapReader extends JFrame implements MouseListener, MouseWheelListener, AppStateListener {
 
 	private Point center;
 
@@ -118,12 +117,6 @@ class MouseTrapReader extends JFrame //
 
 	@Override
 	public void mouseExited(MouseEvent mouseEvent) {}
-
-	@Override
-	public void mouseDragged(MouseEvent mouseEvent) {}
-
-	@Override
-	public void mouseMoved(MouseEvent mouseEvent) {}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
