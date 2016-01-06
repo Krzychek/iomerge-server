@@ -15,7 +15,7 @@
     <bean class="pl.kbieron.iomerge.server.appState.AppStateManager"/>
     <bean class="pl.kbieron.iomerge.server.Bootstrap"/>
 
-    <bean class="pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen"/>
+    <bean class="pl.kbieron.iomerge.server.ui.movementReader.VirtualScreen"/>
 
     <!-- UI -->
     <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>

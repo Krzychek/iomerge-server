@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.deviceAbstraction;
+package pl.kbieron.iomerge.server.ui.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.server.appState.AppStateManager;

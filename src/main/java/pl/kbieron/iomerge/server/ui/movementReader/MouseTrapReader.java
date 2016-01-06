@@ -3,7 +3,6 @@ package pl.kbieron.iomerge.server.ui.movementReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
-import pl.kbieron.iomerge.server.deviceAbstraction.VirtualScreen;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 import pl.kbieron.iomerge.server.ui.UIHelper;
 import pl.kbieron.iomerge.server.utilities.MovementListener;
@@ -104,7 +103,6 @@ class MouseTrapReader extends JFrame //
 			gestureRecorder.mousePressed();
 		}
 		movementListener.mousePressed();
-
 	}
 
 	@Override
