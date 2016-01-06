@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.keyboard.KeyPress;
@@ -14,45 +13,44 @@ import pl.kbieron.iomerge.model.message.mouse.MouseSync;
 import pl.kbieron.iomerge.model.message.mouse.MouseWheel;
 
 
-@Component
 public class MsgDispatcher {
 
 	@Autowired
-	EventServer eventServer;
+	private ConnectionHandler connectionHandler;
 
 	public void dispatchMouseSync(short x, short y) {
-		eventServer.sendToClient(new MouseSync(x, y));
+		connectionHandler.sendToClient(new MouseSync(x, y));
 	}
 
 	public void dispatchMousePress() {
-		eventServer.sendToClient(new MousePress());
+		connectionHandler.sendToClient(new MousePress());
 	}
 
 	public void dispatchMouseRelease() {
-		eventServer.sendToClient(new MouseRelease());
+		connectionHandler.sendToClient(new MouseRelease());
 	}
 
 	public void dispatchKeyPress(int keyCode) {
-		eventServer.sendToClient(new KeyPress(keyCode));
+		connectionHandler.sendToClient(new KeyPress(keyCode));
 	}
 
 	public void dispatchKeyRelease(int keyCode) {
-		eventServer.sendToClient(new KeyRelease(keyCode));
+		connectionHandler.sendToClient(new KeyRelease(keyCode));
 	}
 
 	public void dispatchMouseWheelEvent(int wheelRotation) {
-		eventServer.sendToClient(new MouseWheel(wheelRotation));
+		connectionHandler.sendToClient(new MouseWheel(wheelRotation));
 	}
 
 	public void dispatchClipboardSync(String msg) {
-		eventServer.sendToClient(new ClipboardSync(msg));
+		connectionHandler.sendToClient(new ClipboardSync(msg));
 	}
 
 	public void dispatchEdgeSync(Edge edge) {
-		eventServer.sendToClient(new EdgeSync(edge));
+		connectionHandler.sendToClient(new EdgeSync(edge));
 	}
 
 	public void dispatchCustomMsg(Message msg) {
-		eventServer.sendToClient(msg);
+		connectionHandler.sendToClient(msg);
 	}
 }

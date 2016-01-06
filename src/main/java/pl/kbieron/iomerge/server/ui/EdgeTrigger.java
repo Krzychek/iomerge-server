@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
