@@ -77,6 +77,7 @@ public class PropertyManager {
 		if ( String.class.equals(type) ) return Optional.of(value);
 		if ( Integer.class.equals(type) || int.class.equals(type) ) return Optional.of(Integer.parseInt(value));
 		if ( Double.class.equals(type) || double.class.equals(type) ) return Optional.of(Double.parseDouble(value));
+		if ( Float.class.equals(type) || float.class.equals(type) ) return Optional.of(Float.parseFloat(value));
 		if ( type.isEnum() ) {
 			return Arrays.stream(type.getEnumConstants()).map(o -> (Enum) o) //
 					.filter(e -> e.name().equalsIgnoreCase(value)) //
@@ -118,7 +119,7 @@ public class PropertyManager {
 		if ( obj instanceof String ) {
 			return (String) obj;
 		}
-		if ( obj instanceof Integer || obj instanceof Double ) {
+		if ( obj instanceof Integer || obj instanceof Double || obj instanceof Float ) {
 			return obj.toString();
 		}
 		if ( obj.getClass().isEnum() ) {
