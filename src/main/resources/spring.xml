@@ -23,7 +23,7 @@
     <bean class="pl.kbieron.iomerge.server.ui.TrayManager"/>
 
     <!-- UI - MouseTrapReader -->
-    <bean name="compositeListener" class="pl.kbieron.iomerge.server.ui.movementReader.CompositeListenerImpl"/>
+    <bean name="compositeListener" class="pl.kbieron.iomerge.server.ui.movementReader.CompositeListener"/>
     <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader"/>
 
     <!-- network -->
