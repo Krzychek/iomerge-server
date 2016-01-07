@@ -18,7 +18,7 @@ public class MsgDispatcher {
 	@Autowired
 	private ConnectionHandler connectionHandler;
 
-	public void dispatchMouseSync(short x, short y) {
+	public void dispatchMouseSync(int x, int y) {
 		connectionHandler.sendToClient(new MouseSync(x, y));
 	}
 

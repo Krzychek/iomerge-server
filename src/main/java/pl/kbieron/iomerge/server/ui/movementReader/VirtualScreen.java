@@ -29,7 +29,7 @@ class VirtualScreen implements MovementListener, KeyListener {
 	public void move(int dx, int dy) {
 		unusedYMove += dy * movementScale;
 		unusedXMove += dx * movementScale;
-		actionDispatcher.dispatchMouseSync((short) unusedXMove, (short) unusedYMove);
+		actionDispatcher.dispatchMouseSync((int) unusedXMove, (int) unusedYMove);
 		unusedXMove %= 1.0;
 		unusedYMove %= 1.0;
 	}
