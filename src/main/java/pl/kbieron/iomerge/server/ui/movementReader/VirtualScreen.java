@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-public class VirtualScreen implements MovementListener, KeyListener {
+class VirtualScreen implements MovementListener, KeyListener {
 
 	@Autowired
 	private AppStateManager appStateManager;

@@ -21,7 +21,10 @@
     <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>
     <bean class="pl.kbieron.iomerge.server.ui.SettingsWindow"/>
     <bean class="pl.kbieron.iomerge.server.ui.TrayManager"/>
-    <bean class="pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader"/>
+
+    <!-- UI - MouseTrapReader -->
+    <bean name="compositeListener" class="pl.kbieron.iomerge.server.ui.movementReader.CompositeListenerImpl"/>
+    <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader"/>
 
     <!-- network -->
     <bean class="pl.kbieron.iomerge.server.network.EventServer"/>
