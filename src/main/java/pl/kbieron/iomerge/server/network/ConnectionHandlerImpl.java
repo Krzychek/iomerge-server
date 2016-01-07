@@ -63,16 +63,16 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 	void disconnect() {
 		log.info("disconnecting from client");
 		heartBeetTimer.stop();
-		//		try {
-		//			clientSocket.close();
-		//		} catch (IOException e) {
-		//			log.warn(e);
-		//		}
-		//		try {
-		//			clientOutputStream.close();
-		//		} catch (IOException e) {
-		//			log.warn(e);
-		//		}
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			log.warn(e);
+		}
+		try {
+			clientOutputStream.close();
+		} catch (IOException e) {
+			log.warn(e);
+		}
 		appStateManager.disconnected();
 	}
 
