@@ -55,7 +55,7 @@ class VirtualScreen implements MovementListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
 		int keyCode = keyEvent.getKeyCode();
-		if ( keyCode == KeyEvent.VK_F12 ) appStateManager.exitRemote();
+		if ( keyCode == KeyEvent.VK_F4 ) appStateManager.exitRemote();
 		else actionDispatcher.dispatchKeyPress(keyCode);
 	}
 
