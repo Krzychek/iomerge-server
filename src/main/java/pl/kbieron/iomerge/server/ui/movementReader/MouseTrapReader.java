@@ -68,8 +68,8 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 		if ( move.x != 0 || move.y != 0 ) {
 			movementListener.move(move.x, move.y);
+			centerPointer();
 		}
-		centerPointer();
 	}
 
 	private void centerPointer() {
