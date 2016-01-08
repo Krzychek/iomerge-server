@@ -25,9 +25,6 @@ public class GestureRecorder implements MovementListener {
 	@Autowired
 	private Normalizer normalizer;
 
-	@Autowired
-	private AppStateManager appStateManager;
-
 	private boolean enoughTime = false;
 
 	private Input.Builder inputBuilder;
