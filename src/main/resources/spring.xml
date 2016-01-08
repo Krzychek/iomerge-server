@@ -15,7 +15,7 @@
     <bean class="pl.kbieron.iomerge.server.appState.AppStateManager"/>
     <bean class="pl.kbieron.iomerge.server.Bootstrap"/>
 
-    <bean class="pl.kbieron.iomerge.server.ui.movementReader.VirtualScreen"/>
+    <bean class="pl.kbieron.iomerge.server.movementReader.VirtualScreen"/>
 
     <!-- UI -->
     <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>
@@ -23,8 +23,8 @@
     <bean class="pl.kbieron.iomerge.server.ui.TrayManager"/>
 
     <!-- UI - MouseTrapReader -->
-    <bean name="compositeListener" class="pl.kbieron.iomerge.server.ui.movementReader.CompositeListener"/>
-    <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.ui.movementReader.MouseTrapReader"/>
+    <bean name="compositeListener" class="pl.kbieron.iomerge.server.movementReader.CompositeListener"/>
+    <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.movementReader.MouseTrapReader"/>
 
     <!-- network -->
     <bean class="pl.kbieron.iomerge.server.network.EventServer"/>
@@ -38,10 +38,10 @@
     <bean class="pl.kbieron.iomerge.server.gesture.calc.Normalizer"/>
     <bean class="pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher"/>
 
-    <!-- utilities -->
-    <bean class="pl.kbieron.iomerge.server.utilities.ClipboardManager"/>
+    <!-- utils -->
+    <bean class="pl.kbieron.iomerge.server.utils.ClipboardManager"/>
 
-    <!-- java platform utilities -->
+    <!-- java platform utils -->
     <bean id="defaultToolkit"
           class="java.awt.Toolkit"
           factory-method="getDefaultToolkit"/>

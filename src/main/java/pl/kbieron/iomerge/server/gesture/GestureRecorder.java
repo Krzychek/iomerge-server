@@ -7,7 +7,7 @@ import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
-import pl.kbieron.iomerge.server.utilities.MovementListener;
+import pl.kbieron.iomerge.server.movementReader.MovementListener;
 
 import javax.swing.Timer;
 

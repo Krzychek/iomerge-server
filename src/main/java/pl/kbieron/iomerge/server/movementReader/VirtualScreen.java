@@ -1,16 +1,15 @@
-package pl.kbieron.iomerge.server.ui.movementReader;
+package pl.kbieron.iomerge.server.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
-import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-class VirtualScreen implements MovementListener, KeyListener {
+public class VirtualScreen implements MovementListener, KeyListener {
 
 	@Autowired
 	private AppStateManager appStateManager;

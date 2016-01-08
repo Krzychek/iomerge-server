@@ -2,7 +2,7 @@ package pl.kbieron.iomerge.server.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.model.Edge;
-import pl.kbieron.iomerge.server.ui.movementReader.VirtualScreen;
+import pl.kbieron.iomerge.server.movementReader.VirtualScreen;
 import pl.kbieron.iomerge.server.network.EventServer;
 
 import javax.annotation.PostConstruct;

@@ -1,11 +1,11 @@
-package pl.kbieron.iomerge.server.ui.adapters;
+package pl.kbieron.iomerge.server.ui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 
 @FunctionalInterface
-public interface MouseEnteredAdapter extends MouseListener {
+interface MouseEnteredAdapter extends MouseListener {
 
 	@Override
 	default void mouseClicked(MouseEvent mouseEvent) {}

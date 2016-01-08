@@ -1,10 +1,9 @@
-package pl.kbieron.iomerge.server.ui.movementReader;
+package pl.kbieron.iomerge.server.movementReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.ui.UIHelper;
-import pl.kbieron.iomerge.server.utilities.MovementListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JFrame;

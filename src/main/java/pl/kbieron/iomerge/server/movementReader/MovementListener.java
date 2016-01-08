@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.utilities;
+package pl.kbieron.iomerge.server.movementReader;
 
 public interface MovementListener {
 

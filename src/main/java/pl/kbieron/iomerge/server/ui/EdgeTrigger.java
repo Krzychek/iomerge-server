@@ -7,7 +7,6 @@ import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.properties.ConfigProperty;
-import pl.kbieron.iomerge.server.ui.adapters.MouseEnteredAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JFrame;
