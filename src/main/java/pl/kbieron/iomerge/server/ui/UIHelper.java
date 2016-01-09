@@ -14,11 +14,15 @@ import java.awt.image.BufferedImage;
 
 public class UIHelper {
 
-	public static void makeInvisible(JFrame frame) {
+	public static void makeInvisible(JFrame frame, boolean hideCursor) {
 
 		frame.setUndecorated(true);
 		makeWindowInvisible(frame);
-		setInvisibleContentPane(frame);
+		setInvisibleContentPane(frame, hideCursor);
+	}
+
+	public static void makeInvisible(JFrame frame) {
+		makeInvisible(frame, false);
 	}
 
 	private static void makeWindowInvisible(Window window) {
@@ -27,13 +31,16 @@ public class UIHelper {
 		window.setBackground(new Color(0, 0, 0, 0));
 	}
 
-	private static void setInvisibleContentPane(RootPaneContainer container) {
+	private static void setInvisibleContentPane(RootPaneContainer container, boolean hideCursor) {
 
 		JComponent rootComponent = new JPanel();
 		rootComponent.setOpaque(false);
-		Cursor blankCursor = Toolkit.getDefaultToolkit()
-				.createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
-		rootComponent.setCursor(blankCursor);
+
+		if ( hideCursor ) {
+			Cursor blankCursor = Toolkit.getDefaultToolkit()
+					.createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
+			rootComponent.setCursor(blankCursor);
+		}
 		container.setContentPane(rootComponent);
 
 	}

@@ -45,7 +45,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 		robot = new Robot();
 		timer = new Timer(0, this::readMove);
 		// UI stuff
-		UIHelper.makeInvisible(this);
+		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
 		reposition();
 	}
