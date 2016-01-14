@@ -74,6 +74,7 @@ public class EventServer implements ConnectionHandler {
 				log.info("socket client accepted");
 				connectionHandler = ConnectionHandlerImpl.connect(clientSocket, sendBufferSize, appStateManager);
 				this.connectionHandler = connectionHandler;
+				appStateManager.connected();
 				connectionHandler.startReading(msgProcessor);
 			} catch (SocketException ignored) {
 			} catch (IOException e) {

@@ -45,7 +45,6 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 		socket.setSendBufferSize(sendBufferSize);
 		ConnectionHandlerImpl connectionHandler = new ConnectionHandlerImpl(socket, appStateManager);
 		log.info("client connected");
-		appStateManager.connected();
 		return connectionHandler;
 	}
 
