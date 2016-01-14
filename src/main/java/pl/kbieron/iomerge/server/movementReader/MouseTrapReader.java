@@ -34,9 +34,6 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	@Autowired
 	public MouseTrapReader(CompositeListener compositeListener) {
 		this.movementListener = compositeListener;
-		addKeyListener(compositeListener);
-		addMouseListener(compositeListener);
-		addMouseWheelListener(compositeListener);
 	}
 
 	@PostConstruct

@@ -1,6 +1,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	        http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -25,6 +26,20 @@
     <!-- UI - MouseTrapReader -->
     <bean name="compositeListener" class="pl.kbieron.iomerge.server.movementReader.CompositeListener"/>
     <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.movementReader.MouseTrapReader"/>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean"
+          p:targetObject-ref="mouseTrapReader"
+          p:targetMethod="addKeyListener"
+          p:arguments-ref="compositeListener"/>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean"
+          p:targetObject-ref="mouseTrapReader"
+          p:targetMethod="addMouseListener"
+          p:arguments-ref="compositeListener"/>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean"
+          p:targetObject-ref="mouseTrapReader"
+          p:targetMethod="addMouseWheelListener"
+          p:arguments-ref="compositeListener"/>
+
 
     <!-- network -->
     <bean class="pl.kbieron.iomerge.server.network.EventServer"/>
