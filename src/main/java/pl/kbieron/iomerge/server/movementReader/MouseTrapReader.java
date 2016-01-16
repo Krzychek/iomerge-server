@@ -42,9 +42,9 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 		robot = new Robot();
 		timer = new Timer(0, this::readMove);
 		// UI stuff
+		reposition();
 		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
-		reposition();
 	}
 
 	private void reposition() {
@@ -57,7 +57,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	@SuppressWarnings( "UnusedParameters" )
-	synchronized private void readMove(Object ignored) {
+	private void readMove(Object ignored) {
 		if ( !reading ) return;
 		Point move = MouseInfo.getPointerInfo().getLocation();
 		move.translate(-center.x, -center.y);
@@ -80,11 +80,8 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 		setVisible(true);
 
-		Point location = getLocation();
-		robot.mouseMove(location.x + getWidth() - 1, location.y + getHeight() - 1);
-
-		location.translate(getWidth() / 2, getHeight() / 2);
-		center = location;
+		center = getLocation();
+		center.translate(getWidth() / 2, getHeight() / 2);
 
 		centerPointer();
 
