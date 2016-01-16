@@ -50,7 +50,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	private void reposition() {
 		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
 				.map(screen -> screen.getDefaultConfiguration().getBounds()) //
-				.max((a, b) -> a.x * a.y - b.x * b.y) //
+				.max((a, b) -> a.width * a.height) //
 				.get();
 		setLocation(displayRect.x, displayRect.y);
 		setSize(displayRect.width, displayRect.height);
