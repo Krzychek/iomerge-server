@@ -86,7 +86,8 @@ public class EventServer implements ConnectionHandler {
 	}
 
 	public void sendToClient(Message msg) {
-		connectionHandler.sendToClient(msg);
+		if ( connectionHandler != null )
+			connectionHandler.sendToClient(msg);
 	}
 
 	public int getPort() {

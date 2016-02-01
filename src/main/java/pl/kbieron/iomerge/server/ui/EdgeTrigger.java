@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.util.Arrays;
 
@@ -33,8 +34,13 @@ class EdgeTrigger extends JFrame implements AppStateListener {
 	@ConfigProperty( "EdgeTriggerLength" )
 	private int length = 500;
 
+	public EdgeTrigger(String title) throws HeadlessException {
+		super(title);
+	}
+
 	@PostConstruct
 	private void init() {
+		reposition();
 		UIHelper.makeInvisible(this);
 
 		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen());

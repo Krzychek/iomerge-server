@@ -19,13 +19,15 @@
     <bean class="pl.kbieron.iomerge.server.movementReader.VirtualScreen"/>
 
     <!-- UI -->
-    <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>
+    <bean class="pl.kbieron.iomerge.server.ui.EdgeTrigger" c:title="IOMerge Trigger"/>
     <bean class="pl.kbieron.iomerge.server.ui.SettingsWindow"/>
     <bean class="pl.kbieron.iomerge.server.ui.TrayManager"/>
 
     <!-- UI - MouseTrapReader -->
     <bean name="compositeListener" class="pl.kbieron.iomerge.server.movementReader.CompositeListener"/>
-    <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.movementReader.MouseTrapReader"/>
+    <bean name="mouseTrapReader" class="pl.kbieron.iomerge.server.movementReader.MouseTrapReader"
+          c:compositeListener-ref="compositeListener"
+          c:title="IOMerge CompositeListener"/>
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingBean"
           p:targetObject-ref="mouseTrapReader"

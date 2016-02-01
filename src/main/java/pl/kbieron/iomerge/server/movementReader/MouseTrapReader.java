@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -31,8 +32,8 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 	private Robot robot;
 
-	@Autowired
-	public MouseTrapReader(CompositeListener compositeListener) {
+	public MouseTrapReader(String title, CompositeListener compositeListener) {
+		super(title);
 		this.movementListener = compositeListener;
 	}
 
