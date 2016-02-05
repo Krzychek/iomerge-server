@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server.network;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.message.Message;
+import pl.kbieron.iomerge.model.message.keyboard.KeyClick;
 import pl.kbieron.iomerge.model.message.keyboard.KeyPress;
 import pl.kbieron.iomerge.model.message.keyboard.KeyRelease;
 import pl.kbieron.iomerge.model.message.misc.ClipboardSync;
@@ -52,5 +53,9 @@ public class MsgDispatcher {
 
 	public void dispatchCustomMsg(Message msg) {
 		connectionHandler.sendToClient(msg);
+	}
+
+	public void dispatchKeyClick(int keyCode) {
+		connectionHandler.sendToClient(new KeyClick(keyCode));
 	}
 }

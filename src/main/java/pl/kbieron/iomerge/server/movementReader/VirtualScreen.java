@@ -7,6 +7,7 @@ import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 
 public class VirtualScreen implements MovementListener, KeyListener {
@@ -23,6 +24,14 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	private double unusedXMove = 0.0;
 
 	private double unusedYMove = 0.0;
+
+	private final static int[] modKeys = new int[]{ //
+			KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT
+	};
+
+	static {
+		Arrays.sort(modKeys);
+	}
 
 	@Override
 	public void move(int dx, int dy) {
@@ -54,13 +63,21 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
 		int keyCode = keyEvent.getKeyCode();
-		if ( keyCode == KeyEvent.VK_F4 ) appStateManager.exitRemote();
-		else actionDispatcher.dispatchKeyPress(keyCode);
+
+		if ( keyCode == KeyEvent.VK_F4 )
+			appStateManager.exitRemote();
+		else if ( Arrays.binarySearch(modKeys, keyCode) != -1 )
+			actionDispatcher.dispatchKeyPress(keyCode);
+		else
+			actionDispatcher.dispatchKeyClick(keyCode);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent) {
-		actionDispatcher.dispatchKeyRelease(keyEvent.getKeyCode());
+		int keyCode = keyEvent.getKeyCode();
+
+		if ( Arrays.binarySearch(modKeys, keyCode) != -1 )
+			actionDispatcher.dispatchKeyPress(keyCode);
 	}
 
 	public double getMovementScale() {
