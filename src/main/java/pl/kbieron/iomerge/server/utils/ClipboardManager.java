@@ -1,7 +1,7 @@
 package pl.kbieron.iomerge.server.utils;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
@@ -19,17 +19,17 @@ public class ClipboardManager implements AppStateListener, ClipboardOwner {
 
 	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
-	@Autowired
+	@Inject
 	private MsgDispatcher msgDispatcher;
 
-	@Autowired
+	@Inject
 	private Clipboard systemClipboard;
 
 	private Object sentData;
 
 	@Override
-	public void onApplicationEvent(AppState.UpdateEvent updateEvent) {
-		if ( AppState.ON_REMOTE == updateEvent.getStateChange() //
+	public void onStateChange(AppState newState) {
+		if ( AppState.ON_REMOTE == newState //
 				&& systemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor) ) {
 
 			try {

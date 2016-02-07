@@ -1,9 +1,8 @@
 package pl.kbieron.iomerge.server.movementReader;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 
-import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -18,15 +17,15 @@ class CompositeListener implements MovementListener, MouseListener, MouseWheelLi
 
 	private MovementListener movementListener;
 
-	@Autowired
 	private VirtualScreen virtualScreen;
 
-	@Autowired
 	private GestureRecorder gestureRecorder;
 
-	@PostConstruct
-	void init() {
-		movementListener = virtualScreen;
+	@Inject
+	public CompositeListener(VirtualScreen virtualScreen, GestureRecorder gestureRecorder) {
+		this.gestureRecorder = gestureRecorder;
+		this.virtualScreen = virtualScreen;
+		this.movementListener = virtualScreen;
 	}
 
 	@Override

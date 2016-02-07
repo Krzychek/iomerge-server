@@ -1,10 +1,10 @@
 package pl.kbieron.iomerge.server.network;
 
+import org.annoprops.ConfigProperty;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
-import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -18,10 +18,10 @@ public class EventServer implements ConnectionHandler {
 
 	private final Logger log = Logger.getLogger(EventServer.class);
 
-	@Autowired
+	@Inject
 	private AppStateManager appStateManager;
 
-	@Autowired
+	@Inject
 	private MsgProcessor msgProcessor;
 
 	private ConnectionHandler connectionHandler;

@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.gesture.calc;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import pl.kbieron.iomerge.server.gesture.PatternDatabase;
 import pl.kbieron.iomerge.server.gesture.model.Input;
 import pl.kbieron.iomerge.server.gesture.model.Pattern;
@@ -8,10 +8,10 @@ import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 public class TemplateMatcher {
 
-	@Autowired
+	@Inject
 	private LikelihoodCalculator likelihoodCalculator;
 
-	@Autowired
+	@Inject
 	private PatternDatabase patternDatabase;
 
 	public MatchResult bestMatch(Input input) {

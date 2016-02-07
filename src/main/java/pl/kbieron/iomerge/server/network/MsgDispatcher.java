@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.keyboard.KeyClick;
@@ -16,7 +16,7 @@ import pl.kbieron.iomerge.model.message.mouse.MouseWheel;
 
 public class MsgDispatcher {
 
-	@Autowired
+	@Inject
 	private ConnectionHandler connectionHandler;
 
 	public void dispatchMouseSync(int x, int y) {

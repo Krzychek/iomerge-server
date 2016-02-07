@@ -1,14 +1,13 @@
 package pl.kbieron.iomerge.server.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
-import pl.kbieron.iomerge.server.properties.ConfigProperty;
+import org.annoprops.ConfigProperty;
 
-import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.GraphicsEnvironment;
@@ -17,12 +16,12 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 
 
-class EdgeTrigger extends JFrame implements AppStateListener {
+public class EdgeTrigger extends JFrame implements AppStateListener {
 
-	@Autowired
+	@Inject
 	private AppStateManager appStateManager;
 
-	@Autowired
+	@Inject
 	private MsgDispatcher msgDispatcher;
 
 	@ConfigProperty( "Edge" )
@@ -34,11 +33,11 @@ class EdgeTrigger extends JFrame implements AppStateListener {
 	@ConfigProperty( "EdgeTriggerLength" )
 	private int length = 500;
 
-	public EdgeTrigger(String title) throws HeadlessException {
-		super(title);
+	public EdgeTrigger() throws HeadlessException {
+		super("IOMerge Trigger");
+		init();
 	}
 
-	@PostConstruct
 	private void init() {
 		reposition();
 		UIHelper.makeInvisible(this);
@@ -76,8 +75,8 @@ class EdgeTrigger extends JFrame implements AppStateListener {
 	}
 
 	@Override
-	public void onApplicationEvent(AppState.UpdateEvent appStateUpdateEvent) {
-		AppState stateChange = appStateUpdateEvent.getStateChange();
+	public void onStateChange(AppState appStateUpdateEvent) {
+		AppState stateChange = appStateUpdateEvent;
 		if ( AppState.ON_LOCAL == stateChange ) {
 			msgDispatcher.dispatchEdgeSync(edge);
 			reposition();

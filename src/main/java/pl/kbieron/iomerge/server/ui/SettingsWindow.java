@@ -1,11 +1,11 @@
 package pl.kbieron.iomerge.server.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.movementReader.VirtualScreen;
 import pl.kbieron.iomerge.server.network.EventServer;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -14,17 +14,15 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 
 
 class SettingsWindow extends JFrame {
 
-	@Autowired
 	private EventServer eventServer;
 
-	@Autowired
 	private EdgeTrigger edgeTrigger;
 
-	@Autowired
 	private VirtualScreen virtualScreen;
 
 	private JComboBox<Edge> edge;
@@ -36,6 +34,15 @@ class SettingsWindow extends JFrame {
 	private JFormattedTextField moveScale;
 
 	private JFormattedTextField port;
+
+	@Inject
+	public SettingsWindow(EventServer eventServer, EdgeTrigger edgeTrigger, VirtualScreen virtualScreen)
+			throws HeadlessException {
+		super("IOMerge Settings");
+		this.eventServer = eventServer;
+		this.edgeTrigger = edgeTrigger;
+		this.virtualScreen = virtualScreen;
+	}
 
 	@PostConstruct
 	private void init() {

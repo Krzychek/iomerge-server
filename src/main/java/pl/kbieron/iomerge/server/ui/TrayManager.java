@@ -1,17 +1,16 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import java.awt.AWTException;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.io.IOException;
+import java.io.File;
 
 
 class TrayManager {
@@ -20,15 +19,16 @@ class TrayManager {
 
 	private SystemTray tray;
 
-	@Autowired
-	private ConfigurableApplicationContext context;
-
-	@Autowired
 	private SettingsWindow settingsWindow;
 
 	private TrayIcon trayIcon;
 
-	@PostConstruct
+	@Inject
+	public TrayManager(SettingsWindow settingsWindow) {
+		this.settingsWindow = settingsWindow;
+		init();
+	}
+
 	private void init() {
 		if ( !SystemTray.isSupported() ) {
 			log.warn("Tray is not supported on this system");
@@ -36,9 +36,9 @@ class TrayManager {
 		}
 		tray = SystemTray.getSystemTray();
 		try {
-			trayIcon = new TrayIcon(ImageIO.read(context.getResource("icon.png").getURL()));
+			trayIcon = new TrayIcon(ImageIO.read(getClass().getResource("/icon.png")));
 			trayIcon.setImageAutoSize(true);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("filed to load tray icon", e);
 			return;
 		}
@@ -51,7 +51,7 @@ class TrayManager {
 		PopupMenu popup = new PopupMenu();
 		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.setVisible(true));
 		popup.add(new MenuItem("Exit")).addActionListener(e -> {
-			context.close();
+			//			context.close();
 			System.exit(0);
 		});
 

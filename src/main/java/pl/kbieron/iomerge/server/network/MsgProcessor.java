@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import pl.kbieron.iomerge.model.MessageProcessorAdapter;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.utils.ClipboardManager;
@@ -8,10 +8,10 @@ import pl.kbieron.iomerge.server.utils.ClipboardManager;
 
 class MsgProcessor extends MessageProcessorAdapter {
 
-	@Autowired
+	@Inject
 	private AppStateManager appStateManager;
 
-	@Autowired
+	@Inject
 	private ClipboardManager clipboardManager;
 
 	@Override

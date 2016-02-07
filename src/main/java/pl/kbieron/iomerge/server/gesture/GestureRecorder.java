@@ -1,14 +1,13 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
 import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 import pl.kbieron.iomerge.server.gesture.model.Input;
-import pl.kbieron.iomerge.server.network.MsgDispatcher;
 import pl.kbieron.iomerge.server.movementReader.MovementListener;
+import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
+import javax.inject.Inject;
 import javax.swing.Timer;
 
 
@@ -16,13 +15,13 @@ public class GestureRecorder implements MovementListener {
 
 	private final Logger log = Logger.getLogger(MovementListener.class);
 
-	@Autowired
+	@Inject
 	private TemplateMatcher templateMatcher;
 
-	@Autowired
+	@Inject
 	private MsgDispatcher msgDispatcher;
 
-	@Autowired
+	@Inject
 	private Normalizer normalizer;
 
 	private boolean enoughTime = false;

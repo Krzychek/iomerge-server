@@ -8,7 +8,7 @@ import static pl.kbieron.iomerge.server.gesture.Constants.E_SIGMA;
 import static pl.kbieron.iomerge.server.gesture.Constants.LAMBDA;
 
 
-class LikelihoodCalculator {
+public class LikelihoodCalculator {
 
 	public double getLikelihood(List<Point> sequence, List<Point> pattern) {
 		MeanDistances d = MeanDistances.getMeanDistances(sequence, pattern);

@@ -1,29 +1,16 @@
 package pl.kbieron.iomerge.server.movementReader;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.annoprops.ConfigProperty;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
-import pl.kbieron.iomerge.server.properties.ConfigProperty;
 
+import javax.inject.Inject;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 
 public class VirtualScreen implements MovementListener, KeyListener {
-
-	@Autowired
-	private AppStateManager appStateManager;
-
-	@Autowired
-	private MsgDispatcher actionDispatcher;
-
-	@ConfigProperty( "MovementScale" )
-	private double movementScale = 1.5;
-
-	private double unusedXMove = 0.0;
-
-	private double unusedYMove = 0.0;
 
 	private final static int[] modKeys = new int[]{ //
 			KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT
@@ -32,6 +19,19 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	static {
 		Arrays.sort(modKeys);
 	}
+
+	@Inject
+	private AppStateManager appStateManager;
+
+	@Inject
+	private MsgDispatcher actionDispatcher;
+
+	@ConfigProperty( "MovementScale" )
+	private double movementScale = 1.5;
+
+	private double unusedXMove = 0.0;
+
+	private double unusedYMove = 0.0;
 
 	@Override
 	public void move(int dx, int dy) {
