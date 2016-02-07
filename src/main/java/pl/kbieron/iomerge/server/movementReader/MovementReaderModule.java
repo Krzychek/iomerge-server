@@ -1,6 +1,8 @@
 package pl.kbieron.iomerge.server.movementReader;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
+import pl.kbieron.iomerge.server.appState.AppStateListener;
 
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -19,6 +21,6 @@ public class MovementReaderModule extends AbstractModule {
 		bind(MouseWheelListener.class).to(CompositeListener.class).asEagerSingleton();
 		bind(MouseListener.class).to(CompositeListener.class).asEagerSingleton();
 
-
+		Multibinder.newSetBinder(binder(), AppStateListener.class).addBinding().to(MouseTrapReader.class);
 	}
 }

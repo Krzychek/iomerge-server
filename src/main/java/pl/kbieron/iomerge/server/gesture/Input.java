@@ -1,6 +1,4 @@
-package pl.kbieron.iomerge.server.gesture.model;
-
-import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
+package pl.kbieron.iomerge.server.gesture;
 
 import java.awt.Point;
 import java.io.Serializable;
@@ -10,7 +8,7 @@ import java.util.List;
 import static pl.kbieron.iomerge.server.gesture.Constants.MIN_POINTS;
 
 
-public class Input implements Serializable {
+class Input implements Serializable {
 
 	private final List<Point> points;
 

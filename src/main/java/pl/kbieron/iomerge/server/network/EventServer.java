@@ -35,7 +35,7 @@ public class EventServer implements ConnectionHandler {
 	@ConfigProperty( "SendBufferSize" )
 	private int sendBufferSize = 512;
 
-	@PreDestroy
+	@PreDestroy // TODO
 	private void shutdown() {
 		log.info("shutting down server");
 		if ( serverSocket != null ) try {

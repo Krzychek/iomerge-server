@@ -1,12 +1,9 @@
-package pl.kbieron.iomerge.server.gesture.calc;
+package pl.kbieron.iomerge.server.gesture;
 
 import javax.inject.Inject;
-import pl.kbieron.iomerge.server.gesture.PatternDatabase;
-import pl.kbieron.iomerge.server.gesture.model.Input;
-import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 
-public class TemplateMatcher {
+class TemplateMatcher {
 
 	@Inject
 	private LikelihoodCalculator likelihoodCalculator;

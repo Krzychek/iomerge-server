@@ -1,9 +1,6 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import org.apache.log4j.Logger;
-import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
-import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
-import pl.kbieron.iomerge.server.gesture.model.Input;
 import pl.kbieron.iomerge.server.movementReader.MovementListener;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
@@ -27,6 +24,8 @@ public class GestureRecorder implements MovementListener {
 	private boolean enoughTime = false;
 
 	private Input.Builder inputBuilder;
+
+	GestureRecorder() {}
 
 	@Override
 	synchronized public void move(int dx, int dy) {

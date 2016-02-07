@@ -19,17 +19,12 @@ class TrayManager {
 
 	private SystemTray tray;
 
+	@Inject
 	private SettingsWindow settingsWindow;
 
 	private TrayIcon trayIcon;
 
-	@Inject
-	public TrayManager(SettingsWindow settingsWindow) {
-		this.settingsWindow = settingsWindow;
-		init();
-	}
-
-	private void init() {
+	public TrayManager() {
 		if ( !SystemTray.isSupported() ) {
 			log.warn("Tray is not supported on this system");
 			return;

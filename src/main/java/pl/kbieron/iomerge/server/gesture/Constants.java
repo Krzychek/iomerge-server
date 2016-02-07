@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.gesture;
 
-public interface Constants {
+interface Constants {
 
 	double E_SIGMA = 200.0;
 

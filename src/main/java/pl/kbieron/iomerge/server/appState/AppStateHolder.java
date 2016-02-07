@@ -15,7 +15,7 @@ class AppStateHolder implements AppStateManager {
 	private Set<AppStateListener> listeners;
 
 	@Inject
-	public AppStateHolder(Set<AppStateListener> listeners) {
+	AppStateHolder(Set<AppStateListener> listeners) {
 		this.listeners = listeners;
 		setNewState(AppState.DISCONNECTED);
 	}

@@ -33,7 +33,7 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 	@ConfigProperty( "EdgeTriggerLength" )
 	private int length = 500;
 
-	public EdgeTrigger() throws HeadlessException {
+	EdgeTrigger() throws HeadlessException {
 		super("IOMerge Trigger");
 		init();
 	}
@@ -76,8 +76,7 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 
 	@Override
 	public void onStateChange(AppState appStateUpdateEvent) {
-		AppState stateChange = appStateUpdateEvent;
-		if ( AppState.ON_LOCAL == stateChange ) {
+		if ( AppState.ON_LOCAL == appStateUpdateEvent ) {
 			msgDispatcher.dispatchEdgeSync(edge);
 			reposition();
 			Timer timer = new Timer(50, actionEvent -> setVisible(true));

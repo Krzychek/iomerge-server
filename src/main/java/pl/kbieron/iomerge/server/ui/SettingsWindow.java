@@ -35,7 +35,7 @@ class SettingsWindow extends JFrame {
 	private JFormattedTextField port;
 
 	@Inject
-	public SettingsWindow(EventServer eventServer, EdgeTrigger edgeTrigger, VirtualScreen virtualScreen)
+	SettingsWindow(EventServer eventServer, EdgeTrigger edgeTrigger, VirtualScreen virtualScreen)
 			throws HeadlessException {
 		super("IOMerge Settings");
 		this.eventServer = eventServer;

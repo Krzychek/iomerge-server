@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture.calc;
+package pl.kbieron.iomerge.server.gesture;
 
 import java.awt.Point;
 import java.util.List;
@@ -8,7 +8,7 @@ import static pl.kbieron.iomerge.server.gesture.Constants.E_SIGMA;
 import static pl.kbieron.iomerge.server.gesture.Constants.LAMBDA;
 
 
-public class LikelihoodCalculator {
+class LikelihoodCalculator {
 
 	public double getLikelihood(List<Point> sequence, List<Point> pattern) {
 		MeanDistances d = MeanDistances.getMeanDistances(sequence, pattern);

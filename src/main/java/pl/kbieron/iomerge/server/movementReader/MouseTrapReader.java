@@ -19,7 +19,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.Arrays;
 
 
-public class MouseTrapReader extends JFrame implements AppStateListener {
+class MouseTrapReader extends JFrame implements AppStateListener {
 
 	private final MovementListener movementListener;
 
@@ -34,7 +34,7 @@ public class MouseTrapReader extends JFrame implements AppStateListener {
 	private final Timer timer = new Timer(0, this::readMove);
 
 	@Inject
-	public MouseTrapReader(MovementListener movementListener, MouseWheelListener mouseWheelListener,
+	MouseTrapReader(MovementListener movementListener, MouseWheelListener mouseWheelListener,
 	                       MouseListener mouseListener, KeyListener keyListener) throws AWTException {
 
 		super("IOMerge MovementReader");

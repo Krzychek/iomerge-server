@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture.model;
+package pl.kbieron.iomerge.server.gesture;
 
 import pl.kbieron.iomerge.model.message.Message;
 
@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.util.List;
 
 
-public class Pattern {
+class Pattern {
 
 	private final List<Point> points;
 

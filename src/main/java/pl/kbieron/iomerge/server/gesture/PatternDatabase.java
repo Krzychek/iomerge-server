@@ -3,14 +3,13 @@ package pl.kbieron.iomerge.server.gesture;
 import pl.kbieron.iomerge.model.message.keyboard.BackBtnClick;
 import pl.kbieron.iomerge.model.message.keyboard.HomeBtnClick;
 import pl.kbieron.iomerge.model.message.keyboard.MenuBtnClick;
-import pl.kbieron.iomerge.server.gesture.model.Pattern;
 
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class PatternDatabase {
+class PatternDatabase {
 
 	private final List<Pattern> patterns = Arrays.asList( //
 			new Pattern(Arrays.asList( // up

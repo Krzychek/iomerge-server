@@ -1,9 +1,6 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import com.google.inject.AbstractModule;
-import pl.kbieron.iomerge.server.gesture.calc.LikelihoodCalculator;
-import pl.kbieron.iomerge.server.gesture.calc.Normalizer;
-import pl.kbieron.iomerge.server.gesture.calc.TemplateMatcher;
 
 
 public class GestureModule extends AbstractModule {

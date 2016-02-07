@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.gesture.calc;
+package pl.kbieron.iomerge.server.gesture;
 
 import java.awt.Point;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import static pl.kbieron.iomerge.server.gesture.Constants.NORM_LENGTH;
 import static pl.kbieron.iomerge.server.gesture.Constants.NORM_SIZE;
 
 
-public class Normalizer {
+class Normalizer {
 
 	public List<Point> normalize(List<Point> points) {
 		if ( points.size() < MIN_POINTS ) throw new IllegalArgumentException("too few points provided");
