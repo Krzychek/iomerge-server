@@ -4,7 +4,6 @@ import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.movementReader.VirtualScreen;
 import pl.kbieron.iomerge.server.network.EventServer;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,9 +41,9 @@ class SettingsWindow extends JFrame {
 		this.eventServer = eventServer;
 		this.edgeTrigger = edgeTrigger;
 		this.virtualScreen = virtualScreen;
+		init();
 	}
 
-	@PostConstruct
 	private void init() {
 		createFields();
 		setLayout();
