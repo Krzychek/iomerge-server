@@ -66,7 +66,7 @@ public class VirtualScreen implements MovementListener, KeyListener {
 
 		if ( keyCode == KeyEvent.VK_F4 )
 			appStateManager.exitRemote();
-		else if ( Arrays.binarySearch(modKeys, keyCode) != -1 )
+		else if ( Arrays.binarySearch(modKeys, keyCode) >= 0 )
 			actionDispatcher.dispatchKeyPress(keyCode);
 		else
 			actionDispatcher.dispatchKeyClick(keyCode);
@@ -76,8 +76,8 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	public void keyReleased(KeyEvent keyEvent) {
 		int keyCode = keyEvent.getKeyCode();
 
-		if ( Arrays.binarySearch(modKeys, keyCode) != -1 )
-			actionDispatcher.dispatchKeyPress(keyCode);
+		if ( Arrays.binarySearch(modKeys, keyCode) >= 0 )
+			actionDispatcher.dispatchKeyRelease(keyCode);
 	}
 
 	public double getMovementScale() {
