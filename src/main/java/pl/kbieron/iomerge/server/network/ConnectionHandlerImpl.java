@@ -18,7 +18,9 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 
 	private static final Logger log = Logger.getLogger(ConnectionHandlerImpl.class);
 
-	private final Timer heartBeetTimer;
+	private final Timer heartBeatTimer;
+
+	private final Timer timeOutTimer;
 
 	private final ObjectInputStream clientInputStream;
 
@@ -35,8 +37,12 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 		this.clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		this.clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
-		heartBeetTimer = new Timer(2000, e -> sendToClient(new Heartbeat()));
-		heartBeetTimer.start();
+		Heartbeat heartbeat = new Heartbeat();
+		heartBeatTimer = new Timer(4000, e -> sendToClient(heartbeat));
+		heartBeatTimer.start();
+
+		timeOutTimer = new Timer(5000, e -> disconnect());
+		timeOutTimer.start();
 	}
 
 	static ConnectionHandlerImpl connect(Socket socket, int sendBufferSize, AppStateManager appStateManager)
@@ -61,7 +67,7 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 
 	void disconnect() {
 		log.info("disconnecting from client");
-		heartBeetTimer.stop();
+		heartBeatTimer.stop();
 		try {
 			clientSocket.close();
 		} catch (IOException e) {
@@ -85,5 +91,10 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 		} catch (IOException e) {
 			log.error(e);
 		}
+	}
+
+	@Override
+	public void keepAlive() {
+		timeOutTimer.restart();
 	}
 }

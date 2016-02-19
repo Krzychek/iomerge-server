@@ -14,6 +14,9 @@ class MsgProcessor extends MessageProcessorAdapter {
 	@Inject
 	private ClipboardManager clipboardManager;
 
+	@Inject
+	private ConnectionHandler connectionHandler;
+
 	@Override
 	public void clipboardSync(String text) {
 		clipboardManager.setClipboardContent(text);
@@ -22,5 +25,10 @@ class MsgProcessor extends MessageProcessorAdapter {
 	@Override
 	public void remoteExit() {
 		appStateManager.exitRemote();
+	}
+
+	@Override
+	public void heartbeat() {
+		connectionHandler.keepAlive();
 	}
 }
