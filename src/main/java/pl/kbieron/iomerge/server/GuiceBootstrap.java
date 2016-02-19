@@ -14,15 +14,20 @@ import pl.kbieron.iomerge.server.ui.EdgeTrigger;
 import pl.kbieron.iomerge.server.ui.UIModule;
 import pl.kbieron.iomerge.server.utils.UtilModule;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 
 public class GuiceBootstrap extends AbstractModule {
 
-	private static final Logger log = Logger.getLogger(AbstractModule.class);
+	private static final Logger log = Logger.getLogger(GuiceBootstrap.class);
 
-	private static final String SETTINGS_FILE = "settings.properties";
+	private static final String SETTINGS_FILE;
+
+	static {
+		SETTINGS_FILE = System.getProperty("user.home") + File.separator + ".config/iomerge.properties";
+	}
 
 	public static void main(String... args) throws InterruptedException, IOException {
 		Injector injector = Guice.createInjector(new GuiceBootstrap());
@@ -30,23 +35,24 @@ public class GuiceBootstrap extends AbstractModule {
 		final PropertyManager propertyManager = PropertyManager.createWithObjects(
 				Arrays.asList(injector.getInstance(EventServer.class), injector.getInstance(EdgeTrigger.class)));
 
-		propertyManager.readPropertiesFromFile(SETTINGS_FILE);
+		if ( new File(SETTINGS_FILE).exists() )
+			propertyManager.readPropertiesFromFile(SETTINGS_FILE);
+
 		injector.getInstance(EventServer.class).start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			try {
 				propertyManager.savePropertiesToFile(SETTINGS_FILE);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("Problem while saving settings file", e);
 			}
-		}));
+		}, "shutdown hook"));
 	}
 
 	@Override
 	protected void configure() {
 		install(new MovementReaderModule());
 		install(new AppStateModule());
-		install(new MovementReaderModule());
 		install(new NetworkModule());
 		install(new UIModule());
 		install(new UtilModule());
