@@ -6,6 +6,7 @@ import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.misc.Heartbeat;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 
+import javax.inject.Inject;
 import javax.swing.Timer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,6 +30,9 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 	private final AppStateManager appStateManager;
 
 	private final ObjectOutputStream clientOutputStream;
+
+	@Inject
+	private MsgProcessor msgProcessor;
 
 	private ConnectionHandlerImpl(Socket clientSocket, AppStateManager appStateManager) throws IOException {
 		this.appStateManager = appStateManager;
@@ -54,7 +58,7 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 		return connectionHandler;
 	}
 
-	void startReading(MessageProcessor msgProcessor) throws IOException {
+	void startReading() throws IOException {
 		//noinspection InfiniteLoopStatement
 		while ( true ) {
 			try {

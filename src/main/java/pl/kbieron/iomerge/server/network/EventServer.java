@@ -21,9 +21,6 @@ public class EventServer implements ConnectionHandler {
 	@Inject
 	private AppStateManager appStateManager;
 
-	@Inject
-	private MsgProcessor msgProcessor;
-
 	private ConnectionHandler connectionHandler;
 
 	private ServerSocket serverSocket;
@@ -75,8 +72,9 @@ public class EventServer implements ConnectionHandler {
 				connectionHandler = ConnectionHandlerImpl.connect(clientSocket, sendBufferSize, appStateManager);
 				this.connectionHandler = connectionHandler;
 				appStateManager.connected();
-				connectionHandler.startReading(msgProcessor);
-			} catch (SocketException ignored) {
+				connectionHandler.startReading();
+			} catch (SocketException e) {
+				log.debug(e);
 			} catch (IOException e) {
 				log.warn("Problem with connection", e);
 			} finally {
