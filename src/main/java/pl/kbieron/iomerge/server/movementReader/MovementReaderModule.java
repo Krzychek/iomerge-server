@@ -20,7 +20,5 @@ public class MovementReaderModule extends AbstractModule {
 		bind(KeyListener.class).to(CompositeListener.class).asEagerSingleton();
 		bind(MouseWheelListener.class).to(CompositeListener.class).asEagerSingleton();
 		bind(MouseListener.class).to(CompositeListener.class).asEagerSingleton();
-
-		Multibinder.newSetBinder(binder(), AppStateListener.class).addBinding().to(MouseTrapReader.class);
 	}
 }

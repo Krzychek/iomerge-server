@@ -16,7 +16,6 @@ import pl.kbieron.iomerge.server.utils.UtilModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 
 public class GuiceBootstrap extends AbstractModule {
@@ -30,17 +29,31 @@ public class GuiceBootstrap extends AbstractModule {
 	}
 
 	public static void main(String... args) throws InterruptedException, IOException {
-		Injector injector = Guice.createInjector(new GuiceBootstrap());
+		GuiceBootstrap guiceBootstrap = new GuiceBootstrap();
+		Injector injector = Guice.createInjector(guiceBootstrap);
+		guiceBootstrap.init(injector);
+	}
 
-		final PropertyManager propertyManager = PropertyManager.createWithObjects(
-				Arrays.asList(injector.getInstance(EventServer.class), injector.getInstance(EdgeTrigger.class)));
+	private void init(Injector injector) throws IOException {
 
+		EventServer eventServer = injector.getInstance(EventServer.class);
+		EdgeTrigger edgeTrigger = injector.getInstance(EdgeTrigger.class);
+
+		final PropertyManager propertyManager = PropertyManager.builder() //
+				.withObject(eventServer) //
+				.withObject(edgeTrigger) //
+				.withDefaultSerializers() //
+				.build();
+
+		// start
 		if ( new File(SETTINGS_FILE).exists() )
 			propertyManager.readPropertiesFromFile(SETTINGS_FILE);
 
-		injector.getInstance(EventServer.class).start();
+		eventServer.start();
 
+		// shutdown
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			log.info("shutting down");
 			try {
 				propertyManager.savePropertiesToFile(SETTINGS_FILE);
 			} catch (IOException e) {

@@ -127,4 +127,17 @@ class SettingsWindow extends JFrame {
 		edge.setSelectedItem(edgeTrigger.getEdge());
 	}
 
+	private void refreshFields() {
+		triggerLength.setValue(edgeTrigger.getLength());
+		triggerOffset.setValue(edgeTrigger.getOffset());
+		moveScale.setValue(virtualScreen.getMovementScale());
+		port.setValue(eventServer.getPort());
+		edge.setSelectedItem(edgeTrigger.getEdge());
+	}
+
+	@Override
+	public void setVisible(boolean b) {
+		refreshFields();
+		super.setVisible(b);
+	}
 }

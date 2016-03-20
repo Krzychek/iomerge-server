@@ -14,9 +14,6 @@ public class UtilModule extends AbstractModule {
 	protected void configure() {
 		bind(ClipboardManager.class).asEagerSingleton();
 
-		Multibinder.newSetBinder(binder(), AppStateListener.class)//
-				.addBinding().to(ClipboardManager.class);
-
 		bind(Clipboard.class).toInstance(Toolkit.getDefaultToolkit().getSystemClipboard());
 	}
 }
