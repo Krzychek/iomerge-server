@@ -3,8 +3,6 @@ package pl.kbieron.iomerge.server.gesture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-
 
 @Component
 class TemplateMatcher {
@@ -19,11 +17,11 @@ class TemplateMatcher {
 		return patternDatabase.getPatterns().parallelStream() //
 				.map(pattern -> new MatchResult(pattern, //
 						likelihoodCalculator.getLikelihood(input.getPoints(), pattern.getPoints())))
-				.max(MatchResult::compareTo)
+				.max((o1, o2) -> Double.compare(o1.probability, o2.probability))
 				.orElseThrow(() -> new IllegalStateException("no patterns in db"));
 	}
 
-	static class MatchResult implements Comparable<MatchResult> {
+	static class MatchResult {
 
 		private final double probability;
 
@@ -40,11 +38,6 @@ class TemplateMatcher {
 
 		double getProbability() {
 			return probability;
-		}
-
-		@Override
-		public int compareTo(@Nonnull MatchResult that) {
-			return Double.compare(this.probability, that.probability);
 		}
 	}
 }

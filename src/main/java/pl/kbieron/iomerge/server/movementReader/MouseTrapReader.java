@@ -1,5 +1,6 @@
 package pl.kbieron.iomerge.server.movementReader;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
@@ -18,12 +19,14 @@ import java.util.Arrays;
 @Component
 class MouseTrapReader extends JFrame implements AppStateListener {
 
+	private static final Logger log = Logger.getLogger(MouseTrapReader.class);
+
 	private final Robot robot = new Robot();
 	@Autowired
 	private CompositeListener listener;
-	private Point center;
+	private volatile Point center;
 	private Point oldMouseLocation;
-	private boolean reading;
+	private volatile boolean reading;
 	private final Timer timer = new Timer(0, (ignored) -> readMove());
 
 	MouseTrapReader() throws AWTException {
@@ -31,7 +34,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	@PostConstruct
-	void init() {
+	private void init() {
 		// UI stuff
 		reposition();
 		UIHelper.makeInvisible(this, true);
@@ -53,8 +56,10 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	private void readMove() {
-		if (!reading)
+		if (!reading) {
+			log.warn("readMove called, but I'm not reading");
 			return;
+		}
 		Point move = MouseInfo.getPointerInfo().getLocation();
 		move.translate(-center.x, -center.y);
 
@@ -69,8 +74,11 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	synchronized private void startReading() {
-		if (reading)
+		if (reading) {
+			log.warn("startReading called, but I'm already reading");
 			return;
+		}
+
 		reading = true;
 
 		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
@@ -86,8 +94,10 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	synchronized private void stopReading() {
-		if (!reading)
+		if (!reading) {
+			log.warn("stopReading called, but I'm already reading");
 			return;
+		}
 		reading = false;
 		timer.stop();
 		restoreMouseLocation();
@@ -100,9 +110,10 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 	@Override
 	public void onStateChange(AppState newState) {
-		if (AppState.ON_REMOTE == newState)
+		if (AppState.ON_REMOTE == newState) {
 			startReading();
-		else
+		} else {
 			stopReading();
+		}
 	}
 }

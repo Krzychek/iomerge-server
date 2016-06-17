@@ -1,14 +1,13 @@
 package pl.kbieron.iomerge.server.gesture;
 
-import java.awt.Point;
-import java.io.Serializable;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
 import static pl.kbieron.iomerge.server.gesture.Constants.MIN_POINTS;
 
 
-class Input implements Serializable {
+class Input {
 
 	private final List<Point> points;
 
@@ -16,15 +15,15 @@ class Input implements Serializable {
 		this.points = points;
 	}
 
-	public static Builder builder(Normalizer normalizer) {
+	static Builder builder(Normalizer normalizer) {
 		return new Builder().withNormalizer(normalizer);
 	}
 
-	public List<Point> getPoints() {
+	List<Point> getPoints() {
 		return points;
 	}
 
-	public static class Builder {
+	static class Builder {
 
 		private final List<Point> pointList = new LinkedList<>();
 
@@ -34,21 +33,21 @@ class Input implements Serializable {
 
 		private Builder() {}
 
-		public Input build() {
+		Input build() {
 			return isEnough() ? new Input(normalizer.normalize(pointList)) : null;
 		}
 
-		public boolean isEnough() {
+		boolean isEnough() {
 			return pointList.size() >= MIN_POINTS;
 		}
 
-		public void move(int dx, int dy) {
+		void move(int dx, int dy) {
 			Point point = new Point(lastPoint.x + dx, lastPoint.y + dy);
 			lastPoint = point;
 			pointList.add(point);
 		}
 
-		public Builder withNormalizer(Normalizer normalizer) {
+		Builder withNormalizer(Normalizer normalizer) {
 			this.normalizer = normalizer;
 			return this;
 		}

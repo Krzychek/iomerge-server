@@ -1,0 +1,10 @@
+<FindBugsFilter>
+	<Match>
+		<or>
+			<Class name="pl.kbieron.iomerge.server.movementReader.MouseTrapReader"/>
+			<Class name="pl.kbieron.iomerge.server.ui.SettingsWindow"/>
+			<Class name="pl.kbieron.iomerge.server.ui.EdgeTrigger"/>
+		</or>
+		<Bug code="Se"/>
+	</Match>
+</FindBugsFilter>
