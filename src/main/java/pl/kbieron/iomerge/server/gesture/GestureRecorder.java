@@ -1,24 +1,30 @@
 package pl.kbieron.iomerge.server.gesture;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.movementReader.MovementListener;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
-import javax.inject.Inject;
-import javax.swing.Timer;
+import javax.swing.*;
 
 
+/**
+ * Records gesture on mouse press
+ * NOTE: Probably whole module would be removed
+ */
+@Component
 public class GestureRecorder implements MovementListener {
 
 	private final Logger log = Logger.getLogger(MovementListener.class);
 
-	@Inject
+	@Autowired
 	private TemplateMatcher templateMatcher;
 
-	@Inject
+	@Autowired
 	private MsgDispatcher msgDispatcher;
 
-	@Inject
+	@Autowired
 	private Normalizer normalizer;
 
 	private boolean enoughTime = false;

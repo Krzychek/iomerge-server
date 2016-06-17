@@ -1,24 +1,20 @@
 package pl.kbieron.iomerge.server.movementReader;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.ui.UIHelper;
 
-import javax.inject.Inject;
-import javax.swing.JFrame;
-import javax.swing.Timer;
-import java.awt.AWTException;
-import java.awt.GraphicsEnvironment;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelListener;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 
 
+/**
+ * MovementReader based on transparent JFrame, catches mose inside
+ */
+@Component
 class MouseTrapReader extends JFrame implements AppStateListener {
 
 	private final MovementListener movementListener;
@@ -33,20 +29,19 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 	private final Timer timer = new Timer(0, this::readMove);
 
-	@Inject
-	MouseTrapReader(MovementListener movementListener, MouseWheelListener mouseWheelListener,
-	                       MouseListener mouseListener, KeyListener keyListener) throws AWTException {
+	@Autowired
+	MouseTrapReader(CompositeListener compositeListener) throws AWTException {
 
 		super("IOMerge MovementReader");
-		this.movementListener = movementListener;
+		this.movementListener = compositeListener;
 		// UI stuff
 		reposition();
 		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
 		// add listeners
-		addMouseWheelListener(mouseWheelListener);
-		addMouseListener(mouseListener);
-		addKeyListener(keyListener);
+		addMouseWheelListener(compositeListener);
+		addMouseListener(compositeListener);
+		addKeyListener(compositeListener);
 	}
 
 	private void reposition() {
@@ -58,14 +53,13 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 		setSize(displayRect.width, displayRect.height);
 	}
 
-	@SuppressWarnings( "UnusedParameters" )
 	private void readMove(Object ignored) {
-		if ( !reading )
+		if (!reading)
 			return;
 		Point move = MouseInfo.getPointerInfo().getLocation();
 		move.translate(-center.x, -center.y);
 
-		if ( move.x != 0 || move.y != 0 ) {
+		if (move.x != 0 || move.y != 0) {
 			movementListener.move(move.x, move.y);
 			centerPointer();
 		}
@@ -76,7 +70,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	synchronized private void startReading() {
-		if ( reading )
+		if (reading)
 			return;
 		reading = true;
 
@@ -93,7 +87,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 	}
 
 	synchronized private void stopReading() {
-		if ( !reading )
+		if (!reading)
 			return;
 		reading = false;
 		timer.stop();
@@ -107,7 +101,7 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 
 	@Override
 	public void onStateChange(AppState newState) {
-		if ( AppState.ON_REMOTE == newState )
+		if (AppState.ON_REMOTE == newState)
 			startReading();
 		else
 			stopReading();

@@ -1,5 +1,7 @@
 package pl.kbieron.iomerge.server.gesture;
 
+import org.springframework.stereotype.Component;
+
 import java.awt.Point;
 import java.util.List;
 
@@ -8,9 +10,10 @@ import static pl.kbieron.iomerge.server.gesture.Constants.E_SIGMA;
 import static pl.kbieron.iomerge.server.gesture.Constants.LAMBDA;
 
 
+@Component
 class LikelihoodCalculator {
 
-	public double getLikelihood(List<Point> sequence, List<Point> pattern) {
+	double getLikelihood(List<Point> sequence, List<Point> pattern) {
 		MeanDistances d = MeanDistances.getMeanDistances(sequence, pattern);
 		return Math.exp(-( //
 				LAMBDA * pow(d.euclidean) / pow(E_SIGMA) //

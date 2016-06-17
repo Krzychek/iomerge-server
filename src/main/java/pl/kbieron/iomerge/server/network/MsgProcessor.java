@@ -1,20 +1,25 @@
 package pl.kbieron.iomerge.server.network;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.MessageProcessorAdapter;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.utils.ClipboardManager;
 
 
+/**
+ * Server implementation of {@link pl.kbieron.iomerge.model.MessageProcessor}
+ */
+@Component
 class MsgProcessor extends MessageProcessorAdapter {
 
-	@Inject
+	@Autowired
 	private AppStateManager appStateManager;
 
-	@Inject
+	@Autowired
 	private ClipboardManager clipboardManager;
 
-	@Inject
+	@Autowired
 	private ConnectionHandler connectionHandler;
 
 	@Override

@@ -1,15 +1,20 @@
 package pl.kbieron.iomerge.server.movementReader;
 
 import org.annoprops.ConfigProperty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
-import javax.inject.Inject;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 
+/**
+ * Models device on server side, proxy between dispatcher msg dispatcher and whole module
+ */
+@Component
 public class VirtualScreen implements MovementListener, KeyListener {
 
 	private final static int[] modKeys = new int[]{ //
@@ -20,10 +25,10 @@ public class VirtualScreen implements MovementListener, KeyListener {
 		Arrays.sort(modKeys);
 	}
 
-	@Inject
+	@Autowired
 	private AppStateManager appStateManager;
 
-	@Inject
+	@Autowired
 	private MsgDispatcher actionDispatcher;
 
 	@ConfigProperty( "MovementScale" )

@@ -1,5 +1,6 @@
 package pl.kbieron.iomerge.server.gesture;
 
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.message.keyboard.BackBtnClick;
 import pl.kbieron.iomerge.model.message.keyboard.HomeBtnClick;
 import pl.kbieron.iomerge.model.message.keyboard.MenuBtnClick;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
+@Component
 class PatternDatabase {
 
 	private final List<Pattern> patterns = Arrays.asList( //

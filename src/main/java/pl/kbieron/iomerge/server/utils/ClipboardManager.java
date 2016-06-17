@@ -1,28 +1,28 @@
 package pl.kbieron.iomerge.server.utils;
 
 import org.apache.log4j.Logger;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.datatransfer.*;
 import java.io.IOException;
 
 
+/**
+ * Manages system clipboard, syncs clipboard on remote entering
+ */
+@Component
 public class ClipboardManager implements AppStateListener, ClipboardOwner {
 
 	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
-	@Inject
+	@Autowired
 	private MsgDispatcher msgDispatcher;
 
-	@Inject
+	@Autowired
 	private Clipboard systemClipboard;
 
 	private Object sentData;

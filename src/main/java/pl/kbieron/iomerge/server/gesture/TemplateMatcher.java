@@ -1,21 +1,24 @@
 package pl.kbieron.iomerge.server.gesture;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
+@Component
 class TemplateMatcher {
 
-	@Inject
+	@Autowired
 	private LikelihoodCalculator likelihoodCalculator;
 
-	@Inject
+	@Autowired
 	private PatternDatabase patternDatabase;
 
 	public MatchResult bestMatch(Input input) {
 		return patternDatabase.getPatterns().parallelStream() //
 				.map(pattern -> new MatchResult(pattern, //
 						likelihoodCalculator.getLikelihood(input.getPoints(), pattern.getPoints())))
-				.max(MatchResult::compareTo).get();
+				.max(MatchResult::compareTo)
+				.get();
 	}
 
 	public static class MatchResult implements Comparable<MatchResult> {
@@ -38,7 +41,7 @@ class TemplateMatcher {
 		}
 
 		@Override
-		@SuppressWarnings( "NullableProblems" )
+		@SuppressWarnings("NullableProblems")
 		public int compareTo(MatchResult that) {
 			return Double.compare(this.probability, that.probability);
 		}

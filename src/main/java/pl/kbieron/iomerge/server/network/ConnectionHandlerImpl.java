@@ -1,13 +1,11 @@
 package pl.kbieron.iomerge.server.network;
 
 import org.apache.log4j.Logger;
-import pl.kbieron.iomerge.model.MessageProcessor;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.misc.Heartbeat;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 
-import javax.inject.Inject;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,15 +29,15 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 
 	private final ObjectOutputStream clientOutputStream;
 
-	@Inject
 	private MsgProcessor msgProcessor;
 
-	private ConnectionHandlerImpl(Socket clientSocket, AppStateManager appStateManager) throws IOException {
+	private ConnectionHandlerImpl(Socket clientSocket, AppStateManager appStateManager, MsgProcessor msgProcessor) throws IOException {
 		this.appStateManager = appStateManager;
 
 		this.clientSocket = clientSocket;
 		this.clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 		this.clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+		this.msgProcessor = msgProcessor;
 
 		Heartbeat heartbeat = new Heartbeat();
 		heartBeatTimer = new Timer(4000, e -> sendToClient(heartbeat));
@@ -49,18 +47,18 @@ class ConnectionHandlerImpl implements ConnectionHandler {
 		timeOutTimer.start();
 	}
 
-	static ConnectionHandlerImpl connect(Socket socket, int sendBufferSize, AppStateManager appStateManager)
+	static ConnectionHandlerImpl connect(Socket socket, int sendBufferSize, AppStateManager appStateManager, MsgProcessor msgProcessor)
 			throws IOException {
 
 		socket.setSendBufferSize(sendBufferSize);
-		ConnectionHandlerImpl connectionHandler = new ConnectionHandlerImpl(socket, appStateManager);
+		ConnectionHandlerImpl connectionHandler = new ConnectionHandlerImpl(socket, appStateManager, msgProcessor);
 		log.info("client connected");
 		return connectionHandler;
 	}
 
 	void startReading() throws IOException {
 		//noinspection InfiniteLoopStatement
-		while ( true ) {
+		while (true) {
 			try {
 				((Message) clientInputStream.readObject()).process(msgProcessor);
 			} catch (ClassNotFoundException e) {

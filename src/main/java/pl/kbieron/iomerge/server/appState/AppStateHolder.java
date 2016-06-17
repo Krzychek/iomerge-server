@@ -1,22 +1,28 @@
 package pl.kbieron.iomerge.server.appState;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 import java.util.Set;
 
 
+/**
+ * Holds state of application, and emit its changes t given listeners
+ */
+@Component
 class AppStateHolder implements AppStateManager {
 
 	private final Logger log = Logger.getLogger(AppStateHolder.class);
 
 	private AppState state;
 
+	@Autowired
 	private Set<AppStateListener> listeners;
 
-	@Inject
-	AppStateHolder(Set<AppStateListener> listeners) {
-		this.listeners = listeners;
+	@PostConstruct
+	void init() {
 		setNewState(AppState.DISCONNECTED);
 	}
 

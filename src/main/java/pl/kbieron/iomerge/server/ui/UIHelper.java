@@ -14,6 +14,10 @@ import java.awt.image.BufferedImage;
 
 public class UIHelper {
 
+	/**
+	 * @param frame - {@link JFrame} to make invisible
+	 * @param hideCursor - if true cursor would be changed to transparent
+	 */
 	public static void makeInvisible(JFrame frame, boolean hideCursor) {
 
 		frame.setUndecorated(true);
@@ -21,6 +25,9 @@ public class UIHelper {
 		setInvisibleContentPane(frame, hideCursor);
 	}
 
+	/**
+	 * @param frame - {@link JFrame} to make invisible, also hides cursor
+	 */
 	public static void makeInvisible(JFrame frame) {
 		makeInvisible(frame, false);
 	}

@@ -1,32 +1,31 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
-import java.awt.AWTException;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.io.File;
+import java.awt.*;
 
-
+@Component
 class TrayManager {
 
 	private static final Logger log = Logger.getLogger(TrayManager.class);
 
 	private SystemTray tray;
 
-	@Inject
+	@Autowired
 	private SettingsWindow settingsWindow;
+
+	@Autowired
+	private AbstractApplicationContext applicationContext;
 
 	private TrayIcon trayIcon;
 
 	public TrayManager() {
 		if ( !SystemTray.isSupported() ) {
-			log.warn("Tray is not supported on this system");
+			log.error("Tray is not supported on this system");
 			return;
 		}
 		tray = SystemTray.getSystemTray();
@@ -46,8 +45,7 @@ class TrayManager {
 		PopupMenu popup = new PopupMenu();
 		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.setVisible(true));
 		popup.add(new MenuItem("Exit")).addActionListener(e -> {
-			//			context.close();
-			System.exit(0);
+			applicationContext.close();
 		});
 
 		trayIcon.setPopupMenu(popup);
