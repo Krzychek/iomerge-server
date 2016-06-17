@@ -18,6 +18,7 @@ class AppStateHolder implements AppStateManager {
 
 	private AppState state;
 
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	@Autowired
 	private Set<AppStateListener> listeners;
 

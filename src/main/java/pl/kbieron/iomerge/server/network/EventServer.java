@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,7 +18,7 @@ import java.net.SocketException;
 
 
 /**
- * Main part of network module, starts up connection, passes over msges to concentrate connection handler
+ * Main part of network module, starts up connection, passes over messages to concentrate connection handler
  */
 @PropertyHolder
 @Component
@@ -53,6 +54,7 @@ public class EventServer implements ConnectionHandler {
 		appStateManager.disconnected();
 	}
 
+	@PostConstruct
 	public void start() throws IOException {
 		log.info("starting server");
 		serverSocket = new ServerSocket();

@@ -6,6 +6,7 @@ import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.ui.UIHelper;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -17,50 +18,48 @@ import java.util.Arrays;
 @Component
 class MouseTrapReader extends JFrame implements AppStateListener {
 
-	private final MovementListener movementListener;
-
 	private final Robot robot = new Robot();
-
-	private Point center;
-
-	private Point oldMouseLocation;
-
-	private boolean reading;
-
-	private final Timer timer = new Timer(0, this::readMove);
-
 	@Autowired
-	MouseTrapReader(CompositeListener compositeListener) throws AWTException {
+	private CompositeListener listener;
+	private Point center;
+	private Point oldMouseLocation;
+	private boolean reading;
+	private final Timer timer = new Timer(0, (ignored) -> readMove());
 
+	MouseTrapReader() throws AWTException {
 		super("IOMerge MovementReader");
-		this.movementListener = compositeListener;
+	}
+
+	@PostConstruct
+	void init() {
 		// UI stuff
 		reposition();
 		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
-		// add listeners
-		addMouseWheelListener(compositeListener);
-		addMouseListener(compositeListener);
-		addKeyListener(compositeListener);
+
+		// add listener
+		addMouseWheelListener(listener);
+		addMouseListener(listener);
+		addKeyListener(listener);
 	}
 
 	private void reposition() {
 		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
 				.map(screen -> screen.getDefaultConfiguration().getBounds()) //
 				.max((a, b) -> a.width * a.height) //
-				.get();
+				.orElseThrow(() -> new IllegalStateException("Problem with getting display dimension"));
 		setLocation(displayRect.x, displayRect.y);
 		setSize(displayRect.width, displayRect.height);
 	}
 
-	private void readMove(Object ignored) {
+	private void readMove() {
 		if (!reading)
 			return;
 		Point move = MouseInfo.getPointerInfo().getLocation();
 		move.translate(-center.x, -center.y);
 
 		if (move.x != 0 || move.y != 0) {
-			movementListener.move(move.x, move.y);
+			listener.move(move.x, move.y);
 			centerPointer();
 		}
 	}

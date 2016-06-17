@@ -4,7 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.gesture.GestureRecorder;
 
-import java.awt.event.*;
+import javax.annotation.PostConstruct;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 
@@ -14,20 +20,20 @@ public class CompositeListener implements MovementListener, MouseListener, Mouse
 
 	private MovementListener movementListener;
 
+	@Autowired
 	private VirtualScreen virtualScreen;
 
+	@Autowired
 	private GestureRecorder gestureRecorder;
 
-	@Autowired
-	public CompositeListener(VirtualScreen virtualScreen, GestureRecorder gestureRecorder) {
-		this.gestureRecorder = gestureRecorder;
-		this.virtualScreen = virtualScreen;
-		this.movementListener = virtualScreen;
+	@PostConstruct
+	private void init() {
+		movementListener = virtualScreen;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
-		if ( mouseEvent.getButton() == BUTTON3 ) {
+		if (mouseEvent.getButton() == BUTTON3) {
 			movementListener = gestureRecorder;
 		}
 		movementListener.mousePressed();
@@ -36,7 +42,7 @@ public class CompositeListener implements MovementListener, MouseListener, Mouse
 	@Override
 	public void mouseReleased(MouseEvent mouseEvent) {
 		movementListener.mouseReleased();
-		if ( mouseEvent.getButton() == BUTTON3 ) {
+		if (mouseEvent.getButton() == BUTTON3) {
 			movementListener = virtualScreen;
 		}
 	}

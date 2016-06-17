@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.movementReader;
 
-import org.annoprops.ConfigProperty;
+import org.annoprops.annotations.ConfigProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
@@ -31,7 +31,7 @@ public class VirtualScreen implements MovementListener, KeyListener {
 	@Autowired
 	private MsgDispatcher actionDispatcher;
 
-	@ConfigProperty( "MovementScale" )
+	@ConfigProperty("MovementScale")
 	private double movementScale = 1.5;
 
 	private double unusedXMove = 0.0;

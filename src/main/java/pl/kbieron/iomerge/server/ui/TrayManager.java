@@ -24,7 +24,7 @@ class TrayManager {
 	private TrayIcon trayIcon;
 
 	public TrayManager() {
-		if ( !SystemTray.isSupported() ) {
+		if (!SystemTray.isSupported()) {
 			log.error("Tray is not supported on this system");
 			return;
 		}
@@ -44,9 +44,7 @@ class TrayManager {
 
 		PopupMenu popup = new PopupMenu();
 		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.setVisible(true));
-		popup.add(new MenuItem("Exit")).addActionListener(e -> {
-			applicationContext.close();
-		});
+		popup.add(new MenuItem("Exit")).addActionListener(e -> applicationContext.close());
 
 		trayIcon.setPopupMenu(popup);
 

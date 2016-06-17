@@ -2,7 +2,7 @@ package pl.kbieron.iomerge.server.gesture;
 
 import org.springframework.stereotype.Component;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -17,16 +17,16 @@ import static pl.kbieron.iomerge.server.gesture.Constants.NORM_SIZE;
 class Normalizer {
 
 	List<Point> normalize(List<Point> points) {
-		if ( points.size() < MIN_POINTS ) throw new IllegalArgumentException("too few points provided");
+		if (points.size() < MIN_POINTS) throw new IllegalArgumentException("too few points provided");
 
 		double lengthSum = 0.0;
 		// resample
 		Iterator<Point> iter = points.iterator();
 		Point prevPt = iter.next();
 		Point nextPt;
-		while ( iter.hasNext() ) {
+		while (iter.hasNext()) {
 			nextPt = iter.next();
-			lengthSum += distance(prevPt.x, prevPt.x, nextPt.x, nextPt.x);
+			lengthSum += distance(prevPt.x, prevPt.y, nextPt.x, nextPt.y);
 			prevPt = nextPt;
 		}
 
@@ -40,13 +40,13 @@ class Normalizer {
 		Point prevPoint = iterator.next(), lastPoint = null;
 
 		int ind = 0;
-		while ( ind < NORM_LENGTH ) {
-			if ( iterator.hasNext() ) {
+		while (ind < NORM_LENGTH) {
+			if (iterator.hasNext()) {
 				lastPoint = iterator.next();
 
-				double dist = lengthScale * distance(prevPoint.x, prevPoint.x, lastPoint.x, lastPoint.x);
+				double dist = lengthScale * distance(prevPoint.x, prevPoint.y, lastPoint.x, lastPoint.y);
 				length += dist;
-				while ( ind < length && ind < NORM_LENGTH ) {
+				while (ind < length && ind < NORM_LENGTH) {
 					double diff = ind - prevLength;
 					double percent = diff / dist;
 					result[ind++] = new Point( //
@@ -63,9 +63,9 @@ class Normalizer {
 		}
 
 		//noinspection ConstantConditions
-		double dist = lengthScale * distance(prevPoint.x, prevPoint.x, lastPoint.x, lastPoint.x);
+		double dist = lengthScale * distance(prevPoint.x, prevPoint.y, lastPoint.x, lastPoint.y);
 
-		while ( ind < NORM_LENGTH ) {
+		while (ind < NORM_LENGTH) {
 			double diff = ind - prevLength;
 			double percent = diff / dist;
 			result[ind] = new Point( //
@@ -83,11 +83,11 @@ class Normalizer {
 		Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-		for ( Point pt : result ) {
-			if ( pt.x < min.x ) min.x = pt.x;
-			if ( pt.x > max.x ) max.x = pt.x;
-			if ( pt.y < min.y ) min.y = pt.y;
-			if ( pt.y > max.y ) max.y = pt.y;
+		for (Point pt : result) {
+			if (pt.x < min.x) min.x = pt.x;
+			if (pt.x > max.x) max.x = pt.x;
+			if (pt.y < min.y) min.y = pt.y;
+			if (pt.y > max.y) max.y = pt.y;
 		}
 
 		// rescale
@@ -98,7 +98,7 @@ class Normalizer {
 		double xTranslate = -min.x * scale;
 		double yTranslate = -min.y * scale;
 
-		for ( Point point : result ) {
+		for (Point point : result) {
 			point.x = (int) (point.x * scale + xTranslate);
 			point.y = (int) (point.y * scale + yTranslate);
 		}

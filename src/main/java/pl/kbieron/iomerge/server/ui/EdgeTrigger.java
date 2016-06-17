@@ -22,6 +22,8 @@ import java.util.Arrays;
 @Component
 public class EdgeTrigger extends JFrame implements AppStateListener {
 
+	private static final String DIMENSION_EXCEPTION = "Problem with getting display dimension";
+
 	@Autowired
 	private AppStateManager appStateManager;
 
@@ -56,7 +58,8 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 				displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
 						.map(screen -> screen.getDefaultConfiguration().getBounds()) //
 						.min((a, b) -> a.x - b.x) //
-						.get();
+						.orElseThrow(() -> new IllegalStateException(DIMENSION_EXCEPTION));
+
 				displayRect.translate(0, offset);
 				break;
 
@@ -65,7 +68,7 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 				displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
 						.map(screen -> screen.getDefaultConfiguration().getBounds()) //
 						.max((a, b) -> a.x - b.x) //
-						.get();
+						.orElseThrow(() -> new IllegalStateException(DIMENSION_EXCEPTION));
 				displayRect.translate(displayRect.width - getWidth(), offset);
 		}
 
@@ -91,7 +94,7 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 		}
 	}
 
-	public void setProperties(Edge edge, int length, int offset) {
+	void setProperties(Edge edge, int length, int offset) {
 		if (edge != this.edge || length != this.length || offset != this.offset) {
 			this.edge = edge;
 			this.offset = offset;
@@ -101,15 +104,15 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 		}
 	}
 
-	public Edge getEdge() {
+	Edge getEdge() {
 		return edge;
 	}
 
-	public int getOffset() {
+	int getOffset() {
 		return offset;
 	}
 
-	public int getLength() {
+	int getLength() {
 		return length;
 	}
 }
