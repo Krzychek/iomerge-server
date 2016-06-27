@@ -3,10 +3,10 @@ package pl.kbieron.iomerge.server.ui;
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.server.appState.AppState;
-import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 import pl.kbieron.iomerge.server.network.MsgDispatcher;
 
@@ -20,7 +20,7 @@ import java.util.Arrays;
  */
 @PropertyHolder
 @Component
-public class EdgeTrigger extends JFrame implements AppStateListener {
+public class EdgeTrigger extends JFrame {
 
 	private static final String DIMENSION_EXCEPTION = "Problem with getting display dimension";
 
@@ -81,7 +81,7 @@ public class EdgeTrigger extends JFrame implements AppStateListener {
 		setVisible(wasVisible);
 	}
 
-	@Override
+	@EventListener
 	public void onStateChange(AppState appStateUpdateEvent) {
 		if (AppState.ON_LOCAL == appStateUpdateEvent) {
 			msgDispatcher.dispatchEdgeSync(edge);

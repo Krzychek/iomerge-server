@@ -1,30 +1,33 @@
 package pl.kbieron.iomerge.server.appState;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.Set;
 
 
 /**
- * Holds state of application, and emit its changes t given listeners
+ * Holds state of application, and publish state events on change
  */
 @Component
 class AppStateHolder implements AppStateManager {
 
-	private final Logger log = Logger.getLogger(AppStateHolder.class);
+	private final static Logger log = Logger.getLogger(AppStateHolder.class);
+
+	private final ApplicationEventPublisher publisher;
 
 	private AppState state;
 
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	@Autowired
-	private Set<AppStateListener> listeners;
+	AppStateHolder(ApplicationEventPublisher publisher) {
+		this.publisher = publisher;
+	}
 
-	@PostConstruct
-	void init() {
-		setNewState(AppState.DISCONNECTED);
+	@EventListener(ContextRefreshedEvent.class)
+	private void onContextRefreshed() {
+		if (state == null) {
+			setNewState(AppState.DISCONNECTED);
+		}
 	}
 
 	@Override
@@ -48,10 +51,10 @@ class AppStateHolder implements AppStateManager {
 	}
 
 	private synchronized void setNewState(AppState newState) {
-		if ( state != newState ) {
-			log.info("state: " + newState);
+		if (state != newState) {
+			log.info("setting application state to: " + newState);
 			state = newState;
-			listeners.forEach(listener -> listener.onStateChange(newState));
+			publisher.publishEvent(state);
 		}
 	}
 }

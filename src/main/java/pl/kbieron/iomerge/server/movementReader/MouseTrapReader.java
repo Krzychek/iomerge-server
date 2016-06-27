@@ -1,10 +1,9 @@
 package pl.kbieron.iomerge.server.movementReader;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
-import pl.kbieron.iomerge.server.appState.AppStateListener;
 import pl.kbieron.iomerge.server.ui.UIHelper;
 
 import javax.annotation.PostConstruct;
@@ -17,20 +16,20 @@ import java.util.Arrays;
  * MovementReader based on transparent JFrame, catches mose inside
  */
 @Component
-class MouseTrapReader extends JFrame implements AppStateListener {
+class MouseTrapReader extends JFrame {
 
 	private static final Logger log = Logger.getLogger(MouseTrapReader.class);
 
+	private final CompositeListener listener;
 	private final Robot robot = new Robot();
-	@Autowired
-	private CompositeListener listener;
 	private volatile Point center;
 	private Point oldMouseLocation;
 	private volatile boolean reading;
 	private final Timer timer = new Timer(0, (ignored) -> readMove());
 
-	MouseTrapReader() throws AWTException {
+	MouseTrapReader(CompositeListener listener) throws AWTException {
 		super("IOMerge MovementReader");
+		this.listener = listener;
 	}
 
 	@PostConstruct
@@ -104,16 +103,16 @@ class MouseTrapReader extends JFrame implements AppStateListener {
 		setVisible(false);
 	}
 
-	private void restoreMouseLocation() {
-		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
-	}
-
-	@Override
+	@EventListener
 	public void onStateChange(AppState newState) {
 		if (AppState.ON_REMOTE == newState) {
 			startReading();
 		} else {
 			stopReading();
 		}
+	}
+
+	private void restoreMouseLocation() {
+		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
 	}
 }
