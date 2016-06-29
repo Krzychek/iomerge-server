@@ -8,6 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Configuration
+@EnableSpringConfigured
 @ComponentScan(basePackages = "pl.kbieron.iomerge.server")
 public class SpringBootstrap {
 

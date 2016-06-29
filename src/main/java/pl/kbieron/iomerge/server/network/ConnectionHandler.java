@@ -6,9 +6,9 @@ import pl.kbieron.iomerge.model.message.Message;
 /**
  * Handles connection with client
  */
-interface ConnectionHandler {
+public interface ConnectionHandler {
 
 	void sendToClient(Message msg);
 
-	default void keepAlive() {}
+	void keepAlive();
 }

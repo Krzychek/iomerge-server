@@ -3,9 +3,9 @@ package pl.kbieron.iomerge.server.network;
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.model.message.Message;
+import pl.kbieron.iomerge.server.appState.AppState;
 import pl.kbieron.iomerge.server.appState.AppStateManager;
 
 import javax.annotation.PostConstruct;
@@ -15,42 +15,41 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
 /**
- * Main part of network module, starts up connection, passes over messages to concentrate connection handler
+ * Waits for clients and starts up connection
  */
 @PropertyHolder
 @Component
-public class EventServer implements ConnectionHandler {
+public class EventServer {
 
-	private final Logger log = Logger.getLogger(EventServer.class);
+	private static final Logger log = Logger.getLogger(EventServer.class);
 
-	@Autowired
-	private AppStateManager appStateManager;
-
-	@Autowired
-	private MsgProcessor msgProcessor;
-
-	private ConnectionHandler connectionHandler;
+	private final AppStateManager appStateManager;
+	private final ConnectionHandlerProxy connectionHandlerProxy;
+	private final Executor executor;
 
 	private ServerSocket serverSocket;
 
-	@ConfigProperty("ServerPort")
-	private int port = 7698;
+	private @ConfigProperty("ServerPort") int port = 7698;
 
-	@SuppressWarnings({"FieldCanBeLocal", "CanBeFinal"})
-	@ConfigProperty("SendBufferSize")
-	private int sendBufferSize = 512;
+	public EventServer(AppStateManager appStateManager, ConnectionHandlerProxy connectionHandlerProxy) {
+		this.appStateManager = appStateManager;
+		this.connectionHandlerProxy = connectionHandlerProxy;
+		this.executor = Executors.newSingleThreadExecutor();
+	}
 
 	@PreDestroy
 	private void shutdown() {
 		log.info("shutting down server");
+
 		if (serverSocket != null) try {
 			serverSocket.close();
-		} catch (IOException e) {
-			log.warn(e);
-		}
+		} catch (IOException e) { log.warn(e); }
+
 		appStateManager.disconnected();
 	}
 
@@ -60,8 +59,6 @@ public class EventServer implements ConnectionHandler {
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
-
-		new Thread(this::acceptListener, "acceptListener at: " + port).start();
 	}
 
 	private void restart() {
@@ -76,28 +73,22 @@ public class EventServer implements ConnectionHandler {
 	}
 
 	private void acceptListener() {
-		while (!serverSocket.isClosed()) {
-			ConnectionHandlerImpl connectionHandler = null;
-			try {
-				Socket clientSocket = serverSocket.accept();
-				log.info("socket client accepted");
-				connectionHandler = ConnectionHandlerImpl.connect(clientSocket, sendBufferSize, appStateManager, msgProcessor);
-				this.connectionHandler = connectionHandler;
-				appStateManager.connected();
-				connectionHandler.startReading();
-			} catch (SocketException e) {
-				log.debug(e);
-			} catch (IOException e) {
-				log.warn("Problem with connection", e);
-			} finally {
-				if (connectionHandler != null) connectionHandler.disconnect();
-			}
+		try {
+			Socket clientSocket = serverSocket.accept();
+			log.info("client socket accepted");
+			connectionHandlerProxy.connect(clientSocket);
+		} catch (SocketException e) {
+			log.debug(e);
+		} catch (IOException e) {
+			log.warn("Problem with connection", e);
 		}
 	}
 
-	public void sendToClient(Message msg) {
-		if (connectionHandler != null)
-			connectionHandler.sendToClient(msg);
+	@EventListener
+	private void onAppStateChange(AppState appState) {
+		if (AppState.DISCONNECTED.equals(appState)) {
+			executor.execute(this::acceptListener);
+		}
 	}
 
 	public int getPort() {

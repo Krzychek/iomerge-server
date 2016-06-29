@@ -24,7 +24,7 @@ class AppStateHolder implements AppStateManager {
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
-	private void onContextRefreshed() {
+	private synchronized void onContextRefreshed() {
 		if (state == null) {
 			setNewState(AppState.DISCONNECTED);
 		}

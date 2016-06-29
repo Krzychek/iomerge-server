@@ -73,11 +73,7 @@ class MouseTrapReader extends JFrame {
 	}
 
 	synchronized private void startReading() {
-		if (reading) {
-			log.warn("startReading called, but I'm already reading");
-			return;
-		}
-
+		if (reading) return;
 		reading = true;
 
 		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
@@ -93,10 +89,7 @@ class MouseTrapReader extends JFrame {
 	}
 
 	synchronized private void stopReading() {
-		if (!reading) {
-			log.warn("stopReading called, but I'm already reading");
-			return;
-		}
+		if (!reading) return;
 		reading = false;
 		timer.stop();
 		restoreMouseLocation();
