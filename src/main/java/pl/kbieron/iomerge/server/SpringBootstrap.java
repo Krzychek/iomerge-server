@@ -27,7 +27,8 @@ public class SpringBootstrap {
 	private static final File SETTINGS_FILE = new File(System.getProperty("user.home") + File.separator + ".config/iomerge.properties");
 
 	public static void main(String... args) throws IOException {
-		new AnnotationConfigApplicationContext(SpringBootstrap.class);
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(SpringBootstrap.class);
+		applicationContext.registerShutdownHook();
 	}
 
 	@Bean
