@@ -62,11 +62,7 @@ public class SpringBootstrap {
 		@PreDestroy
 		private void shutdown() throws IOException {
 			log.info("shutting down");
-			try {
-				propertyManager.savePropertiesToFile(SETTINGS_FILE);
-			} catch (IOException e) {
-				log.error("Problem while saving settings file", e);
-			}
+			propertyManager.savePropertiesToFile(SETTINGS_FILE);
 		}
 	}
 }
