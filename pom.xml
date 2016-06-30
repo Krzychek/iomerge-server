@@ -25,7 +25,7 @@
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
-					<failOnError>true</failOnError>
+					<failOnError>false</failOnError>
 					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
 				</configuration>
 				<executions>
