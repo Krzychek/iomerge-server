@@ -129,11 +129,6 @@
 		<!-- logger -->
 		<dependency>
 			<groupId>org.tinylog</groupId>
-			<artifactId>log4j-facade</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.tinylog</groupId>
 			<artifactId>jcl-binding</artifactId>
 			<version>1.1</version>
 		</dependency>

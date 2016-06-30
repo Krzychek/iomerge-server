@@ -12,6 +12,8 @@ import static pl.kbieron.iomerge.server.config.ConstantPaths.LOG_FILE;
 
 public class TinyLogConfigurator {
 
+	private static final String LOG_FORMAT = "{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}\\n{level}: {message}";
+
 	@Option(name = "-logLevel", aliases = "-log",
 			usage = "level of logging")
 	private Level logLevel = Level.INFO;
@@ -36,7 +38,7 @@ public class TinyLogConfigurator {
 
 	private void setupLogger() {
 		Configurator.defaultConfig()
-				.formatPattern("{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}\\n{level}: {message}")
+				.formatPattern(LOG_FORMAT)
 				.writer(new ConsoleWriter())
 				.addWriter(new FileWriter(LOG_FILE.getAbsolutePath()))
 				.level(getLogLevel())

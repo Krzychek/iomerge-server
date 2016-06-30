@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.appState;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class AppStateHolder implements AppStateManager {
-
-	private final static Logger log = Logger.getLogger(AppStateHolder.class);
 
 	private final ApplicationEventPublisher publisher;
 
@@ -52,7 +50,7 @@ class AppStateHolder implements AppStateManager {
 
 	private synchronized void setNewState(AppState newState) {
 		if (state != newState) {
-			log.info("setting application state to: " + newState);
+			Logger.info("setting application state to: " + newState);
 			state = newState;
 			publisher.publishEvent(state);
 		}

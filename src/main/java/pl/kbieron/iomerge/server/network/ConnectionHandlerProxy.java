@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.apache.log4j.Logger;
+
+import org.pmw.tinylog.Logger;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.message.Message;
 
@@ -11,7 +12,6 @@ import java.net.Socket;
 @Component
 public class ConnectionHandlerProxy implements ConnectionHandler {
 
-	private static final Logger log = Logger.getLogger(ConnectionHandlerProxy.class);
 
 	private ConnectionHandler connectionHandler;
 
@@ -39,8 +39,8 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 	private static class NOOPConnectionHandler implements ConnectionHandler {
 		private final static String MSG = "Call to NOOPConnectionHandler";
 
-		public void sendToClient(Message ignore) { log.debug(MSG); }
+		public void sendToClient(Message ignore) { Logger.debug(MSG); }
 
-		public void keepAlive() { log.debug(MSG); }
+		public void keepAlive() { Logger.debug(MSG); }
 	}
 }

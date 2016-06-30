@@ -2,7 +2,7 @@ package pl.kbieron.iomerge.server.network;
 
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
@@ -26,7 +26,6 @@ import java.util.concurrent.Executors;
 @Component
 public class EventServer {
 
-	private static final Logger log = Logger.getLogger(EventServer.class);
 
 	private final AppStateManager appStateManager;
 	private final ConnectionHandlerProxy connectionHandlerProxy;
@@ -44,30 +43,30 @@ public class EventServer {
 
 	@PreDestroy
 	private void shutdown() {
-		log.info("shutting down server");
+		Logger.info("shutting down server");
 
 		if (serverSocket != null) try {
 			serverSocket.close();
-		} catch (IOException e) { log.warn(e); }
+		} catch (IOException e) { Logger.warn(e); }
 
 		appStateManager.disconnected();
 	}
 
 	@PostConstruct
 	public void start() throws IOException {
-		log.info("starting server");
+		Logger.info("starting server");
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
 	}
 
 	private void restart() {
-		log.info("restarting server");
+		Logger.info("restarting server");
 		shutdown();
 		try {
 			start();
 		} catch (IOException e) {
-			log.error(e);
+			Logger.error(e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -75,12 +74,12 @@ public class EventServer {
 	private void acceptListener() {
 		try {
 			Socket clientSocket = serverSocket.accept();
-			log.info("client socket accepted");
+			Logger.info("client socket accepted");
 			connectionHandlerProxy.connect(clientSocket);
 		} catch (SocketException e) {
-			log.debug(e);
+			Logger.debug(e);
 		} catch (IOException e) {
-			log.warn("Problem with connection", e);
+			Logger.warn("Problem with connection", e);
 		}
 	}
 

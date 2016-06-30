@@ -1,8 +1,8 @@
 package pl.kbieron.iomerge.server;
 
 import org.annoprops.PropertyManager;
-import org.apache.log4j.Logger;
 import org.kohsuke.args4j.CmdLineException;
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -24,8 +24,6 @@ import static pl.kbieron.iomerge.server.config.ConstantPaths.SETTINGS_FILE;
 @EnableSpringConfigured
 @ComponentScan(basePackages = "pl.kbieron.iomerge.server")
 public class Bootstrap {
-
-	private static final Logger log = Logger.getLogger(Bootstrap.class);
 
 	public static void main(String... args) throws IOException, CmdLineException {
 		// should be invoked before spring context
@@ -51,7 +49,7 @@ public class Bootstrap {
 		if (SETTINGS_FILE.exists()) {
 			propertyManager.readPropertiesFromFile(SETTINGS_FILE);
 		} else {
-			log.info("File:" + SETTINGS_FILE + " does not exits, probably first run?");
+			Logger.info("File:" + SETTINGS_FILE + " does not exits, probably first run?");
 		}
 
 		return propertyManager;
@@ -65,7 +63,7 @@ public class Bootstrap {
 
 		@PreDestroy
 		private void shutdown() throws IOException {
-			log.info("shutting down");
+			Logger.info("shutting down");
 			propertyManager.savePropertiesToFile(SETTINGS_FILE);
 		}
 	}

@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.utils;
 
-import org.apache.log4j.Logger;
+
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,6 @@ import java.io.IOException;
 @Component
 public class ClipboardManager implements ClipboardOwner {
 
-	private static final Logger log = Logger.getLogger(ClipboardManager.class);
 
 	@Autowired
 	private MsgDispatcher msgDispatcher;
@@ -46,7 +46,7 @@ public class ClipboardManager implements ClipboardOwner {
 				}
 
 			} catch (UnsupportedFlavorException | IOException | ClassCastException e) {
-				log.warn(e);
+				Logger.warn(e);
 			}
 		}
 	}

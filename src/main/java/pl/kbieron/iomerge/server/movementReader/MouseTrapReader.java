@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.movementReader;
 
-import org.apache.log4j.Logger;
+
+import org.pmw.tinylog.Logger;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.appState.AppState;
@@ -18,7 +19,6 @@ import java.util.Arrays;
 @Component
 class MouseTrapReader extends JFrame {
 
-	private static final Logger log = Logger.getLogger(MouseTrapReader.class);
 
 	private final CompositeListener listener;
 	private final Robot robot = new Robot();
@@ -56,7 +56,7 @@ class MouseTrapReader extends JFrame {
 
 	private void readMove() {
 		if (!reading) {
-			log.warn("readMove called, but I'm not reading");
+			Logger.warn("readMove called, but I'm not reading");
 			return;
 		}
 		Point move = MouseInfo.getPointerInfo().getLocation();

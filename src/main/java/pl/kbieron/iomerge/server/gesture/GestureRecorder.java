@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.gesture;
 
-import org.apache.log4j.Logger;
+
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.movementReader.MovementListener;
@@ -15,8 +16,6 @@ import javax.swing.*;
  */
 @Component
 public class GestureRecorder implements MovementListener {
-
-	private final Logger log = Logger.getLogger(MovementListener.class);
 
 	@Autowired
 	private TemplateMatcher templateMatcher;
@@ -38,7 +37,7 @@ public class GestureRecorder implements MovementListener {
 		if ( inputBuilder != null ) {
 			inputBuilder.move(dx, dy);
 		} else {
-			log.warn("not recording");
+			Logger.warn("not recording");
 		}
 	}
 
@@ -62,11 +61,11 @@ public class GestureRecorder implements MovementListener {
 				msgDispatcher.dispatchCustomMsg(match.getPattern().getAction());
 			}
 
-			log.info(String.format("Best gesture match: %s at %2d%%", //
+			Logger.info(String.format("Best gesture match: %s at %2d%%", //
 					match.getPattern().getName(), //
 					(int) (match.getProbability() * 100)));
 		} else {
-			log.info("Gesture too short");
+			Logger.info("Gesture too short");
 		}
 		inputBuilder = null;
 	}

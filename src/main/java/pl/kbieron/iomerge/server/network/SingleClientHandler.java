@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -21,7 +21,6 @@ import java.net.SocketException;
 @Configurable(autowire = Autowire.BY_TYPE, dependencyCheck = true)
 class SingleClientHandler implements ConnectionHandler {
 
-	private static final Logger log = Logger.getLogger(SingleClientHandler.class);
 
 	private static final int SEND_BUFFER_SIZE = 512;
 
@@ -66,7 +65,7 @@ class SingleClientHandler implements ConnectionHandler {
 				((Message) clientInputStream.readObject()).process(msgProcessor);
 			}
 
-		} catch (ClassNotFoundException e) { log.warn(e); }
+		} catch (ClassNotFoundException e) { Logger.warn(e); }
 	}
 
 	private void disconnect() {
@@ -74,17 +73,17 @@ class SingleClientHandler implements ConnectionHandler {
 		connected = false;
 		appStateManager.disconnected();
 
-		log.info("disconnecting from client");
+		Logger.info("disconnecting from client");
 		heartBeatTimer.stop();
 		timeOutTimer.stop();
 
 		try {
 			clientSocket.close();
-		} catch (IOException e) { log.warn(e); }
+		} catch (IOException e) { Logger.warn(e); }
 
 		try {
 			clientOutputStream.close();
-		} catch (IOException e) { log.warn(e); }
+		} catch (IOException e) { Logger.warn(e); }
 	}
 
 	@EventListener
@@ -99,10 +98,10 @@ class SingleClientHandler implements ConnectionHandler {
 		try {
 			clientOutputStream.writeObject(msg);
 		} catch (SocketException e) {
-			log.warn(e);
+			Logger.warn(e);
 			disconnect();
 		} catch (IOException e) {
-			log.error(e);
+			Logger.error(e);
 		}
 	}
 

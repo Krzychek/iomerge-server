@@ -1,6 +1,6 @@
 package pl.kbieron.iomerge.server.ui;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,6 @@ import java.awt.*;
 @Component
 class TrayManager {
 
-	private static final Logger log = Logger.getLogger(TrayManager.class);
 
 	private SystemTray tray;
 
@@ -25,7 +24,7 @@ class TrayManager {
 
 	public TrayManager() {
 		if (!SystemTray.isSupported()) {
-			log.error("Tray is not supported on this system");
+			Logger.error("Tray is not supported on this system");
 			return;
 		}
 		tray = SystemTray.getSystemTray();
@@ -33,7 +32,7 @@ class TrayManager {
 			trayIcon = new TrayIcon(ImageIO.read(getClass().getResource("/icon.png")));
 			trayIcon.setImageAutoSize(true);
 		} catch (Exception e) {
-			log.error("filed to load tray icon", e);
+			Logger.error("filed to load tray icon", e);
 			return;
 		}
 		createAndShow();
