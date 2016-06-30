@@ -64,7 +64,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>pl.kbieron.iomerge.server.SpringBootstrap</mainClass>
+							<mainClass>pl.kbieron.iomerge.server.Bootstrap</mainClass>
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
@@ -119,11 +119,28 @@
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- args4j - cli argument parser -->
+		<dependency>
+			<groupId>args4j</groupId>
+			<artifactId>args4j</artifactId>
+			<version>2.33</version>
+		</dependency>
+
 		<!-- logger -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.tinylog</groupId>
+			<artifactId>log4j-facade</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>jcl-binding</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog</artifactId>
+			<version>1.1</version>
 		</dependency>
 
 		<!-- spring -->

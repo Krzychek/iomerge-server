@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server;
 
 import org.annoprops.PropertyManager;
 import org.apache.log4j.Logger;
+import org.kohsuke.args4j.CmdLineException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -10,24 +11,27 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Component;
+import pl.kbieron.iomerge.server.config.TinyLogConfigurator;
 
 import javax.annotation.PreDestroy;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
-import java.io.File;
 import java.io.IOException;
+
+import static pl.kbieron.iomerge.server.config.ConstantPaths.SETTINGS_FILE;
 
 @Configuration
 @EnableSpringConfigured
 @ComponentScan(basePackages = "pl.kbieron.iomerge.server")
-public class SpringBootstrap {
+public class Bootstrap {
 
-	private static final Logger log = Logger.getLogger(SpringBootstrap.class);
+	private static final Logger log = Logger.getLogger(Bootstrap.class);
 
-	private static final File SETTINGS_FILE = new File(System.getProperty("user.home") + File.separator + ".config/iomerge.properties");
+	public static void main(String... args) throws IOException, CmdLineException {
+		// should be invoked before spring context
+		TinyLogConfigurator.configure(args);
 
-	public static void main(String... args) throws IOException {
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(SpringBootstrap.class);
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Bootstrap.class);
 		applicationContext.registerShutdownHook();
 	}
 
@@ -40,7 +44,7 @@ public class SpringBootstrap {
 	PropertyManager propertyManager(ListableBeanFactory beanFactory) throws IOException {
 		PropertyManager propertyManager = PropertyManager.builder() //
 				.withDefaultSerializers() //
-				.withSpring(beanFactory) //
+				.withSpringListableBeanFactory(beanFactory) //
 				.build();
 
 
