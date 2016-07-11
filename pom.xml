@@ -132,12 +132,12 @@
 
 		<!-- annoprops -->
 		<dependency>
-			<groupId>org.annoprops</groupId>
+			<groupId>com.github.Krzychek.annoprops</groupId>
 			<artifactId>annoprops</artifactId>
 			<version>${annoprops.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.annoprops</groupId>
+			<groupId>com.github.Krzychek.annoprops</groupId>
 			<artifactId>annoprops-springframework</artifactId>
 			<version>${annoprops.version}</version>
 		</dependency>
