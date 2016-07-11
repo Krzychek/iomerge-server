@@ -1,3 +1,6 @@
-iomerge-server.iml
+/iomerge-server.iml
 /target
 /.idea
+/api/api.iml
+/server.iml
+/gesture-plugin/gesture-plugin.iml
