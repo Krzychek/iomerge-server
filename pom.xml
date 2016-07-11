@@ -17,12 +17,19 @@
 		<spring.version>4.3.1.RELEASE</spring.version>
 		<tinylog.version>1.1</tinylog.version>
 		<args4j.version>2.33</args4j.version>
-		<annoprops.version>1.0-SNAPSHOT</annoprops.version>
+		<annoprops.version>1.0</annoprops.version>
 		<iomerge-model.version>1.0-SNAPSHOT</iomerge-model.version>
 
 		<!-- plugins -->
 		<findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
