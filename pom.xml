@@ -12,7 +12,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<java.version>1.8</java.version>
-		<spring.version>4.3.0.RELEASE</spring.version>
+
+		<!-- dependencies -->
+		<spring.version>4.3.1.RELEASE</spring.version>
+		<tinylog.version>1.1</tinylog.version>
+		<args4j.version>2.33</args4j.version>
+		<annoprops.version>1.0-SNAPSHOT</annoprops.version>
+		<iomerge-model.version>1.0-SNAPSHOT</iomerge-model.version>
+
+		<!-- plugins -->
+		<findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
 	</properties>
 
 	<build>
@@ -21,7 +30,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.3</version>
+				<version>${findbugs-maven-plugin.version}</version>
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
@@ -111,38 +120,38 @@
 		<dependency>
 			<groupId>pl.kbieron</groupId>
 			<artifactId>iomerge-model</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${iomerge-model.version}</version>
 		</dependency>
 
 		<!-- annoprops -->
 		<dependency>
 			<groupId>org.annoprops</groupId>
 			<artifactId>annoprops</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${annoprops.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.annoprops</groupId>
 			<artifactId>annoprops-springframework</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${annoprops.version}</version>
 		</dependency>
 
 		<!-- args4j - cli argument parser -->
 		<dependency>
 			<groupId>args4j</groupId>
 			<artifactId>args4j</artifactId>
-			<version>2.33</version>
+			<version>${args4j.version}</version>
 		</dependency>
 
 		<!-- logger -->
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>jcl-binding</artifactId>
-			<version>1.1</version>
+			<version>${tinylog.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog</artifactId>
-			<version>1.1</version>
+			<version>${tinylog.version}</version>
 		</dependency>
 
 		<!-- spring -->
