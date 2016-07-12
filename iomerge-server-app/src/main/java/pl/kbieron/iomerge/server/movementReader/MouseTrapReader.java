@@ -5,6 +5,7 @@ import org.pmw.tinylog.Logger;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.appState.AppState;
+import pl.kbieron.iomerge.server.api.movementReader.IOListener;
 import pl.kbieron.iomerge.server.ui.UIHelper;
 
 import javax.annotation.PostConstruct;
@@ -20,14 +21,14 @@ import java.util.Arrays;
 class MouseTrapReader extends JFrame {
 
 
-	private final CompositeListener listener;
+	private final IOListener listener;
 	private final Robot robot = new Robot();
 	private volatile Point center;
 	private Point oldMouseLocation;
 	private volatile boolean reading;
 	private final Timer timer = new Timer(0, (ignored) -> readMove());
 
-	MouseTrapReader(CompositeListener listener) throws AWTException {
+	MouseTrapReader(IOListener listener) throws AWTException {
 		super("IOMerge MovementReader");
 		this.listener = listener;
 	}
