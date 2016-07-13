@@ -40,7 +40,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>pl.kbieron.iomerge.server.Bootstrap</mainClass>
+							<mainClass>pl.kbieron.iomerge.server.Main</mainClass>
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
