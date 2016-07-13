@@ -1,4 +1,4 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
 interface Constants {
 

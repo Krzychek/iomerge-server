@@ -1,14 +1,16 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
-import java.awt.*;
+import org.springframework.stereotype.Component;
+
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
-import static pl.kbieron.iomerge.server.plugins.gesture.Constants.MIN_POINTS;
-import static pl.kbieron.iomerge.server.plugins.gesture.Constants.NORM_LENGTH;
-import static pl.kbieron.iomerge.server.plugins.gesture.Constants.NORM_SIZE;
+import static pl.kbieron.iomerge.plugins.server.gesture.Constants.MIN_POINTS;
+import static pl.kbieron.iomerge.plugins.server.gesture.Constants.NORM_LENGTH;
+import static pl.kbieron.iomerge.plugins.server.gesture.Constants.NORM_SIZE;
 
 
 @Component

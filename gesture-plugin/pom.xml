@@ -9,7 +9,26 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>iomerger-server-gesture-plugin</artifactId>
+	<artifactId>iomerge-server-gesture-plugin</artifactId>
 
+	<dependencies>
+		<dependency>
+			<groupId>pl.kbieron</groupId>
+			<artifactId>iomerge-server-api</artifactId>
+		</dependency>
 
+		<!-- tinylog -->
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

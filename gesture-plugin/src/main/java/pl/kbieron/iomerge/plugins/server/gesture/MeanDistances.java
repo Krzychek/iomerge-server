@@ -1,21 +1,21 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.List;
 
 
 class MeanDistances {
 
-	public final double euclidean;
+	final double euclidean;
 
-	public final double turningAngle;
+	final double turningAngle;
 
 	private MeanDistances(double euclidean, double turningAngle) {
 		this.euclidean = euclidean;
 		this.turningAngle = turningAngle;
 	}
 
-	public static MeanDistances getMeanDistances(List<Point> seq1, List<Point> seq2) {
+	static MeanDistances getMeanDistances(List<Point> seq1, List<Point> seq2) {
 		int length = seq1.size();
 		double euclideanSum = 0.0, turningAngleSum = 0.0;
 

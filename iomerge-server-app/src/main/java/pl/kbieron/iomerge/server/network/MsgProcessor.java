@@ -1,6 +1,5 @@
 package pl.kbieron.iomerge.server.network;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.MessageProcessorAdapter;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
@@ -13,14 +12,15 @@ import pl.kbieron.iomerge.server.utils.ClipboardManager;
 @Component
 class MsgProcessor extends MessageProcessorAdapter {
 
-	@Autowired
-	private AppStateManager appStateManager;
+	private final AppStateManager appStateManager;
+	private final ClipboardManager clipboardManager;
+	private final ConnectionHandler connectionHandler;
 
-	@Autowired
-	private ClipboardManager clipboardManager;
-
-	@Autowired
-	private ConnectionHandler connectionHandler;
+	public MsgProcessor(ClipboardManager clipboardManager, AppStateManager appStateManager, ConnectionHandler connectionHandler) {
+		this.clipboardManager = clipboardManager;
+		this.appStateManager = appStateManager;
+		this.connectionHandler = connectionHandler;
+	}
 
 	@Override
 	public void clipboardSync(String text) {

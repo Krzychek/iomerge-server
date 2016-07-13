@@ -2,7 +2,6 @@ package pl.kbieron.iomerge.server.ui;
 
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
@@ -10,8 +9,11 @@ import pl.kbieron.iomerge.server.api.appState.AppState;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
 import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.Timer;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
 import java.util.Arrays;
 
 
@@ -24,11 +26,8 @@ public class EdgeTrigger extends JFrame {
 
 	private static final String DIMENSION_EXCEPTION = "Problem with getting display dimension";
 
-	@Autowired
-	private AppStateManager appStateManager;
-
-	@Autowired
-	private MessageDispatcher messageDispatcher;
+	private final AppStateManager appStateManager;
+	private final MessageDispatcher messageDispatcher;
 
 	@ConfigProperty("Edge")
 	private Edge edge = Edge.LEFT;
@@ -39,8 +38,12 @@ public class EdgeTrigger extends JFrame {
 	@ConfigProperty("EdgeTriggerLength")
 	private int length = 500;
 
-	EdgeTrigger() throws HeadlessException {
+	EdgeTrigger(MessageDispatcher messageDispatcher, AppStateManager appStateManager) throws HeadlessException {
 		super("IOMerge Trigger");
+
+		this.messageDispatcher = messageDispatcher;
+		this.appStateManager = appStateManager;
+
 		init();
 	}
 

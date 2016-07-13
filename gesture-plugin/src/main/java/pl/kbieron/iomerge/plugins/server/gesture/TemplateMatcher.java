@@ -1,17 +1,19 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 class TemplateMatcher {
 
-	@Autowired
-	private LikelihoodCalculator likelihoodCalculator;
+	private final LikelihoodCalculator likelihoodCalculator;
 
-	@Autowired
-	private PatternDatabase patternDatabase;
+	private final PatternDatabase patternDatabase;
+
+	public TemplateMatcher(PatternDatabase patternDatabase, LikelihoodCalculator likelihoodCalculator) {
+		this.patternDatabase = patternDatabase;
+		this.likelihoodCalculator = likelihoodCalculator;
+	}
 
 	MatchResult bestMatch(Input input) {
 		return patternDatabase.getPatterns().parallelStream() //

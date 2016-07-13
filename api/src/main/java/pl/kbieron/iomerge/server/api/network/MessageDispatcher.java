@@ -2,8 +2,11 @@ package pl.kbieron.iomerge.server.api.network;
 
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.message.Message;
+import pl.kbieron.iomerge.server.api.Chainable;
 
-public interface MessageDispatcher {
+
+public interface MessageDispatcher extends Chainable<MessageDispatcher> {
+
 	void dispatchMouseSync(int x, int y);
 
 	void dispatchMousePress();

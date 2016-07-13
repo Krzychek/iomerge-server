@@ -1,10 +1,8 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
-
-import static pl.kbieron.iomerge.server.plugins.gesture.Constants.MIN_POINTS;
 
 
 class Input {
@@ -13,10 +11,6 @@ class Input {
 
 	private Input(List<Point> points) {
 		this.points = points;
-	}
-
-	static Builder builder(Normalizer normalizer) {
-		return new Builder().withNormalizer(normalizer);
 	}
 
 	List<Point> getPoints() {
@@ -31,14 +25,14 @@ class Input {
 
 		private Normalizer normalizer;
 
-		private Builder() {}
+		Builder() {}
 
 		Input build() {
 			return isEnough() ? new Input(normalizer.normalize(pointList)) : null;
 		}
 
 		boolean isEnough() {
-			return pointList.size() >= MIN_POINTS;
+			return pointList.size() >= Constants.MIN_POINTS;
 		}
 
 		void move(int dx, int dy) {

@@ -1,28 +1,26 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.pmw.tinylog.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+
 
 @Component
 class TrayManager {
 
-
+	private final SettingsWindow settingsWindow;
 	private SystemTray tray;
-
-	@Autowired
-	private SettingsWindow settingsWindow;
-
-	@Autowired
-	private AbstractApplicationContext applicationContext;
-
 	private TrayIcon trayIcon;
 
-	public TrayManager() {
+	public TrayManager(SettingsWindow settingsWindow) {
+		this.settingsWindow = settingsWindow;
+
 		if (!SystemTray.isSupported()) {
 			Logger.error("Tray is not supported on this system");
 			return;

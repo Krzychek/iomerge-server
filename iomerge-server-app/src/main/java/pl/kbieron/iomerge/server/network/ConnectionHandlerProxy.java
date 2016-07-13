@@ -9,9 +9,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.Socket;
 
+
 @Component
 public class ConnectionHandlerProxy implements ConnectionHandler {
-
 
 	private ConnectionHandler connectionHandler;
 
@@ -37,6 +37,7 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 	}
 
 	private static class NOOPConnectionHandler implements ConnectionHandler {
+
 		private final static String MSG = "Call to NOOPConnectionHandler";
 
 		public void sendToClient(Message ignore) { Logger.debug(MSG); }

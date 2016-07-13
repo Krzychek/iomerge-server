@@ -1,13 +1,11 @@
-package pl.kbieron.iomerge.server.plugins.gesture;
+package pl.kbieron.iomerge.plugins.server.gesture;
 
 
 import org.pmw.tinylog.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.kbieron.iomerge.server.api.movementReader.MovementListener;
 import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
 
-import javax.swing.*;
+import javax.swing.Timer;
 
 
 /**
@@ -15,35 +13,32 @@ import javax.swing.*;
  * NOTE: Probably whole module would be removed
  */
 @Component
-public class GestureRecorder implements MovementListener {
+class GestureRecorder {
 
-	@Autowired
-	private TemplateMatcher templateMatcher;
+	private final TemplateMatcher templateMatcher;
+	private final MessageDispatcher messageDispatcher;
+	private final Normalizer normalizer;
 
-	@Autowired
-	private MessageDispatcher messageDispatcher;
-
-	@Autowired
-	private Normalizer normalizer;
-
-	private volatile boolean enoughTime = false;
-
+	private boolean enoughTime = false;
 	private Input.Builder inputBuilder;
 
-	GestureRecorder() {}
+	GestureRecorder(Normalizer normalizer, MessageDispatcher messageDispatcher, TemplateMatcher templateMatcher) {
+		this.normalizer = normalizer;
+		this.messageDispatcher = messageDispatcher;
+		this.templateMatcher = templateMatcher;
+	}
 
-	@Override
-	synchronized public void move(int dx, int dy) {
-		if ( inputBuilder != null ) {
+	synchronized void move(int dx, int dy) {
+		if (inputBuilder != null) {
 			inputBuilder.move(dx, dy);
 		} else {
 			Logger.warn("not recording");
 		}
 	}
 
-	@Override
-	synchronized public void mousePressed() {
-		inputBuilder = Input.builder(normalizer);
+
+	synchronized void startGesture() {
+		inputBuilder = new Input.Builder().withNormalizer(normalizer);
 
 		enoughTime = false;
 		Timer timer = new Timer(200, actionEvent -> enoughTime = true);
@@ -51,13 +46,12 @@ public class GestureRecorder implements MovementListener {
 		timer.start();
 	}
 
-	@Override
-	synchronized public void mouseReleased() {
-		if ( enoughTime && inputBuilder.isEnough() ) {
+	synchronized void finishGesture() {
+		if (enoughTime && inputBuilder.isEnough()) {
 			Input input = inputBuilder.build();
 			TemplateMatcher.MatchResult match = templateMatcher.bestMatch(input);
 
-			if ( match.getProbability() > Constants.PROB_THRESHOLD ) {
+			if (match.getProbability() > Constants.PROB_THRESHOLD) {
 				messageDispatcher.dispatchCustomMsg(match.getPattern().getAction());
 			}
 

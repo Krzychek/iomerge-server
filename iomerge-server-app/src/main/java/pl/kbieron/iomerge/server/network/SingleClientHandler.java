@@ -10,7 +10,7 @@ import pl.kbieron.iomerge.model.message.misc.Heartbeat;
 import pl.kbieron.iomerge.server.api.appState.AppState;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
 
-import javax.swing.*;
+import javax.swing.Timer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,7 +36,6 @@ class SingleClientHandler implements ConnectionHandler {
 
 	@Autowired
 	private MsgProcessor msgProcessor;
-
 
 	private SingleClientHandler(Socket clientSocket) throws IOException {
 		this.clientSocket = clientSocket;
