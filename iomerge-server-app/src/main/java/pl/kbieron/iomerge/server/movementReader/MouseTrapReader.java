@@ -65,9 +65,9 @@ class MouseTrapReader extends JFrame {
 	}
 
 	private void reposition() {
-		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) //
-				.map(screen -> screen.getDefaultConfiguration().getBounds()) //
-				.max((a, b) -> a.width * b.height) //
+		Rectangle displayRect = Arrays.stream(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices())
+				.map(screen -> screen.getDefaultConfiguration().getBounds())
+				.max((a, b) -> a.width * a.height - b.width * b.height)
 				.orElseThrow(() -> new IllegalStateException("Problem with getting display dimension"));
 		setLocation(displayRect.x, displayRect.y);
 		setSize(displayRect.width, displayRect.height);
