@@ -15,14 +15,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
+
 
 public class PluginLoader {
 
-	private final File pluginDir;
-
-	public PluginLoader(File pluginDir) {
-		this.pluginDir = pluginDir;
-	}
 
 	private Optional<Class<?>> loadFromJar(PluginDefinition pluginDefinition) {
 
@@ -45,20 +42,20 @@ public class PluginLoader {
 	}
 
 	public List<Class<?>> loadPlugins() {
-		if (!pluginDir.exists() || !pluginDir.isDirectory()) {
+		if (!PLUGINS_DIR.exists() || !PLUGINS_DIR.isDirectory()) {
 			Logger.debug("Plugin dir doesn't exists");
 			return Collections.emptyList();
 		}
 
-		return Arrays.stream(getpluginDirectories())
+		return Arrays.stream(getPluginDirectories())
 				.map(PluginDefinition::read).flatMap(this::toStream)
 				.map(this::loadFromJar).flatMap(this::toStream)
 				.collect(Collectors.toList());
 
 	}
 
-	private File[] getpluginDirectories() {
-		File[] pluginDirs = pluginDir.listFiles(File::isDirectory);
+	private File[] getPluginDirectories() {
+		File[] pluginDirs = PLUGINS_DIR.listFiles(File::isDirectory);
 		return (pluginDirs != null) ? pluginDirs : new File[0];
 
 	}

@@ -31,9 +31,11 @@ class SingleClientHandler implements ConnectionHandler {
 
 	private volatile boolean connected;
 
+	@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 	@Autowired
 	private AppStateManager appStateManager;
 
+	@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 	@Autowired
 	private MsgProcessor msgProcessor;
 

@@ -7,34 +7,35 @@ import pl.kbieron.iomerge.server.movementReader.VirtualScreen;
 import pl.kbieron.iomerge.server.network.EventServer;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 
 @Component
 class SettingsWindow extends JFrame {
 
-	@Autowired
-	private EventServer eventServer;
-
-	@Autowired
-	private EdgeTrigger edgeTrigger;
-
-	@Autowired
-	private VirtualScreen virtualScreen;
+	private final EventServer eventServer;
+	private final EdgeTrigger edgeTrigger;
+	private final VirtualScreen virtualScreen;
 
 	private JComboBox<Edge> edge;
-
 	private JFormattedTextField triggerLength;
-
 	private JFormattedTextField triggerOffset;
-
 	private JFormattedTextField moveScale;
-
 	private JFormattedTextField port;
 
-	SettingsWindow() {
+	@Autowired
+	SettingsWindow(EventServer eventServer, EdgeTrigger edgeTrigger, VirtualScreen virtualScreen) {
 		super("IOMerge Settings");
+		this.eventServer = eventServer;
+		this.edgeTrigger = edgeTrigger;
+		this.virtualScreen = virtualScreen;
 	}
 
 	@PostConstruct

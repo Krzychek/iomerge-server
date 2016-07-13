@@ -2,7 +2,6 @@ package pl.kbieron.iomerge.server;
 
 import org.annoprops.PropertyManagerHelperBean;
 import org.annoprops.springframework.SpringframeworkAnnopropsBeanFactory;
-import org.kohsuke.args4j.CmdLineException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
 import static pl.kbieron.iomerge.server.config.ConstantPaths.SETTINGS_FILE;
 import static pl.kbieron.iomerge.server.utils.ChainHelper.createChain;
 
@@ -33,12 +31,12 @@ import static pl.kbieron.iomerge.server.utils.ChainHelper.createChain;
 @ComponentScan(basePackages = "pl.kbieron.iomerge.server")
 public class Bootstrap {
 
-	public static void main(String... args) throws IOException, CmdLineException {
+	public static void main(String... args) throws IOException {
 		// should be invoked before spring context
 		TinyLogConfigurator.configure(args);
 
 		// array with spring config classes including plugins and bootstrap
-		ArrayList<Class> classes = new ArrayList<>(new PluginLoader(PLUGINS_DIR).loadPlugins());
+		ArrayList<Class> classes = new ArrayList<>(new PluginLoader().loadPlugins());
 		classes.add(Bootstrap.class);
 
 		AbstractApplicationContext applicationContext = new AnnotationConfigApplicationContext(

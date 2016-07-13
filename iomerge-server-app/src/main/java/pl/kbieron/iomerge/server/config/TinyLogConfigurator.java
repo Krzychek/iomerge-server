@@ -23,7 +23,7 @@ public class TinyLogConfigurator {
 			forbids = "-logLevel")
 	private boolean debug = false;
 
-	public static void configure(String... args) throws CmdLineException {
+	public static void configure(String... args) {
 		TinyLogConfigurator config = new TinyLogConfigurator();
 		CmdLineParser parser = new CmdLineParser(config);
 		try {
