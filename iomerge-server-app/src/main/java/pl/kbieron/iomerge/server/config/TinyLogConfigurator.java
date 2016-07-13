@@ -42,7 +42,7 @@ public class TinyLogConfigurator {
 				.writer(new ConsoleWriter())
 				.addWriter(new FileWriter(LOG_FILE.getAbsolutePath()))
 				.level(getLogLevel())
-				.writingThread(true)
+				.writingThread(null)
 				.activate();
 	}
 
