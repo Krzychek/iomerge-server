@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server.utils;
 
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.appState.AppState;
@@ -10,7 +11,6 @@ import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.io.IOException;
  * Manages system clipboard, syncs clipboard on remote entering
  */
 @Component
-public class ClipboardManager implements ClipboardOwner {
+public class ClipboardSynchronizer implements ClipboardOwner {
 
 
 	private final MessageDispatcher messageDispatcher;
@@ -28,7 +28,8 @@ public class ClipboardManager implements ClipboardOwner {
 
 	private Object sentData;
 
-	ClipboardManager(MessageDispatcher messageDispatcher, Clipboard systemClipboard) {
+	@Autowired
+	ClipboardSynchronizer(MessageDispatcher messageDispatcher, Clipboard systemClipboard) {
 		this.messageDispatcher = messageDispatcher;
 		this.systemClipboard = systemClipboard;
 	}
@@ -50,10 +51,6 @@ public class ClipboardManager implements ClipboardOwner {
 				Logger.warn(e);
 			}
 		}
-	}
-
-	public void setClipboardContent(String data) {
-		systemClipboard.setContents(new StringSelection(data), this);
 	}
 
 	@Override

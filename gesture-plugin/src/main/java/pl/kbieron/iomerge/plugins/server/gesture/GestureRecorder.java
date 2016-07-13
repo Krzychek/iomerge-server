@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.plugins.server.gesture;
 
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
 
@@ -22,6 +23,7 @@ class GestureRecorder {
 	private boolean enoughTime = false;
 	private Input.Builder inputBuilder;
 
+	@Autowired
 	GestureRecorder(Normalizer normalizer, MessageDispatcher messageDispatcher, TemplateMatcher templateMatcher) {
 		this.normalizer = normalizer;
 		this.messageDispatcher = messageDispatcher;

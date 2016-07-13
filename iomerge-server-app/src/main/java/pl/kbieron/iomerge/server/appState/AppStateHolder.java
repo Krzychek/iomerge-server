@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.appState;
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -22,6 +23,7 @@ class AppStateHolder implements AppStateManager {
 	private AppState state;
 	private AppStateManager nextInChain;
 
+	@Autowired
 	AppStateHolder(ApplicationEventPublisher publisher) {
 		this.publisher = publisher;
 	}

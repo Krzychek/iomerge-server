@@ -3,6 +3,7 @@ package pl.kbieron.iomerge.server.network;
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.appState.AppState;
@@ -26,7 +27,6 @@ import java.util.concurrent.Executors;
 @Component
 public class EventServer {
 
-
 	private final AppStateManager appStateManager;
 	private final ConnectionHandlerProxy connectionHandlerProxy;
 	private final Executor executor;
@@ -35,6 +35,7 @@ public class EventServer {
 
 	private @ConfigProperty("ServerPort") int port = 7698;
 
+	@Autowired
 	public EventServer(AppStateManager appStateManager, ConnectionHandlerProxy connectionHandlerProxy) {
 		this.appStateManager = appStateManager;
 		this.connectionHandlerProxy = connectionHandlerProxy;

@@ -1,5 +1,6 @@
 package pl.kbieron.iomerge.plugins.server.gesture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.movementReader.IOListener;
 
@@ -19,7 +20,10 @@ class GestureIOListener implements IOListener {
 	private IOListener nextInChain;
 	private boolean capturing = false;
 
-	public GestureIOListener(GestureRecorder gestureRecorder) {this.gestureRecorder = gestureRecorder;}
+	@Autowired
+	public GestureIOListener(GestureRecorder gestureRecorder) {
+		this.gestureRecorder = gestureRecorder;
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {

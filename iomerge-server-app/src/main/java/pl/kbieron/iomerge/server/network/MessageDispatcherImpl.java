@@ -1,5 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
@@ -24,7 +25,10 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
 	private MessageDispatcher nextInChain;
 
-	public MessageDispatcherImpl(ConnectionHandler connectionHandler) {this.connectionHandler = connectionHandler;}
+	@Autowired
+	public MessageDispatcherImpl(ConnectionHandler connectionHandler) {
+		this.connectionHandler = connectionHandler;
+	}
 
 	@Override
 	public void dispatchMouseSync(int x, int y) {

@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.ui;
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ class TrayManager {
 	private SystemTray tray;
 	private TrayIcon trayIcon;
 
+	@Autowired
 	public TrayManager(SettingsWindow settingsWindow) {
 		this.settingsWindow = settingsWindow;
 

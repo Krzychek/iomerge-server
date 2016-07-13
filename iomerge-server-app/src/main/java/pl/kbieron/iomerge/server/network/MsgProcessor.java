@@ -1,9 +1,10 @@
 package pl.kbieron.iomerge.server.network;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.MessageProcessorAdapter;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
-import pl.kbieron.iomerge.server.utils.ClipboardManager;
+import pl.kbieron.iomerge.server.utils.ClipboardContentSetter;
 
 
 /**
@@ -13,27 +14,21 @@ import pl.kbieron.iomerge.server.utils.ClipboardManager;
 class MsgProcessor extends MessageProcessorAdapter {
 
 	private final AppStateManager appStateManager;
-	private final ClipboardManager clipboardManager;
-	private final ConnectionHandler connectionHandler;
+	private final ClipboardContentSetter clipboardContentSetter;
 
-	public MsgProcessor(ClipboardManager clipboardManager, AppStateManager appStateManager, ConnectionHandler connectionHandler) {
-		this.clipboardManager = clipboardManager;
+	@Autowired
+	public MsgProcessor(ClipboardContentSetter clipboardContentSetter, AppStateManager appStateManager) {
+		this.clipboardContentSetter = clipboardContentSetter;
 		this.appStateManager = appStateManager;
-		this.connectionHandler = connectionHandler;
 	}
 
 	@Override
 	public void clipboardSync(String text) {
-		clipboardManager.setClipboardContent(text);
+		clipboardContentSetter.setClipboardContent(text);
 	}
 
 	@Override
 	public void remoteExit() {
 		appStateManager.exitRemote();
-	}
-
-	@Override
-	public void heartbeat() {
-		connectionHandler.keepAlive();
 	}
 }

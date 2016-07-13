@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server.network;
 
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.message.Message;
 
@@ -13,7 +14,14 @@ import java.net.Socket;
 @Component
 public class ConnectionHandlerProxy implements ConnectionHandler {
 
+	private final SingleClientHandlerFactory singleClientHandlerFactory;
+
 	private ConnectionHandler connectionHandler;
+
+	@Autowired
+	public ConnectionHandlerProxy(SingleClientHandlerFactory singleClientHandlerFactory) {
+		this.singleClientHandlerFactory = singleClientHandlerFactory;
+	}
 
 	@Override
 	public void sendToClient(Message msg) {
@@ -31,9 +39,9 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 	}
 
 	void connect(Socket clientSocket) throws IOException {
-		SingleClientHandler clientHandler = SingleClientHandler.connect(clientSocket);
-		this.connectionHandler = clientHandler;
+		SingleClientHandler clientHandler = singleClientHandlerFactory.createSingleClientHandler(clientSocket);
 		clientHandler.startReading();
+		this.connectionHandler = clientHandler;
 	}
 
 	private static class NOOPConnectionHandler implements ConnectionHandler {

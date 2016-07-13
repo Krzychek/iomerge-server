@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server.ui;
 
 import org.annoprops.annotations.ConfigProperty;
 import org.annoprops.annotations.PropertyHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.model.Edge;
@@ -38,6 +39,7 @@ public class EdgeTrigger extends JFrame {
 	@ConfigProperty("EdgeTriggerLength")
 	private int length = 500;
 
+	@Autowired
 	EdgeTrigger(MessageDispatcher messageDispatcher, AppStateManager appStateManager) throws HeadlessException {
 		super("IOMerge Trigger");
 

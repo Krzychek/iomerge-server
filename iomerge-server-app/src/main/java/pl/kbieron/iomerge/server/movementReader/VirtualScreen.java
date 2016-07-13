@@ -1,6 +1,7 @@
 package pl.kbieron.iomerge.server.movementReader;
 
 import org.annoprops.annotations.ConfigProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
@@ -41,6 +42,7 @@ public class VirtualScreen implements IOListener {
 
 	private IOListener nextInChain;
 
+	@Autowired
 	public VirtualScreen(MessageDispatcher actionDispatcher, AppStateManager appStateManager) {
 		this.actionDispatcher = actionDispatcher;
 		this.appStateManager = appStateManager;

@@ -1,9 +1,6 @@
 package pl.kbieron.iomerge.server.network;
 
 import org.pmw.tinylog.Logger;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.event.EventListener;
 import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.model.message.misc.Heartbeat;
@@ -18,49 +15,51 @@ import java.net.Socket;
 import java.net.SocketException;
 
 
-@Configurable(autowire = Autowire.BY_TYPE, dependencyCheck = true)
 class SingleClientHandler implements ConnectionHandler {
 
-
-	private static final int SEND_BUFFER_SIZE = 512;
+	private static final int SEND_BUFFER_SIZE = 1;
 
 	private final Socket clientSocket;
 	private final Timer heartBeatTimer;
 	private final Timer timeOutTimer;
 	private final ObjectOutputStream clientOutputStream;
+	private final ObjectInputStream clientInputStream;
+	private final AppStateManager appStateManager;
+	private final MsgProcessor msgProcessor;
 
 	private volatile boolean connected;
 
-	@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-	@Autowired
-	private AppStateManager appStateManager;
+	SingleClientHandler(Socket clientSocket, MsgProcessor msgProcessor, AppStateManager appStateManager) throws IOException {
+		this.msgProcessor = msgProcessor;
+		this.appStateManager = appStateManager;
+		this.connected = true;
 
-	@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-	@Autowired
-	private MsgProcessor msgProcessor;
-
-	private SingleClientHandler(Socket clientSocket) throws IOException {
 		this.clientSocket = clientSocket;
 		clientSocket.setSendBufferSize(SEND_BUFFER_SIZE);
-		clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
-		Heartbeat heartbeat = new Heartbeat();
-		this.heartBeatTimer = new Timer(2000, e -> sendToClient(heartbeat));
-		this.heartBeatTimer.start();
+		this.clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+		this.clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-		this.timeOutTimer = new Timer(5000, e -> {}); // TODOe -> disconnect());
-		this.timeOutTimer.start();
-		this.connected = true;
+		this.heartBeatTimer = new Timer(2000, null);
+
+		this.timeOutTimer = new Timer(5000, null);
+
 	}
 
-	static SingleClientHandler connect(Socket clientSocket) throws IOException {
-		return new SingleClientHandler(clientSocket);
+	private void initTimers() throws IOException {
+		Heartbeat heartbeat = new Heartbeat();
+		heartBeatTimer.addActionListener(e -> sendToClient(heartbeat));
+		heartBeatTimer.start();
+
+		timeOutTimer.addActionListener(e -> {}); // TODOe -> disconnect());
+		timeOutTimer.start();
 	}
 
 	void startReading() throws IOException {
 		appStateManager.connected();
+		initTimers();
 
-		ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
+
 		try {
 			while (connected) {
 				((Message) clientInputStream.readObject()).process(msgProcessor);

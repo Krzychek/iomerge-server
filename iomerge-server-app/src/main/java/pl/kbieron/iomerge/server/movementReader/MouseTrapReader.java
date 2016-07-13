@@ -2,6 +2,7 @@ package pl.kbieron.iomerge.server.movementReader;
 
 
 import org.pmw.tinylog.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.kbieron.iomerge.server.api.appState.AppState;
@@ -41,6 +42,7 @@ class MouseTrapReader extends JFrame {
 	private Point oldMouseLocation;
 	private volatile boolean reading;
 
+	@Autowired
 	MouseTrapReader(IOListener listener) throws AWTException {
 		super("IOMerge MovementReader");
 
