@@ -11,9 +11,9 @@
 
 	<modules>
 		<module>api</module>
+		<module>data-model</module>
 		<module>gesture-plugin</module>
 		<module>iomerge-server-app</module>
-		<module>data-model</module>
 	</modules>
 
 	<properties>
@@ -60,8 +60,8 @@
 			<!-- internal dependency -->
 			<dependency>
 				<groupId>pl.kbieron</groupId>
-				<artifactId>iomerge-model</artifactId>
-				<version>${iomerge-model.version}</version>
+				<artifactId>data-model</artifactId>
+				<version>${iomerge-server-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>pl.kbieron</groupId>

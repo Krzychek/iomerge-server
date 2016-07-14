@@ -57,7 +57,7 @@
 		<!-- internal dependency -->
 		<dependency>
 			<groupId>pl.kbieron</groupId>
-			<artifactId>iomerge-model</artifactId>
+			<artifactId>data-model</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>pl.kbieron</groupId>
