@@ -1,8 +1,8 @@
 package pl.kbieron.iomerge.server.utils.plugins;
 
 import com.google.common.collect.Iterators;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
@@ -59,7 +59,7 @@ class ChainedClassLoader extends ClassLoader {
 				.map(classLoader -> classLoader.getResourceAsStream(name))
 				.filter(Objects::nonNull)
 				.reduce(SequenceInputStream::new)
-				.orElse(new ByteInputStream());
+				.orElseGet(() -> new ByteArrayInputStream(new byte[0]));
 	}
 
 	@Override
