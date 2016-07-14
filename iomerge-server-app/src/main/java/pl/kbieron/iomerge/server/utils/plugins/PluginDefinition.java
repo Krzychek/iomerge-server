@@ -25,7 +25,7 @@ class PluginDefinition {
 		this.className = className;
 	}
 
-	static Stream<PluginDefinition> read(File pluginDir) {
+	static Stream<PluginDefinition> readFromDir(File pluginDir) {
 		// load props
 		Properties props = new Properties();
 		try {

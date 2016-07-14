@@ -18,13 +18,12 @@ public class Main {
 	private static void loadSpringContext() {
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
-		//noinspection ConfusingArgumentToVarargsMethod
-		ctx.register(new PluginLoader().loadPlugins());
+		new PluginLoader().loadPluginsToContext(ctx);
+
 		ctx.register(SpringConfig.class);
 
-		ctx.refresh();
-
 		ctx.registerShutdownHook();
+		ctx.refresh();
 	}
 
 	private static void configureStaticContext(String[] args) {
