@@ -13,6 +13,7 @@
 		<module>api</module>
 		<module>gesture-plugin</module>
 		<module>iomerge-server-app</module>
+		<module>data-model</module>
 	</modules>
 
 	<properties>
