@@ -9,10 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
@@ -41,16 +38,16 @@ public class PluginLoader {
 		method.invoke(ClassLoader.getSystemClassLoader(), url);
 	}
 
-	public List<Class<?>> loadPlugins() {
+	public Class<?>[] loadPlugins() {
 		if (!PLUGINS_DIR.exists() || !PLUGINS_DIR.isDirectory()) {
 			Logger.debug("Plugin dir doesn't exists");
-			return Collections.emptyList();
+			return new Class[0];
 		}
 
 		return Arrays.stream(getPluginDirectories())
 				.map(PluginDefinition::read).flatMap(this::toStream)
 				.map(this::loadFromJar).flatMap(this::toStream)
-				.collect(Collectors.toList());
+				.toArray(Class[]::new);
 
 	}
 
