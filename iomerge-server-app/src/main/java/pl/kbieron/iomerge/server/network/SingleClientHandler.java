@@ -46,7 +46,7 @@ class SingleClientHandler implements ConnectionHandler {
 
 	}
 
-	private void initTimers() throws IOException {
+	private void initTimers() {
 		Heartbeat heartbeat = new Heartbeat();
 		heartBeatTimer.addActionListener(e -> sendToClient(heartbeat));
 		heartBeatTimer.start();
@@ -65,7 +65,9 @@ class SingleClientHandler implements ConnectionHandler {
 				((Message) clientInputStream.readObject()).process(msgProcessor);
 			}
 
-		} catch (ClassNotFoundException e) { Logger.warn(e); }
+		} catch (ClassNotFoundException e) {
+			Logger.warn(e);
+		}
 	}
 
 	private void disconnect() {
@@ -79,11 +81,15 @@ class SingleClientHandler implements ConnectionHandler {
 
 		try {
 			clientSocket.close();
-		} catch (IOException e) { Logger.warn(e); }
+		} catch (IOException e) {
+			Logger.warn(e);
+		}
 
 		try {
 			clientOutputStream.close();
-		} catch (IOException e) { Logger.warn(e); }
+		} catch (IOException e) {
+			Logger.warn(e);
+		}
 	}
 
 	@EventListener

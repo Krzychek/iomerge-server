@@ -15,7 +15,7 @@ import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
 
 public class PluginLoader {
 
-	private List<ClassLoader> classLoaders;
+	private final List<ClassLoader> classLoaders;
 
 	public PluginLoader() {
 		classLoaders = new ArrayList<>();

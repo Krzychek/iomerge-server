@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ChainedClassLoader extends ClassLoader {
+class ChainedClassLoader extends ClassLoader {
 
 	private final List<ClassLoader> classLoaders;
 
@@ -31,7 +31,7 @@ public class ChainedClassLoader extends ClassLoader {
 			}
 		}
 
-		throw new ClassNotFoundException("class not found in any chained classloaders" + name);
+		throw new ClassNotFoundException("class not found in any chained classLoaders" + name);
 	}
 
 	@Override
