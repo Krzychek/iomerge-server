@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
@@ -18,16 +16,16 @@ import static pl.kbieron.iomerge.server.config.ConstantPaths.PLUGINS_DIR;
 public class PluginLoader {
 
 
-	private Optional<Class<?>> loadFromJar(PluginDefinition pluginDefinition) {
+	private Stream<Class<?>> loadFromJar(PluginDefinition pluginDefinition) {
 
 		try {
 			loadJar(pluginDefinition);
 
-			return Optional.of(Class.forName(pluginDefinition.className));
+			return Stream.of(Class.forName(pluginDefinition.className));
 
 		} catch (Exception ex) {
 			Logger.warn(ex, "Problem while loading plugin");
-			return Optional.empty();
+			return Stream.empty();
 		}
 	}
 
@@ -44,22 +42,17 @@ public class PluginLoader {
 			return new Class[0];
 		}
 
-		return Arrays.stream(getPluginDirectories())
-				.map(PluginDefinition::read).flatMap(this::toStream)
-				.map(this::loadFromJar).flatMap(this::toStream)
+		return getPluginDirectories()
+				.flatMap(PluginDefinition::read)
+				.flatMap(this::loadFromJar)
 				.toArray(Class[]::new);
 
 	}
 
-	private File[] getPluginDirectories() {
+	private Stream<File> getPluginDirectories() {
 		File[] pluginDirs = PLUGINS_DIR.listFiles(File::isDirectory);
-		return (pluginDirs != null) ? pluginDirs : new File[0];
+		return (pluginDirs != null) ? Stream.of(pluginDirs) : Stream.empty();
 
-	}
-
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private <T> Stream<T> toStream(Optional<T> optional) {
-		return optional.isPresent() ? Stream.of(optional.get()) : Stream.empty();
 	}
 
 }

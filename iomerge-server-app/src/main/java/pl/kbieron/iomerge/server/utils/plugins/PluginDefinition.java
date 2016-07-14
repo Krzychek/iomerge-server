@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 
 class PluginDefinition {
@@ -24,7 +25,7 @@ class PluginDefinition {
 		this.className = className;
 	}
 
-	static Optional<PluginDefinition> read(File pluginDir) {
+	static Stream<PluginDefinition> read(File pluginDir) {
 		// load props
 		Properties props = new Properties();
 		try {
@@ -33,21 +34,21 @@ class PluginDefinition {
 
 		} catch (IOException e) {
 			Logger.error(e, "problem with loading plugin props");
-			return Optional.empty();
+			return Stream.empty();
 		}
 
 		// check jar file
 		Optional<File> jar = getExistingFile(pluginDir, props.getProperty(JAR_PROP));
 		if (!jar.isPresent()) {
 			Logger.warn("plugin jar doesn't exist", jar);
-			return Optional.empty();
+			return Stream.empty();
 		}
 
 		String springClass = props.getProperty(SPRING_CONFIGURATION_CLASS_PROP);
 		// check springClass
-		if (springClass == null) return Optional.empty();
+		if (springClass == null) return Stream.empty();
 
-		return Optional.of(new PluginDefinition(jar.get(), springClass));
+		return Stream.of(new PluginDefinition(jar.get(), springClass));
 	}
 
 	private static Optional<File> getExistingFile(File parent, String fileName) {
