@@ -77,16 +77,6 @@ public class VirtualScreen implements IOListener {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		nextInChain.mouseEntered(e);
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		nextInChain.mouseExited(e);
-	}
-
-	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		actionDispatcher.dispatchMouseWheelEvent(e.getWheelRotation());
 		nextInChain.mouseWheelMoved(e);

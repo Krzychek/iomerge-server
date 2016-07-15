@@ -23,16 +23,6 @@ public abstract class IOListenerAdapter extends AbstractChainable<IOListener> im
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		nextInChain.mouseEntered(e);
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		nextInChain.mouseExited(e);
-	}
-
-	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		nextInChain.mouseWheelMoved(e);
 	}

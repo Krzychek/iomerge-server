@@ -152,10 +152,10 @@ class MouseTrapReader extends JFrame {
 		public void mouseReleased(MouseEvent e) { listener.mouseReleased(e); }
 
 		@Override
-		public void mouseEntered(MouseEvent e) { listener.mouseEntered(e); }
+		public void mouseEntered(MouseEvent e) {}
 
 		@Override
-		public void mouseExited(MouseEvent e) { listener.mouseExited(e); }
+		public void mouseExited(MouseEvent e) {}
 
 		@Override
 		public void keyTyped(KeyEvent e) { listener.keyTyped(e); }

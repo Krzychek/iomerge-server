@@ -28,10 +28,6 @@ public interface IOListener extends Chainable<IOListener> {
 
 	void mouseReleased(MouseEvent e);
 
-	void mouseEntered(MouseEvent e);
-
-	void mouseExited(MouseEvent e);
-
 	void mouseWheelMoved(MouseWheelEvent e);
 
 }
