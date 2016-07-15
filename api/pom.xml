@@ -12,11 +12,19 @@
 	<artifactId>iomerge-server-api</artifactId>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>pl.kbieron</groupId>
-			<artifactId>data-model</artifactId>
+			<artifactId>iomerge-data-model</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- needed in java doc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 
 </project>

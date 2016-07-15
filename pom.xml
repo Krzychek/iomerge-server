@@ -10,9 +10,8 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<modules>
-		<module>api</module>
 		<module>data-model</module>
-		<module>gesture-plugin</module>
+		<module>api</module>
 		<module>iomerge-server-app</module>
 	</modules>
 
@@ -60,7 +59,7 @@
 			<!-- internal dependency -->
 			<dependency>
 				<groupId>pl.kbieron</groupId>
-				<artifactId>data-model</artifactId>
+				<artifactId>iomerge-data-model</artifactId>
 				<version>${iomerge-server-api.version}</version>
 			</dependency>
 			<dependency>
@@ -114,16 +113,6 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aspects</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 		</dependencies>

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import pl.kbieron.iomerge.server.api.appState.AppStateManager;
 import pl.kbieron.iomerge.server.api.movementReader.IOListener;
 import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
@@ -22,9 +21,8 @@ import static pl.kbieron.iomerge.server.utils.ChainHelper.createChain;
 
 
 @Configuration
-@EnableSpringConfigured
 @ComponentScan(basePackages = "pl.kbieron.iomerge.server")
-public class SpringConfig {
+class SpringConfig {
 
 	@Bean
 	Clipboard clipboard() {
