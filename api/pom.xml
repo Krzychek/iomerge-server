@@ -16,7 +16,6 @@
 		<dependency>
 			<groupId>com.github.Krzychek.iomerge-server</groupId>
 			<artifactId>data-model</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- needed in java doc -->
