@@ -59,7 +59,7 @@ class MouseTrapReader extends JFrame {
 		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
 
-		IOListenerAdapter listenerAdapter = new IOListenerAdapter(listener);
+		ListenerAdapter listenerAdapter = new ListenerAdapter(listener);
 		// add listener
 		addMouseWheelListener(listenerAdapter);
 		addMouseListener(listenerAdapter);
@@ -130,11 +130,11 @@ class MouseTrapReader extends JFrame {
 		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
 	}
 
-	private static class IOListenerAdapter implements MouseWheelListener, MouseListener, KeyListener {
+	private static class ListenerAdapter implements MouseWheelListener, MouseListener, KeyListener {
 
 		private final IOListener listener;
 
-		IOListenerAdapter(IOListener listener) {
+		ListenerAdapter(IOListener listener) {
 			this.listener = listener;
 		}
 
