@@ -1,7 +1,6 @@
 package pl.kbieron.iomerge.server.api.movementReader;
 
-import pl.kbieron.iomerge.server.api.ChainableAdapter;
-import pl.kbieron.iomerge.server.api.network.MessageDispatcher;
+import pl.kbieron.iomerge.server.api.AbstractChainable;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -11,7 +10,7 @@ import java.awt.event.MouseWheelEvent;
 /**
  * adapter for {@link IOListener} with all method delegating to chained objects
  */
-public abstract class IOListenerAdapter extends ChainableAdapter<IOListener> implements IOListener {
+public abstract class IOListenerAdapter extends AbstractChainable<IOListener> implements IOListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {

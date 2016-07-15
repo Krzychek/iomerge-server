@@ -3,7 +3,7 @@ package pl.kbieron.iomerge.server.api;
 /**
  * @see Chainable
  */
-public abstract class ChainableAdapter<T> implements Chainable<T> {
+public abstract class AbstractChainable<T> implements Chainable<T> {
 
 	protected T nextInChain;
 

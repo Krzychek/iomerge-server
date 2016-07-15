@@ -2,13 +2,13 @@ package pl.kbieron.iomerge.server.api.network;
 
 import pl.kbieron.iomerge.model.Edge;
 import pl.kbieron.iomerge.model.message.Message;
-import pl.kbieron.iomerge.server.api.ChainableAdapter;
+import pl.kbieron.iomerge.server.api.AbstractChainable;
 
 
 /**
  * adapter for {@link MessageDispatcher} with all method delegating to chained objects
  */
-public abstract class MessageDispatcherAdapter extends ChainableAdapter<MessageDispatcher> implements MessageDispatcher {
+public abstract class MessageDispatcherAdapter extends AbstractChainable<MessageDispatcher> implements MessageDispatcher {
 
 	public void dispatchMouseSync(int x, int y) {
 		nextInChain.dispatchMouseSync(x, y);
