@@ -4,10 +4,10 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>pl.kbieron</groupId>
-	<artifactId>iomerge-server-parent</artifactId>
+	<groupId>com.github.Krzychek.iomerge-server</groupId>
+	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>master-SNAPSHOT</version>
 
 	<modules>
 		<module>data-model</module>
@@ -25,8 +25,6 @@
 		<tinylog.version>1.1</tinylog.version>
 		<args4j.version>2.33</args4j.version>
 		<annoprops.version>1.0</annoprops.version>
-		<iomerge-model.version>1.0-SNAPSHOT</iomerge-model.version>
-		<iomerge-server-api.version>1.0-SNAPSHOT</iomerge-server-api.version>
 
 		<!-- plugins -->
 		<findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
@@ -58,14 +56,14 @@
 		<dependencies>
 			<!-- internal dependency -->
 			<dependency>
-				<groupId>pl.kbieron</groupId>
-				<artifactId>iomerge-data-model</artifactId>
-				<version>${iomerge-server-api.version}</version>
+				<groupId>com.github.Krzychek.iomerge-server</groupId>
+				<artifactId>data-model</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>pl.kbieron</groupId>
-				<artifactId>iomerge-server-api</artifactId>
-				<version>${iomerge-server-api.version}</version>
+				<groupId>com.github.Krzychek.iomerge-server</groupId>
+				<artifactId>api</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<!-- annoprops -->

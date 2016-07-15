@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>iomerge-server-parent</artifactId>
-		<groupId>pl.kbieron</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<artifactId>parent</artifactId>
+		<groupId>com.github.Krzychek.iomerge-server</groupId>
+		<version>master-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>iomerge-data-model</artifactId>
+	<artifactId>data-model</artifactId>
 
 	<build>
 		<plugins>

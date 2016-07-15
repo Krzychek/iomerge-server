@@ -3,19 +3,19 @@
 		 xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-		<artifactId>iomerge-server-parent</artifactId>
-		<groupId>pl.kbieron</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<artifactId>parent</artifactId>
+		<groupId>com.github.Krzychek.iomerge-server</groupId>
+		<version>master-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>iomerge-server-api</artifactId>
+	<artifactId>api</artifactId>
 
 	<dependencies>
 
 		<dependency>
-			<groupId>pl.kbieron</groupId>
-			<artifactId>iomerge-data-model</artifactId>
+			<groupId>com.github.Krzychek.iomerge-server</groupId>
+			<artifactId>data-model</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
