@@ -4,7 +4,9 @@ import pl.kbieron.iomerge.server.api.Chainable;
 
 
 /**
- * Menages {@link AppState}
+ * Menages {@link AppState} in the application
+ *
+ * @see Chainable
  */
 public interface AppStateManager extends Chainable<AppStateManager> {
 

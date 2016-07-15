@@ -5,6 +5,9 @@ import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.server.api.ChainableAdapter;
 
 
+/**
+ * adapter for {@link MessageDispatcher} with all method delegating to chained objects
+ */
 public abstract class MessageDispatcherAdapter extends ChainableAdapter<MessageDispatcher> implements MessageDispatcher {
 
 	public void dispatchMouseSync(int x, int y) {

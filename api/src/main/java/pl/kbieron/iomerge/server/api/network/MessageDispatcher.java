@@ -5,6 +5,11 @@ import pl.kbieron.iomerge.model.message.Message;
 import pl.kbieron.iomerge.server.api.Chainable;
 
 
+/**
+ * Implementation dispatches messages to client by proper client handler
+ *
+ * @see Chainable
+ */
 public interface MessageDispatcher extends Chainable<MessageDispatcher> {
 
 	void dispatchMouseSync(int x, int y);

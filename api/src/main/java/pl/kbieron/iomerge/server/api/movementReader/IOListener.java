@@ -8,7 +8,9 @@ import java.awt.event.MouseWheelEvent;
 
 
 /**
- * Receives io events
+ * Receives io application events
+ *
+ * @see Chainable
  */
 public interface IOListener extends Chainable<IOListener> {
 
