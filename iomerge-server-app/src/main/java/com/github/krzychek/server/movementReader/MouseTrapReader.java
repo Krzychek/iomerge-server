@@ -4,26 +4,22 @@ package com.github.krzychek.server.movementReader;
 import com.github.krzychek.server.api.appState.AppState;
 import com.github.krzychek.server.api.movementReader.IOListener;
 import com.github.krzychek.server.ui.UIHelper;
+import com.github.krzychek.server.utils.BooleanCondition;
+import com.github.krzychek.server.utils.IOListenerToAWTAdapter;
 import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.Arrays;
 
 
@@ -36,11 +32,11 @@ class MouseTrapReader extends JFrame {
 
 	private final IOListener listener;
 	private final Robot robot;
-	private final Timer timer;
+	private final MoveReadingThread readingThread;
 
 	private volatile Point center;
-	private Point oldMouseLocation;
-	private volatile boolean reading;
+	private volatile Point oldMouseLocation;
+	private BooleanCondition isReading = new BooleanCondition();
 
 	@Autowired
 	MouseTrapReader(IOListener listener) throws AWTException {
@@ -48,7 +44,9 @@ class MouseTrapReader extends JFrame {
 
 		this.listener = listener;
 
-		timer = new Timer(0, (ignored) -> readMove());
+		readingThread = new MoveReadingThread();
+		readingThread.start();
+
 		robot = new Robot();
 	}
 
@@ -59,7 +57,7 @@ class MouseTrapReader extends JFrame {
 		UIHelper.makeInvisible(this, true);
 		setAutoRequestFocus(true);
 
-		ListenerAdapter listenerAdapter = new ListenerAdapter(listener);
+		IOListenerToAWTAdapter listenerAdapter = new IOListenerToAWTAdapter(listener);
 		// add listener
 		addMouseWheelListener(listenerAdapter);
 		addMouseListener(listenerAdapter);
@@ -76,27 +74,27 @@ class MouseTrapReader extends JFrame {
 	}
 
 	private void readMove() {
-		if (!reading) {
+		if (isReading.no()) {
 			Logger.warn("readMove called, but I'm not reading");
 			return;
 		}
+		// absolute location
 		Point move = MouseInfo.getPointerInfo().getLocation();
+		// relative location
 		move.translate(-center.x, -center.y);
 
 		if (move.x != 0 || move.y != 0) {
 			listener.move(move.x, move.y);
-			centerPointer();
+			centerMousePointer();
 		}
 	}
 
-	private void centerPointer() {
+	private void centerMousePointer() {
 		robot.mouseMove(center.x, center.y);
 	}
 
 	synchronized private void startReading() {
-		if (reading) return;
-		reading = true;
-
+		if (isReading.yes()) return;
 		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
 
 		setVisible(true);
@@ -104,17 +102,18 @@ class MouseTrapReader extends JFrame {
 		center = getLocation();
 		center.translate(getWidth() / 2, getHeight() / 2);
 
-		centerPointer();
+		centerMousePointer();
 
-		timer.start();
+		isReading.makeYes();
 	}
 
 	synchronized private void stopReading() {
-		if (!reading) return;
-		reading = false;
-		timer.stop();
+		if (isReading.no()) return;
+
 		restoreMouseLocation();
 		setVisible(false);
+
+		isReading.makeNo();
 	}
 
 	@EventListener
@@ -130,40 +129,37 @@ class MouseTrapReader extends JFrame {
 		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
 	}
 
-	private static class ListenerAdapter implements MouseWheelListener, MouseListener, KeyListener {
+	@PreDestroy
+	private void shutdown() {
+		stopReading();
+		readingThread.interrupt();
+	}
 
-		private final IOListener listener;
 
-		ListenerAdapter(IOListener listener) {
-			this.listener = listener;
+	private class MoveReadingThread extends Thread {
+
+		private volatile boolean interrupted = false;
+
+		MoveReadingThread() {
+			super("MouseTrapReader : mouse move reading thread");
 		}
 
-
 		@Override
-		public void mouseWheelMoved(MouseWheelEvent e) { listener.mouseWheelMoved(e); }
+		public void run() {
 
-		@Override
-		public void mouseClicked(MouseEvent e) { listener.mouseClicked(e); }
+			while (!interrupted) {
+				// await
+				isReading.await();
 
-		@Override
-		public void mousePressed(MouseEvent e) { listener.mousePressed(e); }
+				// read while is reading
+				isReading.whileTrue(MouseTrapReader.this::readMove);
+			}
+		}
 
-		@Override
-		public void mouseReleased(MouseEvent e) { listener.mouseReleased(e); }
-
-		@Override
-		public void mouseEntered(MouseEvent e) {}
-
-		@Override
-		public void mouseExited(MouseEvent e) {}
-
-		@Override
-		public void keyTyped(KeyEvent e) { listener.keyTyped(e); }
-
-		@Override
-		public void keyPressed(KeyEvent e) { listener.keyPressed(e); }
-
-		@Override
-		public void keyReleased(KeyEvent e) { listener.keyReleased(e); }
+		public synchronized void interrupt() {
+			interrupted = true;
+			super.interrupt();
+		}
 	}
+
 }
