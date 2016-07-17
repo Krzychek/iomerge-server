@@ -109,11 +109,15 @@ class MouseTrapReader extends JFrame {
 
 	synchronized private void stopReading() {
 		if (isReading.no()) return;
+		isReading.makeNo();
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			throw new IllegalStateException(e);
+		}
 
 		restoreMouseLocation();
 		setVisible(false);
-
-		isReading.makeNo();
 	}
 
 	@EventListener
