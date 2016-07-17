@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import java.awt.GraphicsEnvironment;
@@ -45,10 +46,9 @@ public class EdgeTrigger extends JFrame {
 
 		this.messageDispatcher = messageDispatcher;
 		this.appStateManager = appStateManager;
-
-		init();
 	}
 
+	@PostConstruct
 	private void init() {
 		reposition();
 		UIHelper.makeInvisible(this);
