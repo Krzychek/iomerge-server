@@ -9,6 +9,4 @@ import com.github.krzychek.server.model.message.Message;
 public interface ConnectionHandler {
 
 	void sendToClient(Message msg);
-
-	void keepAlive();
 }

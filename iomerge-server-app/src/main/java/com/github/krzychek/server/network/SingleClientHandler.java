@@ -18,7 +18,6 @@ class SingleClientHandler implements ConnectionHandler {
 
 	private final Socket clientSocket;
 	private final Timer heartBeatTimer;
-	private final Timer timeOutTimer;
 	private final MessageIOFacade messageIOFacade;
 	private final AppStateManager appStateManager;
 	private final MsgProcessor msgProcessor;
@@ -34,7 +33,6 @@ class SingleClientHandler implements ConnectionHandler {
 		this.messageIOFacade = new MessageIOFacade(clientSocket);
 
 		this.heartBeatTimer = new Timer(2000, null);
-		this.timeOutTimer = new Timer(5000, null);
 
 	}
 
@@ -64,7 +62,6 @@ class SingleClientHandler implements ConnectionHandler {
 
 		Logger.info("disconnecting from client");
 		heartBeatTimer.stop();
-		timeOutTimer.stop();
 
 		try {
 			clientSocket.close();
@@ -90,10 +87,5 @@ class SingleClientHandler implements ConnectionHandler {
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-	}
-
-	@Override
-	public void keepAlive() {
-		timeOutTimer.restart();
 	}
 }

@@ -28,11 +28,6 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 		connectionHandler.sendToClient(msg);
 	}
 
-	@Override
-	public void keepAlive() {
-		connectionHandler.keepAlive();
-	}
-
 	@PostConstruct
 	public void resetConnectionHandler() {
 		this.connectionHandler = new NOOPConnectionHandler();
@@ -49,7 +44,5 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 		private final static String MSG = "Call to NOOPConnectionHandler";
 
 		public void sendToClient(Message ignore) { Logger.debug(MSG); }
-
-		public void keepAlive() { Logger.debug(MSG); }
 	}
 }
