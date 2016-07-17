@@ -53,7 +53,11 @@ class SingleClientHandler implements ConnectionHandler {
 				} catch (EOFException e) {
 					disconnect();
 
-				} catch (IOException | ClassNotFoundException e) {
+				} catch (IOException e) {
+					disconnect();
+					Logger.warn(e);
+
+				} catch (ClassNotFoundException e) {
 					Logger.warn(e);
 				}
 			}
