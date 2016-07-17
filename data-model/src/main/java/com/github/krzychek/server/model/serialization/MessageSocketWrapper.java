@@ -7,20 +7,16 @@ import java.io.IOException;
 import java.net.Socket;
 
 
-public class MessageIOFacade {
+public class MessageSocketWrapper {
 
 	private final TCPObjectSocket tcpObjectSocket;
 
-	public MessageIOFacade(String address, int port) throws IOException {
+	public MessageSocketWrapper(String address, int port) throws IOException {
 		this.tcpObjectSocket = new TCPObjectSocket(address, port, FSTConfigurationFactory.createConfiguration());
 	}
 
-	public MessageIOFacade(Socket socket) throws IOException {
+	public MessageSocketWrapper(Socket socket) throws IOException {
 		this.tcpObjectSocket = new TCPObjectSocket(socket, FSTConfigurationFactory.createConfiguration());
-	}
-
-	public boolean isStopped() {
-		return tcpObjectSocket.isStopped();
 	}
 
 	public boolean isClosed() {

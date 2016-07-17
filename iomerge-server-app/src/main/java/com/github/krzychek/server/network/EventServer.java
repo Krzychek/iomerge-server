@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -33,7 +32,9 @@ public class EventServer {
 
 	private ServerSocket serverSocket;
 
-	private @ConfigProperty("ServerPort") int port = 7698;
+	private
+	@ConfigProperty("ServerPort")
+	int port = 7698;
 
 	@Autowired
 	public EventServer(AppStateManager appStateManager, ConnectionHandlerProxy connectionHandlerProxy) {
@@ -48,7 +49,9 @@ public class EventServer {
 
 		if (serverSocket != null) try {
 			serverSocket.close();
-		} catch (IOException e) { Logger.warn(e); }
+		} catch (IOException e) {
+			Logger.warn(e);
+		}
 
 		appStateManager.disconnected();
 	}
@@ -77,8 +80,7 @@ public class EventServer {
 			Socket clientSocket = serverSocket.accept();
 			Logger.info("client socket accepted");
 			connectionHandlerProxy.connect(clientSocket);
-		} catch (SocketException e) {
-			Logger.debug(e);
+
 		} catch (IOException e) {
 			Logger.warn("Problem with connection", e);
 		}

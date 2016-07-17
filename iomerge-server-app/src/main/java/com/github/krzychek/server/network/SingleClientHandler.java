@@ -4,11 +4,12 @@ import com.github.krzychek.server.api.appState.AppState;
 import com.github.krzychek.server.api.appState.AppStateManager;
 import com.github.krzychek.server.model.message.Message;
 import com.github.krzychek.server.model.message.misc.Heartbeat;
-import com.github.krzychek.server.model.serialization.MessageIOFacade;
+import com.github.krzychek.server.model.serialization.MessageSocketWrapper;
 import org.pmw.tinylog.Logger;
 import org.springframework.context.event.EventListener;
 
 import javax.swing.Timer;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,9 +17,8 @@ import java.net.SocketException;
 
 class SingleClientHandler implements ConnectionHandler {
 
-	private final Socket clientSocket;
 	private final Timer heartBeatTimer;
-	private final MessageIOFacade messageIOFacade;
+	private final MessageSocketWrapper socket;
 	private final AppStateManager appStateManager;
 	private final MsgProcessor msgProcessor;
 	private volatile boolean connected;
@@ -28,9 +28,7 @@ class SingleClientHandler implements ConnectionHandler {
 		this.appStateManager = appStateManager;
 		this.connected = true;
 
-		this.clientSocket = clientSocket;
-
-		this.messageIOFacade = new MessageIOFacade(clientSocket);
+		this.socket = new MessageSocketWrapper(clientSocket);
 
 		this.heartBeatTimer = new Timer(2000, null);
 
@@ -42,17 +40,25 @@ class SingleClientHandler implements ConnectionHandler {
 		heartBeatTimer.start();
 	}
 
-	void startReading() throws IOException {
-		appStateManager.connected();
-		initTimers();
+	void startReading() {
+		new Thread(() -> {
 
-		try {
-			while (!messageIOFacade.isStopped())
-				messageIOFacade.getMessage().process(msgProcessor);
+			appStateManager.connected();
+			initTimers();
 
-		} catch (ClassNotFoundException e) {
-			Logger.warn(e);
-		}
+			while (!socket.isClosed()) {
+				try {
+					socket.getMessage().process(msgProcessor);
+
+				} catch (EOFException e) {
+					disconnect();
+
+				} catch (IOException | ClassNotFoundException e) {
+					Logger.warn(e);
+				}
+			}
+
+		}, "Message Reading thread").start();
 	}
 
 	private void disconnect() {
@@ -64,7 +70,7 @@ class SingleClientHandler implements ConnectionHandler {
 		heartBeatTimer.stop();
 
 		try {
-			clientSocket.close();
+			socket.close();
 		} catch (IOException e) {
 			Logger.warn(e);
 		}
@@ -80,7 +86,7 @@ class SingleClientHandler implements ConnectionHandler {
 	@Override
 	public void sendToClient(Message msg) {
 		try {
-			messageIOFacade.sendMessage(msg);
+			socket.sendMessage(msg);
 		} catch (SocketException e) {
 			Logger.warn(e);
 			disconnect();
