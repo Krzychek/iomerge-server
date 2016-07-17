@@ -34,7 +34,6 @@ class SingleClientHandler implements ConnectionHandler {
 		this.messageIOFacade = new MessageIOFacade(clientSocket);
 
 		this.heartBeatTimer = new Timer(2000, null);
-
 		this.timeOutTimer = new Timer(5000, null);
 
 	}
@@ -43,9 +42,6 @@ class SingleClientHandler implements ConnectionHandler {
 		Heartbeat heartbeat = new Heartbeat();
 		heartBeatTimer.addActionListener(e -> sendToClient(heartbeat));
 		heartBeatTimer.start();
-
-		timeOutTimer.addActionListener(e -> {}); // TODOe -> disconnect());
-		timeOutTimer.start();
 	}
 
 	void startReading() throws IOException {
