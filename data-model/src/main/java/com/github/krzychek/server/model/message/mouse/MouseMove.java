@@ -4,21 +4,21 @@ import com.github.krzychek.server.model.MessageProcessor;
 import com.github.krzychek.server.model.message.Message;
 
 
-public class MouseSync implements Message {
+public class MouseMove implements Message {
 
 	private final static long serialVersionUID = 1L;
 
-	private final int x;
+	private final int dx;
 
-	private final int y;
+	private final int dy;
 
-	public MouseSync(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public MouseMove(int dx, int dy) {
+		this.dx = dx;
+		this.dy = dy;
 	}
 
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.mouseSync(x, y);
+		processor.mouseMove(dx, dy);
 	}
 }

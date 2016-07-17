@@ -12,7 +12,7 @@ import com.github.krzychek.server.model.message.Message;
  */
 public interface MessageDispatcher extends Chainable<MessageDispatcher> {
 
-	void dispatchMouseSync(int x, int y);
+	void dispatchMouseMove(int x, int y);
 
 	void dispatchMousePress();
 

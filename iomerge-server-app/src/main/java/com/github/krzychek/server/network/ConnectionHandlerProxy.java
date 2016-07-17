@@ -40,8 +40,8 @@ public class ConnectionHandlerProxy implements ConnectionHandler {
 
 	void connect(Socket clientSocket) throws IOException {
 		SingleClientHandler clientHandler = singleClientHandlerFactory.createSingleClientHandler(clientSocket);
-		clientHandler.startReading();
 		this.connectionHandler = clientHandler;
+		clientHandler.startReading();
 	}
 
 	private static class NOOPConnectionHandler implements ConnectionHandler {

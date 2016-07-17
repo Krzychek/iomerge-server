@@ -10,8 +10,8 @@ import com.github.krzychek.server.model.message.Message;
  */
 public abstract class MessageDispatcherAdapter extends AbstractChainable<MessageDispatcher> implements MessageDispatcher {
 
-	public void dispatchMouseSync(int x, int y) {
-		nextInChain.dispatchMouseSync(x, y);
+	public void dispatchMouseMove(int x, int y) {
+		nextInChain.dispatchMouseMove(x, y);
 	}
 
 	public void dispatchMousePress() {

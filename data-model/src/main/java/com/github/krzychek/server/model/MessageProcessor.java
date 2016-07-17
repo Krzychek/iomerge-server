@@ -7,7 +7,7 @@ public interface MessageProcessor {
 
 	void mouseRelease();
 
-	void mouseSync(int x, int y);
+	void mouseMove(int x, int y);
 
 	void mouseWheel(int move);
 

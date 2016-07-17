@@ -4,29 +4,24 @@ import com.github.krzychek.server.api.appState.AppState;
 import com.github.krzychek.server.api.appState.AppStateManager;
 import com.github.krzychek.server.model.message.Message;
 import com.github.krzychek.server.model.message.misc.Heartbeat;
+import com.github.krzychek.server.model.serialization.MessageIOFacade;
 import org.pmw.tinylog.Logger;
 import org.springframework.context.event.EventListener;
 
 import javax.swing.Timer;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
 
 class SingleClientHandler implements ConnectionHandler {
 
-	private static final int SEND_BUFFER_SIZE = 1;
-
 	private final Socket clientSocket;
 	private final Timer heartBeatTimer;
 	private final Timer timeOutTimer;
-	private final ObjectOutputStream clientOutputStream;
-	private final ObjectInputStream clientInputStream;
+	private final MessageIOFacade messageIOFacade;
 	private final AppStateManager appStateManager;
 	private final MsgProcessor msgProcessor;
-
 	private volatile boolean connected;
 
 	SingleClientHandler(Socket clientSocket, MsgProcessor msgProcessor, AppStateManager appStateManager) throws IOException {
@@ -35,10 +30,8 @@ class SingleClientHandler implements ConnectionHandler {
 		this.connected = true;
 
 		this.clientSocket = clientSocket;
-		clientSocket.setSendBufferSize(SEND_BUFFER_SIZE);
 
-		this.clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-		this.clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
+		this.messageIOFacade = new MessageIOFacade(clientSocket);
 
 		this.heartBeatTimer = new Timer(2000, null);
 
@@ -59,11 +52,9 @@ class SingleClientHandler implements ConnectionHandler {
 		appStateManager.connected();
 		initTimers();
 
-
 		try {
-			while (connected) {
-				((Message) clientInputStream.readObject()).process(msgProcessor);
-			}
+			while (!messageIOFacade.isStopped())
+				messageIOFacade.getMessage().process(msgProcessor);
 
 		} catch (ClassNotFoundException e) {
 			Logger.warn(e);
@@ -84,12 +75,6 @@ class SingleClientHandler implements ConnectionHandler {
 		} catch (IOException e) {
 			Logger.warn(e);
 		}
-
-		try {
-			clientOutputStream.close();
-		} catch (IOException e) {
-			Logger.warn(e);
-		}
 	}
 
 	@EventListener
@@ -102,7 +87,7 @@ class SingleClientHandler implements ConnectionHandler {
 	@Override
 	public void sendToClient(Message msg) {
 		try {
-			clientOutputStream.writeObject(msg);
+			messageIOFacade.sendMessage(msg);
 		} catch (SocketException e) {
 			Logger.warn(e);
 			disconnect();

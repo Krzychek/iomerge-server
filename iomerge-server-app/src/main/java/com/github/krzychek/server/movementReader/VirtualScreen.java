@@ -52,7 +52,7 @@ public class VirtualScreen implements IOListener {
 	public void move(int dx, int dy) {
 		unusedYMove += dy * movementScale;
 		unusedXMove += dx * movementScale;
-		actionDispatcher.dispatchMouseSync((int) unusedXMove, (int) unusedYMove);
+		actionDispatcher.dispatchMouseMove((int) unusedXMove, (int) unusedYMove);
 		unusedXMove %= 1.0;
 		unusedYMove %= 1.0;
 

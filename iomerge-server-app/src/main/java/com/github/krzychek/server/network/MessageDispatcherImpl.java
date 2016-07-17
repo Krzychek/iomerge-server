@@ -8,9 +8,9 @@ import com.github.krzychek.server.model.message.keyboard.KeyPress;
 import com.github.krzychek.server.model.message.keyboard.KeyRelease;
 import com.github.krzychek.server.model.message.misc.ClipboardSync;
 import com.github.krzychek.server.model.message.misc.EdgeSync;
+import com.github.krzychek.server.model.message.mouse.MouseMove;
 import com.github.krzychek.server.model.message.mouse.MousePress;
 import com.github.krzychek.server.model.message.mouse.MouseRelease;
-import com.github.krzychek.server.model.message.mouse.MouseSync;
 import com.github.krzychek.server.model.message.mouse.MouseWheel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -31,9 +31,9 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 	}
 
 	@Override
-	public void dispatchMouseSync(int x, int y) {
-		connectionHandler.sendToClient(new MouseSync(x, y));
-		nextInChain.dispatchMouseSync(x, y);
+	public void dispatchMouseMove(int x, int y) {
+		connectionHandler.sendToClient(new MouseMove(x, y));
+		nextInChain.dispatchMouseMove(x, y);
 	}
 
 	@Override

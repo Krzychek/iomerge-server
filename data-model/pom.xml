@@ -25,4 +25,13 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<dependencies>
+		<!-- msg serialization -->
+		<dependency>
+			<groupId>de.ruedigermoeller</groupId>
+			<artifactId>fst</artifactId>
+			<version>2.47</version>
+		</dependency>
+	</dependencies>
 </project>

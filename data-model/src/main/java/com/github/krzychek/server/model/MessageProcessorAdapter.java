@@ -9,7 +9,7 @@ public abstract class MessageProcessorAdapter implements MessageProcessor {
 	public void mouseRelease() {}
 
 	@Override
-	public void mouseSync(int x, int y) {}
+	public void mouseMove(int x, int y) {}
 
 	@Override
 	public void mouseWheel(int move) {}
