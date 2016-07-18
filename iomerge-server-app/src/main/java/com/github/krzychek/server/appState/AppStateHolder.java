@@ -1,7 +1,8 @@
 package com.github.krzychek.server.appState;
 
 import com.github.krzychek.server.api.appState.AppState;
-import com.github.krzychek.server.api.appState.AppStateManager;
+import com.github.krzychek.server.api.appState.AppStateManagerAdapter;
+import com.github.krzychek.server.api.appState.MouseRestoreListener;
 import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -10,22 +11,27 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Holds state of application, and publish state events on change
  */
 @Order(0)
 @Component
-class AppStateHolder implements AppStateManager {
+class AppStateHolder extends AppStateManagerAdapter {
 
 	private final ApplicationEventPublisher publisher;
+	private final Set<MouseRestoreListener> mouseRestoreListeners;
 
 	private AppState state;
-	private AppStateManager nextInChain;
+	private Float position;
 
 	@Autowired
 	AppStateHolder(ApplicationEventPublisher publisher) {
 		this.publisher = publisher;
+		mouseRestoreListeners = new HashSet<>();
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -36,21 +42,35 @@ class AppStateHolder implements AppStateManager {
 	}
 
 	@Override
-	public void enterRemoteScreen() {
+	public void enterRemoteScreen(MouseRestoreListener mouseRestoreListener) {
+		mouseRestoreListeners.add(mouseRestoreListener);
 		setNewState(AppState.ON_REMOTE);
-		nextInChain.enterRemoteScreen();
+		nextInChain.enterRemoteScreen(mouseRestoreListener);
 	}
 
 	@Override
-	public void exitRemote() {
-		setNewState(AppState.ON_LOCAL);
-		nextInChain.exitRemote();
+	public void restoreMouse() {
+		if (position != null)
+			mouseRestoreListeners.forEach(listener -> listener.restoreMouseAt(position));
+
+		mouseRestoreListeners.clear();
+		position = null;
+
+		nextInChain.restoreMouse();
 	}
 
 	@Override
 	public void connected() {
 		setNewState(AppState.ON_LOCAL);
 		nextInChain.connected();
+	}
+
+	@Override
+	public void returnToLocal(Float position) {
+		this.position = position;
+		setNewState(AppState.ON_LOCAL);
+
+		nextInChain.returnToLocal(position);
 	}
 
 	@Override
@@ -65,10 +85,5 @@ class AppStateHolder implements AppStateManager {
 			state = newState;
 			publisher.publishEvent(state);
 		}
-	}
-
-	@Override
-	public void chain(AppStateManager nextInChain) {
-		this.nextInChain = nextInChain;
 	}
 }

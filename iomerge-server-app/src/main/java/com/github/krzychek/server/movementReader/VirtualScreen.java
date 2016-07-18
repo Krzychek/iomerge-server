@@ -87,7 +87,7 @@ public class VirtualScreen implements IOListener {
 		int keyCode = e.getKeyCode();
 
 		if (keyCode == KeyEvent.VK_F4)
-			appStateManager.exitRemote();
+			appStateManager.restoreMouse();
 		else if (Arrays.binarySearch(modKeys, keyCode) >= 0)
 			actionDispatcher.dispatchKeyPress(keyCode);
 		else

@@ -2,6 +2,7 @@ package com.github.krzychek.server.movementReader;
 
 
 import com.github.krzychek.server.api.appState.AppState;
+import com.github.krzychek.server.api.appState.AppStateManager;
 import com.github.krzychek.server.api.movementReader.IOListener;
 import com.github.krzychek.server.ui.UIHelper;
 import com.github.krzychek.server.utils.BooleanCondition;
@@ -31,18 +32,19 @@ class MouseTrapReader extends JFrame {
 
 
 	private final IOListener listener;
+	private final AppStateManager appStateManager;
 	private final Robot robot;
 	private final MoveReadingThread readingThread;
 
 	private volatile Point center;
-	private volatile Point oldMouseLocation;
 	private BooleanCondition isReading = new BooleanCondition();
 
 	@Autowired
-	MouseTrapReader(IOListener listener) throws AWTException {
+	MouseTrapReader(IOListener listener, AppStateManager appStateManager) throws AWTException {
 		super("IOMerge MovementReader");
 
 		this.listener = listener;
+		this.appStateManager = appStateManager;
 
 		readingThread = new MoveReadingThread();
 		readingThread.start();
@@ -95,7 +97,6 @@ class MouseTrapReader extends JFrame {
 
 	synchronized private void startReading() {
 		if (isReading.yes()) return;
-		oldMouseLocation = MouseInfo.getPointerInfo().getLocation();
 
 		setVisible(true);
 
@@ -116,7 +117,7 @@ class MouseTrapReader extends JFrame {
 			throw new IllegalStateException(e);
 		}
 
-		restoreMouseLocation();
+		appStateManager.restoreMouse();
 		setVisible(false);
 	}
 
@@ -127,10 +128,6 @@ class MouseTrapReader extends JFrame {
 		} else {
 			stopReading();
 		}
-	}
-
-	private void restoreMouseLocation() {
-		robot.mouseMove(oldMouseLocation.x, oldMouseLocation.y);
 	}
 
 	@PreDestroy

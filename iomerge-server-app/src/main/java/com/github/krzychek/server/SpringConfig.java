@@ -11,6 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
@@ -27,6 +29,11 @@ class SpringConfig {
 	@Bean
 	Clipboard clipboard() {
 		return Toolkit.getDefaultToolkit().getSystemClipboard();
+	}
+
+	@Bean
+	Robot robot() throws AWTException {
+		return new Robot();
 	}
 
 	@Bean

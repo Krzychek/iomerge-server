@@ -29,7 +29,7 @@ class MsgProcessor extends MessageProcessorAdapter {
 	}
 
 	@Override
-	public void remoteExit() {
-		appStateManager.exitRemote();
+	public void returnToLocal(float position) {
+		appStateManager.returnToLocal(position);
 	}
 }

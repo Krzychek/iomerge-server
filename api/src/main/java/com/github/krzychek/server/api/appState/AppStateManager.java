@@ -10,11 +10,13 @@ import com.github.krzychek.server.api.Chainable;
  */
 public interface AppStateManager extends Chainable<AppStateManager> {
 
-	void enterRemoteScreen();
+	void enterRemoteScreen(MouseRestoreListener edgeTrigger);
 
-	void exitRemote();
+	void restoreMouse();
 
 	void connected();
+
+	void returnToLocal(Float position);
 
 	void disconnected();
 }

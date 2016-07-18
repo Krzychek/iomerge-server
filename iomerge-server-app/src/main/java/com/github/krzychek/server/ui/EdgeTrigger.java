@@ -2,6 +2,7 @@ package com.github.krzychek.server.ui;
 
 import com.github.krzychek.server.api.appState.AppState;
 import com.github.krzychek.server.api.appState.AppStateManager;
+import com.github.krzychek.server.api.appState.MouseRestoreListener;
 import com.github.krzychek.server.api.network.MessageDispatcher;
 import com.github.krzychek.server.model.Edge;
 import org.annoprops.annotations.ConfigProperty;
@@ -16,6 +17,7 @@ import javax.swing.Timer;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.util.Arrays;
 
 
@@ -24,11 +26,12 @@ import java.util.Arrays;
  */
 @PropertyHolder
 @Component
-public class EdgeTrigger extends JFrame {
+class EdgeTrigger extends JFrame implements MouseRestoreListener {
 
 	private static final String DIMENSION_EXCEPTION = "Problem with getting display dimension";
 
 	private final AppStateManager appStateManager;
+	private final Robot robot;
 	private final MessageDispatcher messageDispatcher;
 
 	@ConfigProperty("Edge")
@@ -41,11 +44,12 @@ public class EdgeTrigger extends JFrame {
 	private int length = 500;
 
 	@Autowired
-	EdgeTrigger(MessageDispatcher messageDispatcher, AppStateManager appStateManager) throws HeadlessException {
+	EdgeTrigger(MessageDispatcher messageDispatcher, AppStateManager appStateManager, Robot robot) throws HeadlessException {
 		super("IOMerge Trigger");
 
 		this.messageDispatcher = messageDispatcher;
 		this.appStateManager = appStateManager;
+		this.robot = robot;
 	}
 
 	@PostConstruct
@@ -53,7 +57,7 @@ public class EdgeTrigger extends JFrame {
 		reposition();
 		UIHelper.makeInvisible(this);
 
-		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen());
+		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen(this));
 	}
 
 	private void reposition() {
@@ -119,5 +123,10 @@ public class EdgeTrigger extends JFrame {
 
 	int getLength() {
 		return length;
+	}
+
+	@Override
+	public void restoreMouseAt(float position) {
+		robot.mouseMove(getX(), getY() + (int) (getHeight() / position));
 	}
 }

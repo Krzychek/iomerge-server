@@ -33,7 +33,7 @@ public abstract class MessageProcessorAdapter implements MessageProcessor {
 	public void heartbeat() {}
 
 	@Override
-	public void remoteExit() {}
+	public void returnToLocal(float position) {}
 
 	@Override
 	public void keyPress(int keyCode) {}

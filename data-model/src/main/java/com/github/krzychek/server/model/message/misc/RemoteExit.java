@@ -9,8 +9,14 @@ public class RemoteExit implements Message {
 
 	private final static long serialVersionUID = 1L;
 
+	private final float position;
+
+	public RemoteExit(float position) {
+		this.position = position;
+	}
+
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.remoteExit();
+		processor.returnToLocal(position);
 	}
 }

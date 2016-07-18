@@ -19,7 +19,7 @@ public interface MessageProcessor {
 
 	void edgeSync(Edge edge);
 
-	void remoteExit();
+	void returnToLocal(float position);
 
 	void keyPress(int keyCode);
 
