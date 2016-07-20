@@ -50,7 +50,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- compile Groovy code for Spock -->
+			<!-- compile Groovy code -->
 			<plugin>
 				<groupId>org.codehaus.gmavenplus</groupId>
 				<artifactId>gmavenplus-plugin</artifactId>
@@ -58,6 +58,7 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>compile</goal>
 							<goal>testCompile</goal>
 						</goals>
 					</execution>
@@ -131,6 +132,13 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
+		</dependency>
+
+		<!-- groovy -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.7</version>
 		</dependency>
 
 		<!-- TEST -->
