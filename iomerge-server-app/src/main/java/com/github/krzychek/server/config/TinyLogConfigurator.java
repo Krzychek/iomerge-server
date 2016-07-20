@@ -10,9 +10,11 @@ import org.pmw.tinylog.writers.FileWriter;
 
 import static com.github.krzychek.server.config.ConstantPaths.LOG_FILE;
 
+
 public class TinyLogConfigurator {
 
-	private static final String LOG_FORMAT = "{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}\\n{level}: {message}";
+	private static final String LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" +
+											 "\\n{level}: {message}";
 
 	@Option(name = "-logLevel", aliases = "-log",
 			usage = "level of logging")
