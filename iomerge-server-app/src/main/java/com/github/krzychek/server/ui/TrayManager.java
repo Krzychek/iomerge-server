@@ -29,7 +29,7 @@ class TrayManager {
 		}
 		tray = SystemTray.getSystemTray();
 		try {
-			trayIcon = new TrayIcon(ImageIO.read(getClass().getResource("/icon.png")));
+			trayIcon = new TrayIcon(ImageIO.read(getClass().getResource("/icon.png")), "IOMerge");
 			trayIcon.setImageAutoSize(true);
 		} catch (Exception e) {
 			Logger.error("filed to load tray icon", e);
@@ -42,7 +42,7 @@ class TrayManager {
 		tray.remove(trayIcon);
 
 		PopupMenu popup = new PopupMenu();
-		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.setVisible(true));
+		popup.add(new MenuItem("Settings")).addActionListener(e -> settingsWindow.show());
 		popup.add(new MenuItem("Exit")).addActionListener(e -> Runtime.getRuntime().exit(0));
 
 		trayIcon.setPopupMenu(popup);
