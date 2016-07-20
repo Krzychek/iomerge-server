@@ -3,136 +3,84 @@ package com.github.krzychek.server.ui;
 import com.github.krzychek.server.model.Edge;
 import com.github.krzychek.server.movementReader.VirtualScreen;
 import com.github.krzychek.server.network.EventServer;
+import com.sun.javafx.application.PlatformImpl;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
+import javafx.stage.Stage;
+import org.pmw.tinylog.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.io.IOException;
 
 
 @Component
-class SettingsWindow extends JFrame {
+public class SettingsWindow {
 
 	private final EventServer eventServer;
 	private final EdgeTrigger edgeTrigger;
 	private final VirtualScreen virtualScreen;
 
-	private JComboBox<Edge> edge;
-	private JFormattedTextField triggerLength;
-	private JFormattedTextField triggerOffset;
-	private JFormattedTextField moveScale;
-	private JFormattedTextField port;
+	private Stage stage;
+
+	@FXML
+	private ComboBox<Edge> edge;
+	@FXML
+	private Spinner<Integer> triggerLength;
+	@FXML
+	private Spinner<Integer> triggerOffset;
+	@FXML
+	private Spinner<Double> moveScale;
+	@FXML
+	private Spinner<Integer> port;
+
 
 	@Autowired
 	SettingsWindow(EventServer eventServer, EdgeTrigger edgeTrigger, VirtualScreen virtualScreen) {
-		super("IOMerge Settings");
 		this.eventServer = eventServer;
 		this.edgeTrigger = edgeTrigger;
 		this.virtualScreen = virtualScreen;
 	}
 
-	@PostConstruct
-	private void init() {
-		createFields();
-		setLayout();
-	}
 
-	private void setLayout() {
-		this.setMinimumSize(new Dimension(200, 200));// T
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridy = 0;
-
-		c.weightx = 0.5;
-		c.gridx = 0;
-		this.add(new JLabel("Edge"), c);
-		c.weightx = 1.0;
-		c.gridx = 1;
-		this.add(edge, c);
-
-		++c.gridy;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		this.add(new JLabel("Trigger length"), c);
-		c.weightx = 1.0;
-		c.gridx = 1;
-		this.add(triggerLength, c);
-
-		++c.gridy;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		this.add(new JLabel("Trigger offset"), c);
-		c.weightx = 1.0;
-		c.gridx = 1;
-		this.add(triggerOffset, c);
-
-		++c.gridy;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		this.add(new JLabel("Movement scale"), c);
-		c.weightx = 1.0;
-		c.gridx = 1;
-		this.add(moveScale, c);
-
-		++c.gridy;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		this.add(new JLabel("Server port"), c);
-		c.weightx = 1.0;
-		c.gridx = 1;
-		this.add(port, c);
-
-		++c.gridy;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		c.weighty = 1.0;
-		c.anchor = GridBagConstraints.PAGE_END;
-		JButton saveAndExitBtn = new JButton("Save");
-		this.add(saveAndExitBtn, c);
-		saveAndExitBtn.addActionListener(actionEvent -> {
-			saveValues();
-			setVisible(false);
+	void show() {
+		PlatformImpl.runAndWait(() -> {
+			if (stage == null) {
+				try {
+					// load scene
+					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/settings_window.fxml"));
+					fxmlLoader.setControllerFactory(aClass -> this);
+					Parent page = fxmlLoader.load();
+					stage = new Stage();
+					stage.setTitle("IOMerge");
+					stage.setScene(new Scene(page));
+				} catch (IOException e) {
+					Logger.error(e);
+					return;
+				}
+			}
+			refreshFields();
+			stage.show();
 		});
 	}
 
+	@FXML
 	private void saveValues() {
-		edgeTrigger.setProperties( //
-				(Edge) edge.getSelectedItem(), //
-				(int) triggerLength.getValue(), //
-				(int) triggerOffset.getValue());
-		eventServer.setPort((int) port.getValue());
-		virtualScreen.setMovementScale((double) moveScale.getValue());
-	}
-
-	private void createFields() {
-		triggerLength = new JFormattedTextField(edgeTrigger.getLength());
-		triggerOffset = new JFormattedTextField(edgeTrigger.getOffset());
-		moveScale = new JFormattedTextField(virtualScreen.getMovementScale());
-		port = new JFormattedTextField(eventServer.getPort());
-
-		edge = new JComboBox<>(Edge.values());
-		edge.setSelectedItem(edgeTrigger.getEdge());
+		edgeTrigger.setProperties(edge.getValue(), triggerLength.getValue(), triggerOffset.getValue());
+		eventServer.setPort(port.getValue());
+		virtualScreen.setMovementScale(moveScale.getValue());
 	}
 
 	private void refreshFields() {
-		triggerLength.setValue(edgeTrigger.getLength());
-		triggerOffset.setValue(edgeTrigger.getOffset());
-		moveScale.setValue(virtualScreen.getMovementScale());
-		port.setValue(eventServer.getPort());
-		edge.setSelectedItem(edgeTrigger.getEdge());
+		triggerLength.getValueFactory().setValue(edgeTrigger.getLength());
+		triggerOffset.getValueFactory().setValue(edgeTrigger.getOffset());
+		moveScale.getValueFactory().setValue(virtualScreen.getMovementScale());
+		port.getValueFactory().setValue(eventServer.getPort());
+		edge.setValue(edgeTrigger.getEdge());
 	}
 
-	@Override
-	public void setVisible(boolean b) {
-		refreshFields();
-		super.setVisible(b);
-	}
 }
