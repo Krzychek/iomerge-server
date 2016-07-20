@@ -32,9 +32,8 @@ public class EventServer {
 
 	private ServerSocket serverSocket;
 
-	private
 	@ConfigProperty("ServerPort")
-	int port = 7698;
+	private int port = 7698;
 
 	@Autowired
 	public EventServer(AppStateManager appStateManager, ConnectionHandlerProxy connectionHandlerProxy) {
@@ -58,10 +57,11 @@ public class EventServer {
 
 	@PostConstruct
 	public void start() throws IOException {
-		Logger.info("starting server");
+		Logger.info("starting server at port " + port);
 		serverSocket = new ServerSocket();
 		serverSocket.setPerformancePreferences(1, 2, 0);
 		serverSocket.bind(new InetSocketAddress(port));
+		Logger.info("listening at port " + port);
 	}
 
 	private void restart() {
