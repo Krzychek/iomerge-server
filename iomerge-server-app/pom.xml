@@ -40,7 +40,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.krzychek.server.Main</mainClass>
+							<mainClass>com.github.krzychek.iomerge.server.Main</mainClass>
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
