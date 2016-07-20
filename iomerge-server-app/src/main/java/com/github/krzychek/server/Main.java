@@ -1,6 +1,6 @@
 package com.github.krzychek.server;
 
-import com.github.krzychek.server.config.TinyLogConfigurator;
+import com.github.krzychek.server.config.AppPreConfigurator;
 import com.github.krzychek.server.utils.plugins.PluginLoader;
 import com.sun.javafx.application.PlatformImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -13,7 +13,8 @@ public class Main {
 	public static void main(String... args) throws IOException {
 		PlatformImpl.startup(() -> {});
 
-		TinyLogConfigurator.configure(args);
+		AppPreConfigurator appConfigurator = new AppPreConfigurator(args);
+		appConfigurator.configure();
 
 		loadSpringContext();
 	}

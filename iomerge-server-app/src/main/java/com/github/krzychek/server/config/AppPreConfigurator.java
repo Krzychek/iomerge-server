@@ -11,7 +11,7 @@ import org.pmw.tinylog.writers.FileWriter;
 import static com.github.krzychek.server.config.ConstantPaths.LOG_FILE;
 
 
-public class TinyLogConfigurator {
+public class AppPreConfigurator {
 
 	private static final String LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" +
 											 "\\n{level}: {message}";
@@ -25,12 +25,13 @@ public class TinyLogConfigurator {
 			forbids = "-logLevel")
 	private boolean debug = false;
 
-	public static void configure(String... args) {
-		TinyLogConfigurator config = new TinyLogConfigurator();
-		CmdLineParser parser = new CmdLineParser(config);
+	private boolean logWritingThread = true;
+	private boolean logToFile = true;
+
+	public AppPreConfigurator(String... args) {
+		CmdLineParser parser = new CmdLineParser(this);
 		try {
 			parser.parseArgument(args);
-			config.setupLogger();
 		} catch (CmdLineException e) {
 			System.out.println(e.getLocalizedMessage());
 			parser.printUsage(System.out);
@@ -38,17 +39,34 @@ public class TinyLogConfigurator {
 		}
 	}
 
-	private void setupLogger() {
-		Configurator.defaultConfig()
-				.formatPattern(LOG_FORMAT)
-				.writer(new ConsoleWriter())
-				.addWriter(new FileWriter(LOG_FILE.getAbsolutePath()))
-				.level(getLogLevel())
-				.writingThread(null)
-				.activate();
+	public void configure() {
+		configureLogger();
+	}
+
+	private void configureLogger() {
+		Configurator configurator = Configurator.defaultConfig();
+		configurator.formatPattern(LOG_FORMAT);
+		configurator.writer(new ConsoleWriter());
+		configurator.level(getLogLevel());
+		configurator.writingThread(logWritingThread);
+
+		if (logToFile)
+			configurator.addWriter(new FileWriter(LOG_FILE.getAbsolutePath()));
+
+		configurator.activate();
 	}
 
 	private Level getLogLevel() {
 		return debug ? Level.DEBUG : logLevel;
+	}
+
+	public AppPreConfigurator setLogWritingThread(boolean writingThread) {
+		this.logWritingThread = writingThread;
+		return this;
+	}
+
+	public AppPreConfigurator setLogToFile(boolean logToFile) {
+		this.logToFile = logToFile;
+		return this;
 	}
 }

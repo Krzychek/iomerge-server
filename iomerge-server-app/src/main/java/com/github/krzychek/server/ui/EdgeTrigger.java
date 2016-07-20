@@ -26,7 +26,7 @@ import java.util.Arrays;
  */
 @PropertyHolder
 @Component
-class EdgeTrigger extends JFrame implements MouseRestoreListener {
+public class EdgeTrigger extends JFrame implements MouseRestoreListener {
 
 	private static final String DIMENSION_EXCEPTION = "Problem with getting display dimension";
 
