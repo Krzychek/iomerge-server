@@ -1,12 +1,10 @@
 package com.github.krzychek.iomerge.server.network;
 
-import com.github.krzychek.iomerge.server.api.appState.AppState;
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager;
 import com.github.krzychek.iomerge.server.model.message.Message;
 import com.github.krzychek.iomerge.server.model.message.misc.Heartbeat;
 import com.github.krzychek.iomerge.server.model.serialization.MessageSocketWrapper;
 import org.pmw.tinylog.Logger;
-import org.springframework.context.event.EventListener;
 
 import javax.swing.Timer;
 import java.io.EOFException;
@@ -77,13 +75,6 @@ class SingleClientHandler implements ConnectionHandler {
 			socket.close();
 		} catch (IOException e) {
 			Logger.warn(e);
-		}
-	}
-
-	@EventListener
-	private void onAppStateChange(AppState appState) {
-		if (appState.equals(AppState.DISCONNECTED) && connected) {
-			disconnect();
 		}
 	}
 
