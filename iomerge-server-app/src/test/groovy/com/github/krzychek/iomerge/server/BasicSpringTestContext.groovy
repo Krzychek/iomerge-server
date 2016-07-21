@@ -2,6 +2,7 @@ package com.github.krzychek.iomerge.server
 
 import com.github.krzychek.iomerge.server.config.AppPreConfigurator
 import org.annoprops.PropertyManagerHelperBean
+import org.pmw.tinylog.Level
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.context.annotation.Configuration
 
@@ -17,6 +18,7 @@ class BasicSpringTestContext extends SpringConfig {
 	static {
 		new AppPreConfigurator()
 				.setLogWritingThread(false)
+				.setLogLevel(Level.WARNING)
 				.setLogToFile(false)
 				.configure();
 	}

@@ -13,16 +13,13 @@ public class AppPreConfigurator {
 
 	private static final String LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" +
 											 "\\n{level}: {message}";
-
 	@Option(name = "-logLevel", aliases = "-log",
 			usage = "level of logging")
 	private Level logLevel = Level.INFO;
-
 	@Option(name = "-debug", aliases = "debug",
 			usage = "enables debug level of logging",
 			forbids = "-logLevel")
 	private boolean debug = false;
-
 	private boolean logWritingThread = true;
 	private boolean logToFile = true;
 
@@ -56,6 +53,11 @@ public class AppPreConfigurator {
 
 	private Level getLogLevel() {
 		return debug ? Level.DEBUG : logLevel;
+	}
+
+	public AppPreConfigurator setLogLevel(Level logLevel) {
+		this.logLevel = logLevel;
+		return this;
 	}
 
 	public AppPreConfigurator setLogWritingThread(boolean writingThread) {
