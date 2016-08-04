@@ -1,0 +1,8 @@
+rootProject.name = 'parent'
+include ':data-model'
+include ':api'
+include ':server'
+
+project(':data-model').projectDir = "$rootDir/data-model" as File
+project(':api').projectDir = "$rootDir/api" as File
+project(':server').projectDir = "$rootDir/iomerge-server-app" as File
