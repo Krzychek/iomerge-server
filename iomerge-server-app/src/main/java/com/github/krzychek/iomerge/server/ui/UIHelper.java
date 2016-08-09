@@ -16,39 +16,40 @@ public class UIHelper {
 
 	/**
 	 * @param frame - {@link JFrame} to make invisible
-	 * @param hideCursor - if true cursor would be changed to transparent
 	 */
-	public static void makeInvisible(JFrame frame, boolean hideCursor) {
+	public static void makeJFrameInvisible(JFrame frame) {
 
 		frame.setUndecorated(true);
 		makeWindowInvisible(frame);
-		setInvisibleContentPane(frame, hideCursor);
+		setInvisibleContentPane(frame);
+		hideCursor(frame.getRootPane());
+
 	}
 
 	/**
-	 * @param frame - {@link JFrame} to make invisible, also hides cursor
+	 * @param window - {@link Window} to make invisible
 	 */
-	static void makeInvisible(JFrame frame) {
-		makeInvisible(frame, false);
-	}
-
-	private static void makeWindowInvisible(Window window) {
-
+	static void makeWindowInvisible(Window window) {
 		window.setAlwaysOnTop(true);
 		window.setBackground(new Color(0, 0, 0, 0));
+		window.setType(Window.Type.POPUP);
 	}
 
-	private static void setInvisibleContentPane(RootPaneContainer container, boolean hideCursor) {
-
+	private static void setInvisibleContentPane(RootPaneContainer container) {
 		JComponent rootComponent = new JPanel();
 		rootComponent.setOpaque(false);
 
-		if ( hideCursor ) {
-			Cursor blankCursor = Toolkit.getDefaultToolkit()
-					.createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
-			rootComponent.setCursor(blankCursor);
-		}
-		container.setContentPane(rootComponent);
+		// hide cursor
+		Cursor blankCursor = Toolkit.getDefaultToolkit()
+				.createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
+		rootComponent.setCursor(blankCursor);
 
+		container.setContentPane(rootComponent);
+	}
+
+	private static void hideCursor(JComponent rootComponent) {
+		Cursor blankCursor = Toolkit.getDefaultToolkit()
+				.createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
+		rootComponent.setCursor(blankCursor);
 	}
 }
