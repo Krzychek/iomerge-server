@@ -56,6 +56,7 @@ public class EdgeTrigger extends JFrame implements MouseRestoreListener {
 	private void init() {
 		reposition();
 		UIHelper.makeInvisible(this);
+		setAutoRequestFocus(false);
 
 		addMouseListener((MouseEnteredAdapter) e -> appStateManager.enterRemoteScreen(this));
 	}
