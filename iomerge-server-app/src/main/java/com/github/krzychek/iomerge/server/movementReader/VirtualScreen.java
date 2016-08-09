@@ -67,13 +67,13 @@ public class VirtualScreen implements IOListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		actionDispatcher.dispatchMousePress();
+		actionDispatcher.dispatchMousePress(e.getButton());
 		nextInChain.mousePressed(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		actionDispatcher.dispatchMouseRelease();
+		actionDispatcher.dispatchMouseRelease(e.getButton());
 		nextInChain.mouseReleased(e);
 	}
 

@@ -3,9 +3,9 @@ package com.github.krzychek.iomerge.server.model;
 @SuppressWarnings({"EmptyMethod", "UnusedParameters"})
 public interface MessageProcessor {
 
-	void mousePress();
+	void mousePress(int button);
 
-	void mouseRelease();
+	void mouseRelease(int button);
 
 	void mouseMove(int x, int y);
 

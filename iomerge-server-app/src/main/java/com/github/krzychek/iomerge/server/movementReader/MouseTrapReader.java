@@ -56,7 +56,7 @@ class MouseTrapReader extends JFrame {
 	private void init() {
 		// UI stuff
 		reposition();
-		UIHelper.makeInvisible(this, true);
+		UIHelper.makeJFrameInvisible(this);
 		setAutoRequestFocus(true);
 
 		IOListenerToAWTAdapter listenerAdapter = new IOListenerToAWTAdapter(listener);

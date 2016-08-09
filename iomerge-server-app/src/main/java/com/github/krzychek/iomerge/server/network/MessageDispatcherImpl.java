@@ -37,15 +37,15 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 	}
 
 	@Override
-	public void dispatchMousePress() {
-		connectionHandler.sendToClient(new MousePress());
-		nextInChain.dispatchMousePress();
+	public void dispatchMousePress(int button) {
+		connectionHandler.sendToClient(new MousePress(button));
+		nextInChain.dispatchMousePress(button);
 	}
 
 	@Override
-	public void dispatchMouseRelease() {
-		connectionHandler.sendToClient(new MouseRelease());
-		nextInChain.dispatchMouseRelease();
+	public void dispatchMouseRelease(int button) {
+		connectionHandler.sendToClient(new MouseRelease(button));
+		nextInChain.dispatchMouseRelease(button);
 	}
 
 	@Override

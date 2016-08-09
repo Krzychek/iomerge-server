@@ -3,10 +3,10 @@ package com.github.krzychek.iomerge.server.model;
 public abstract class MessageProcessorAdapter implements MessageProcessor {
 
 	@Override
-	public void mousePress() {}
+	public void mousePress(int button) {}
 
 	@Override
-	public void mouseRelease() {}
+	public void mouseRelease(int button) {}
 
 	@Override
 	public void mouseMove(int x, int y) {}

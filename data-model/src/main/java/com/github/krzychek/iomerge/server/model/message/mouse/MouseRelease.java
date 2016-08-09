@@ -8,8 +8,14 @@ public class MouseRelease implements Message {
 
 	private final static long serialVersionUID = 1L;
 
+	private final int button;
+
+	public MouseRelease(int button) {
+		this.button = button;
+	}
+
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.mouseRelease();
+		processor.mouseRelease(button);
 	}
 }

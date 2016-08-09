@@ -14,9 +14,9 @@ public interface MessageDispatcher extends Chainable<MessageDispatcher> {
 
 	void dispatchMouseMove(int x, int y);
 
-	void dispatchMousePress();
+	void dispatchMousePress(int button);
 
-	void dispatchMouseRelease();
+	void dispatchMouseRelease(int button);
 
 	void dispatchKeyPress(int keyCode);
 

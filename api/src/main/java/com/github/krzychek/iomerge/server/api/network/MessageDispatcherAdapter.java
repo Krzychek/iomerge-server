@@ -14,12 +14,12 @@ public abstract class MessageDispatcherAdapter extends AbstractChainable<Message
 		nextInChain.dispatchMouseMove(x, y);
 	}
 
-	public void dispatchMousePress() {
-		nextInChain.dispatchMousePress();
+	public void dispatchMousePress(int button) {
+		nextInChain.dispatchMousePress(button);
 	}
 
-	public void dispatchMouseRelease() {
-		nextInChain.dispatchMouseRelease();
+	public void dispatchMouseRelease(int button) {
+		nextInChain.dispatchMouseRelease(button);
 	}
 
 	public void dispatchKeyPress(int keyCode) {
