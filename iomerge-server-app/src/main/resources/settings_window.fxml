@@ -39,6 +39,9 @@
 		</valueFactory>
 	</Spinner>
 
-	<Button onAction="#saveValues" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+	<Label text="Reverse scroll" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+	<CheckBox fx:id="reverseScroll" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+	<Button onAction="#saveValues" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
 </GridPane>

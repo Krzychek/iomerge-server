@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.stage.Stage;
@@ -37,6 +38,8 @@ public class SettingsWindow {
 	private Spinner<Double> moveScale;
 	@FXML
 	private Spinner<Integer> port;
+	@FXML
+	private CheckBox reverseScroll;
 
 
 	@Autowired
@@ -73,6 +76,7 @@ public class SettingsWindow {
 		edgeTrigger.setProperties(edge.getValue(), triggerLength.getValue(), triggerOffset.getValue());
 		eventServer.setPort(port.getValue());
 		virtualScreen.setMovementScale(moveScale.getValue());
+		virtualScreen.setReverseScroll(reverseScroll.isSelected());
 	}
 
 	private void refreshFields() {
@@ -81,6 +85,7 @@ public class SettingsWindow {
 		moveScale.getValueFactory().setValue(virtualScreen.getMovementScale());
 		port.getValueFactory().setValue(eventServer.getPort());
 		edge.setValue(edgeTrigger.getEdge());
+		reverseScroll.setSelected(virtualScreen.isReverseScroll());
 	}
 
 }

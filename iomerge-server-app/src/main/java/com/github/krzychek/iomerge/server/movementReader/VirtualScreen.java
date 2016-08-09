@@ -4,6 +4,7 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager;
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener;
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher;
 import org.annoprops.annotations.ConfigProperty;
+import org.annoprops.annotations.PropertyHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Arrays;
  */
 @Order(0)
 @Component
+@PropertyHolder
 public class VirtualScreen implements IOListener {
 
 	private final static int[] modKeys = new int[]{ //
@@ -35,11 +37,10 @@ public class VirtualScreen implements IOListener {
 
 	@ConfigProperty("MovementScale")
 	private double movementScale = 1.5;
-
+	@ConfigProperty("ReverseScroll")
+	private boolean reverseScroll = false;
 	private double unusedXMove = 0.0;
-
 	private double unusedYMove = 0.0;
-
 	private IOListener nextInChain;
 
 	@Autowired
@@ -78,7 +79,9 @@ public class VirtualScreen implements IOListener {
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		actionDispatcher.dispatchMouseWheelEvent(e.getWheelRotation());
+		int wheelRotation = reverseScroll ? -e.getWheelRotation() : e.getWheelRotation();
+		actionDispatcher.dispatchMouseWheelEvent(wheelRotation);
+
 		nextInChain.mouseWheelMoved(e);
 	}
 
@@ -117,6 +120,14 @@ public class VirtualScreen implements IOListener {
 
 	public void setMovementScale(double movementScale) {
 		this.movementScale = movementScale;
+	}
+
+	public boolean isReverseScroll() {
+		return reverseScroll;
+	}
+
+	public void setReverseScroll(boolean reverseScroll) {
+		this.reverseScroll = reverseScroll;
 	}
 
 	@Override
