@@ -16,10 +16,12 @@ public class AppPreConfigurator {
 	@Option(name = "-logLevel", aliases = "-log",
 			usage = "level of logging")
 	private Level logLevel = Level.INFO;
+
 	@Option(name = "-debug", aliases = "debug",
 			usage = "enables debug level of logging",
 			forbids = "-logLevel")
 	private boolean debug = false;
+
 	private boolean logWritingThread = true;
 	private boolean logToFile = true;
 
@@ -43,7 +45,9 @@ public class AppPreConfigurator {
 		configurator.formatPattern(LOG_FORMAT);
 		configurator.writer(new ConsoleWriter());
 		configurator.level(getLogLevel());
-		configurator.writingThread(logWritingThread);
+
+		if (logWritingThread)
+			configurator.writingThread(null);
 
 		if (logToFile)
 			configurator.addWriter(new FileWriter(ConstantPaths.LOG_FILE.getAbsolutePath()));
