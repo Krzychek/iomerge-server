@@ -2,3 +2,6 @@ description = ''
 dependencies {
 	compile group: 'de.ruedigermoeller', name: 'fst', version: '2.47'
 }
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
