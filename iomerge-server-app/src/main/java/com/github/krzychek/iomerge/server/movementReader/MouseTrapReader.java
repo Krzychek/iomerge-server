@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 
 /**
- * MovementReader based on transparent JFrame, catches mose inside
+ * MovementReader based on transparent JFrame, catches mouse inside
  */
 @Component
 class MouseTrapReader extends JFrame {
