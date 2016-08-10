@@ -1,8 +1,7 @@
 package com.github.krzychek.iomerge.server
 
-import com.github.krzychek.iomerge.server.config.AppPreConfigurator
+import com.github.krzychek.iomerge.server.config.AppConfigurator
 import org.annoprops.PropertyManagerHelperBean
-import org.pmw.tinylog.Level
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.context.annotation.Configuration
 
@@ -16,11 +15,8 @@ import static org.powermock.api.mockito.PowerMockito.whenNew
 @Configuration
 class BasicSpringTestContext extends SpringConfig {
 	static {
-		new AppPreConfigurator()
-				.setLogWritingThread(false)
-				.setLogLevel(Level.WARNING)
-				.setLogToFile(false)
-				.configure();
+		new AppConfigurator(new String[0], false, false)
+				.configureBootstrap();
 	}
 
 	@Override

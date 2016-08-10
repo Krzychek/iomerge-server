@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server
 
-import com.github.krzychek.iomerge.server.config.AppPreConfigurator
+import com.github.krzychek.iomerge.server.config.AppConfigurator
 import com.github.krzychek.iomerge.server.utils.plugins.PluginLoader
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
@@ -8,8 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 object Main {
 
 	@JvmStatic fun main(args: Array<String>) {
-		AppPreConfigurator(*args)
-				.configure()
+		AppConfigurator(*args).apply { configureBootstrap() }
 
 		AnnotationConfigApplicationContext().apply {
 

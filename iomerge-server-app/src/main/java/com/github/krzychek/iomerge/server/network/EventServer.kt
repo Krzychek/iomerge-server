@@ -7,6 +7,7 @@ import org.annoprops.annotations.PropertyHolder
 import org.pmw.tinylog.Logger
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.io.EOFException
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
@@ -77,6 +78,8 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 			Logger.info("client socket accepted")
 			connectionHandlerProxy.connect(clientSocket)
 
+		} catch (e: EOFException) {
+			Logger.info("Problem with connection", e)
 		} catch (e: IOException) {
 			Logger.warn("Problem with connection", e)
 		}

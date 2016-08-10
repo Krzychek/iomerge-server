@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server.utils.plugins
 
-import com.github.krzychek.iomerge.server.config.ConstantPaths.PLUGINS_DIR
+import com.github.krzychek.iomerge.server.config.AppConfigurator.Companion.pluginsDir
 import org.pmw.tinylog.Logger
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.io.support.PropertiesLoaderUtils
@@ -9,7 +9,7 @@ import java.io.File
 import java.net.URLClassLoader
 
 
-class PluginLoader {
+class PluginLoader() {
 
 	private val classLoaders = arrayListOf(Thread.currentThread().contextClassLoader)
 
@@ -17,7 +17,7 @@ class PluginLoader {
 	 * @return stream of jar files in  plugins directory
 	 */
 	fun readPluginJars(): Array<File> {
-		return PLUGINS_DIR.listFiles { file -> file.isFile && file.name.endsWith(".jar") }
+		return pluginsDir.listFiles { file -> file.isFile && file.name.endsWith(".jar") }
 				?: emptyArray<File>()
 	}
 
@@ -25,8 +25,8 @@ class PluginLoader {
 	 * register plugin classes and sets proper classLoader in @param ctx
 	 */
 	fun loadPluginsToContext(ctx: AnnotationConfigApplicationContext) {
-		if (PLUGINS_DIR.isDirectory.not()) {
-			Logger.info("Plugin dir doesn't exists: ", PLUGINS_DIR)
+		if (pluginsDir.isDirectory.not()) {
+			Logger.info("Plugin dir doesn't exists: ", pluginsDir)
 			return
 		}
 
