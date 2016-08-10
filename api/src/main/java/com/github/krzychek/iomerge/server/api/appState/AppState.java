@@ -10,5 +10,6 @@ package com.github.krzychek.iomerge.server.api.appState;
 public enum AppState {
 	ON_REMOTE,
 	ON_LOCAL,
-	DISCONNECTED
+	DISCONNECTED,
+	STARTUP
 }

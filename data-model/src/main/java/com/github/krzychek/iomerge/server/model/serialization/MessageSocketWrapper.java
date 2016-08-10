@@ -23,7 +23,7 @@ public class MessageSocketWrapper {
 		return tcpObjectSocket.isClosed();
 	}
 
-	public Message getMessage() throws IOException, ClassNotFoundException {
+	public Message readMessage() throws IOException, ClassNotFoundException {
 		try {
 			return (Message) tcpObjectSocket.readObject();
 		} catch (ClassNotFoundException | IOException e) {
