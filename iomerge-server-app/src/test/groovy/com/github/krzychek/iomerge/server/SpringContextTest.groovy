@@ -1,10 +1,10 @@
 package com.github.krzychek.iomerge.server
 
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
+import com.github.krzychek.iomerge.server.movementReader.MouseTrapReader
 import com.github.krzychek.iomerge.server.network.ConnectionHandler
 import com.github.krzychek.iomerge.server.network.EventServer
 import com.github.krzychek.iomerge.server.ui.EdgeTrigger
-import com.github.krzychek.iomerge.server.ui.SettingsWindow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
@@ -21,7 +21,7 @@ class SpringContextTest extends Specification {
 	ApplicationContext ctx;
 
 	@Unroll
-	def "context should be autowired and have bean of #beanClass"() {
+	def "context should be up and have bean of #beanClass"() {
 		when:
 		ctx.getBean(beanClass)
 
@@ -31,9 +31,9 @@ class SpringContextTest extends Specification {
 		where:
 		beanClass         | _
 		EdgeTrigger       | _
+		MouseTrapReader   | _
 		EventServer       | _
 		IOListener        | _
 		ConnectionHandler | _
-		SettingsWindow    | _
 	}
 }

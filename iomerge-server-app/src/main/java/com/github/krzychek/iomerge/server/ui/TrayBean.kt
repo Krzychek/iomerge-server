@@ -1,6 +1,7 @@
 package com.github.krzychek.iomerge.server.ui
 
 import org.pmw.tinylog.Logger
+import org.springframework.context.support.AbstractApplicationContext
 import org.springframework.stereotype.Component
 import java.awt.*
 import java.awt.image.BufferedImage
@@ -9,7 +10,10 @@ import javax.imageio.ImageIO
 
 
 @Component
-open class TrayBean(private val settingsWindow: SettingsWindow) {
+open class TrayBean(private val context: AbstractApplicationContext) {
+
+	val settingsWindow: SettingsWindow
+		get() = context.getBean(SettingsWindow::class.java)
 
 	@PostConstruct
 	fun init() {

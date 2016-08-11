@@ -22,10 +22,6 @@ import java.awt.datatransfer.Clipboard
 @ComponentScan(basePackages = arrayOf("com.github.krzychek.iomerge.server"))
 open class SpringConfig {
 
-	init {
-		PlatformImpl.startup { }
-	}
-
 	@Bean
 	open fun clipboard(): Clipboard {
 		return Toolkit.getDefaultToolkit().systemClipboard

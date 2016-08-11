@@ -3,7 +3,7 @@ package com.github.krzychek.iomerge.server.ui
 import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.EventServer
-import com.sun.javafx.application.PlatformImpl
+import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
@@ -12,10 +12,12 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Spinner
 import javafx.stage.Stage
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 
 
+@Lazy
 @Component
 open class SettingsWindow(private val eventServer: EventServer, private val edgeTrigger: EdgeTrigger, private val virtualScreen: VirtualScreen) {
 
@@ -36,7 +38,7 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 
 	@PostConstruct
 	fun init() {
-		PlatformImpl.runAndWait {
+		Platform.runLater {
 			// load scene
 			val page = FXMLLoader(javaClass.getResource("/settings_window.fxml")).run {
 				setControllerFactory { this@SettingsWindow }
@@ -50,7 +52,7 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 	}
 
 	fun show() {
-		PlatformImpl.runAndWait {
+		Platform.runLater {
 			refreshFields()
 			stage.show()
 		}
