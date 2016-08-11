@@ -3,7 +3,7 @@ package com.github.krzychek.iomerge.server.ui
 import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.EventServer
-import javafx.application.Platform
+import com.github.krzychek.iomerge.server.utils.JFXHelper
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
@@ -38,7 +38,7 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 
 	@PostConstruct
 	fun init() {
-		Platform.runLater {
+		JFXHelper.runLater {
 			// load scene
 			val page = FXMLLoader(javaClass.getResource("/settings_window.fxml")).run {
 				setControllerFactory { this@SettingsWindow }
@@ -52,7 +52,7 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 	}
 
 	fun show() {
-		Platform.runLater {
+		JFXHelper.runLater {
 			refreshFields()
 			stage.show()
 		}

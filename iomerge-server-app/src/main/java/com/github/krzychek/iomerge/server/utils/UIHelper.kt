@@ -1,5 +1,7 @@
 package com.github.krzychek.iomerge.server.utils
 
+import com.sun.javafx.application.PlatformImpl
+import javafx.application.Platform
 import java.awt.Color
 import java.awt.Point
 import java.awt.Toolkit
@@ -26,4 +28,18 @@ fun JFrame.makeInvisible() {
 		isOpaque = false
 		cursor = Toolkit.getDefaultToolkit().createCustomCursor(BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), Point(0, 0), "blank")
 	}
+}
+
+object JFXHelper {
+	@Volatile private var initialized: Boolean = false
+
+	fun runLater(cbk: () -> Unit) {
+		if (!initialized) {
+			PlatformImpl.startup { }
+			initialized = true
+		}
+		Platform.runLater(cbk)
+	}
+
+
 }
