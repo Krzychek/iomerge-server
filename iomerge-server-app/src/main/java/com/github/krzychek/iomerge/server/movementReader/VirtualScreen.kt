@@ -68,7 +68,7 @@ open class VirtualScreen(private val actionDispatcher: MessageDispatcher, privat
 
 		if (keyCode == KeyEvent.VK_F4)
 			appStateManager.restoreMouse()
-		else if (Arrays.binarySearch(modKeys, keyCode) >= 0)
+		else if (keyCode.isModKey)
 			actionDispatcher.dispatchKeyPress(keyCode)
 		else
 			actionDispatcher.dispatchKeyClick(keyCode)
@@ -79,7 +79,7 @@ open class VirtualScreen(private val actionDispatcher: MessageDispatcher, privat
 	override fun keyReleased(e: KeyEvent) {
 		val keyCode = e.keyCode
 
-		if (Arrays.binarySearch(modKeys, keyCode) >= 0)
+		if (keyCode.isModKey)
 			actionDispatcher.dispatchKeyRelease(keyCode)
 
 		nextInChain.keyReleased(e)
@@ -93,7 +93,10 @@ open class VirtualScreen(private val actionDispatcher: MessageDispatcher, privat
 		this.nextInChain = nextInChain
 	}
 
+
 	companion object {
 		private val modKeys = intArrayOf(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT).apply { Arrays.sort(this) }
+		private val Int.isModKey: Boolean
+			get() = Arrays.binarySearch(modKeys, this) >= 0
 	}
 }
