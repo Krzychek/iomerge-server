@@ -11,7 +11,7 @@ import org.annoprops.annotations.PropertyHolder
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.awt.Dimension
-import java.awt.GraphicsEnvironment
+import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 import java.awt.Point
 import java.awt.Robot
 import java.util.*
@@ -27,6 +27,8 @@ import javax.swing.Timer
 @Component
 open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private val appStateManager: AppStateManager, private val robot: Robot)
 : JWindow(), MouseRestoreListener {
+
+	private val THICKNESS = 1
 
 	@ConfigProperty("Edge")
 	var edge = Edge.LEFT
@@ -61,22 +63,33 @@ open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private
 	}
 
 	private fun calculateSize(): Dimension = when (edge) {
-		Edge.LEFT,
-		Edge.RIGHT -> Dimension(1, length)
+		Edge.LEFT, Edge.RIGHT -> Dimension(THICKNESS, length)
+		Edge.TOP, Edge.BOTTOM -> Dimension(length, THICKNESS)
 		else -> throw IllegalStateException("Not handled edge: " + edge)
 	}
 
 	private fun calculateLocation(): Point = when (edge) {
-		Edge.LEFT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
-				.map { it.defaultConfiguration.bounds }
+		Edge.LEFT -> getScreenBounds()
 				.minWith(Comparator { a, b -> a.x - b.x })!!
 				.apply { translate(0, offset) }
-		Edge.RIGHT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
-				.map { it.defaultConfiguration.bounds }
+
+		Edge.RIGHT -> getScreenBounds()
 				.maxWith(Comparator { a, b -> a.x - b.x })!!
-				.apply { translate(width - this@EdgeTrigger.width, offset) }
+				.apply { translate(width - THICKNESS, offset) }
+
+		Edge.TOP -> getScreenBounds()
+				.minWith(Comparator { a, b -> a.y - b.y })!!
+				.apply { translate(offset, 0) }
+
+		Edge.BOTTOM -> getScreenBounds()
+				.maxWith(Comparator { a, b -> a.y - b.y })!!
+				.apply { translate(offset, height - THICKNESS) }
+
 		else -> throw IllegalStateException("Not handled edge: " + edge)
 	}.location
+
+
+	private fun getScreenBounds() = getLocalGraphicsEnvironment().screenDevices.map { it.defaultConfiguration.bounds }
 
 	@EventListener
 	fun onStateChange(appStateUpdateEvent: AppState) {
@@ -105,6 +118,9 @@ open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private
 	}
 
 	override fun restoreMouseAt(position: Float) {
-		robot.mouseMove(x, y + (height / position).toInt())
+		when (edge) {
+			Edge.RIGHT, Edge.LEFT -> robot.mouseMove(x, (y + height / position).toInt())
+			Edge.TOP, Edge.BOTTOM -> robot.mouseMove((x + width / position).toInt(), y)
+		}
 	}
 }
