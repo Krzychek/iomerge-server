@@ -1,7 +1,8 @@
 package com.github.krzychek.iomerge.server
 
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
-import com.github.krzychek.iomerge.server.movementReader.MouseTrapReader
+import com.github.krzychek.iomerge.server.movementReader.InvisibleInputReader
+import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.ConnectionHandler
 import com.github.krzychek.iomerge.server.network.EventServer
 import com.github.krzychek.iomerge.server.ui.EdgeTrigger
@@ -29,11 +30,13 @@ class SpringContextTest extends Specification {
 		noExceptionThrown()
 
 		where:
-		beanClass         | _
-		EdgeTrigger       | _
-		MouseTrapReader   | _
-		EventServer       | _
-		IOListener        | _
-		ConnectionHandler | _
+		beanClass            | _
+		EdgeTrigger          | _
+		InvisibleInputReader | _
+		EventServer          | _
+		IOListener           | _
+		ConnectionHandler    | _
+		VirtualScreen        | _
+		ConnectionHandler    | _
 	}
 }
