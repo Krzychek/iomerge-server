@@ -69,6 +69,12 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 		virtualScreen.reverseScroll = reverseScroll.isSelected
 	}
 
+	@FXML
+	private fun saveAndExit() {
+		saveValues()
+		stage.hide()
+	}
+
 	private fun refreshFields() {
 		triggerLength.valueFactory.value = edgeTrigger.length
 		triggerOffset.valueFactory.value = edgeTrigger.offset

@@ -8,40 +8,68 @@
 		<Insets bottom="10" left="25" right="25" top="25"/>
 	</padding>
 
-	<Label text="Edge:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-	<ComboBox fx:id="edge" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+	<Label text="Edge:"
+		   GridPane.rowIndex="0" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<ComboBox fx:id="edge"
+			  GridPane.rowIndex="0" GridPane.columnIndex="1"
+			  prefWidth="110"/>
 
-	<Label text="Trigger length:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-	<Spinner fx:id="triggerLength" GridPane.columnIndex="1" GridPane.rowIndex="1">
+	<Label text="Trigger length:"
+		   GridPane.rowIndex="1" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<Spinner fx:id="triggerLength"
+			 GridPane.rowIndex="1" GridPane.columnIndex="1"
+			 prefWidth="110">
 		<valueFactory>
 			<SpinnerValueFactory.IntegerSpinnerValueFactory min="1000" max="65535"/>
 		</valueFactory>
 	</Spinner>
 
-	<Label text="Trigger offset:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-	<Spinner fx:id="triggerOffset" GridPane.columnIndex="1" GridPane.rowIndex="2">
+	<Label text="Trigger offset:"
+		   GridPane.rowIndex="2" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<Spinner fx:id="triggerOffset"
+			 GridPane.rowIndex="2" GridPane.columnIndex="1"
+			 prefWidth="110">
 		<valueFactory>
 			<SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="65535"/>
 		</valueFactory>
 	</Spinner>
 
-	<Label text="Movement scale" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-	<Spinner editable="true" fx:id="moveScale" GridPane.columnIndex="1" GridPane.rowIndex="3">
+	<Label text="Movement scale:"
+		   GridPane.rowIndex="3" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<Spinner editable="true"
+			 fx:id="moveScale"
+			 GridPane.rowIndex="3" GridPane.columnIndex="1"
+			 prefWidth="110">
 		<valueFactory>
 			<SpinnerValueFactory.DoubleSpinnerValueFactory min="0" max="10" amountToStepBy="0.1"/>
 		</valueFactory>
 	</Spinner>
 
-	<Label text="Server port" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-	<Spinner fx:id="port" GridPane.columnIndex="1" GridPane.rowIndex="4">
+	<Label text="Server port:"
+		   GridPane.rowIndex="4" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<Spinner fx:id="port"
+			 GridPane.rowIndex="4" GridPane.columnIndex="1"
+			 prefWidth="110">
 		<valueFactory>
 			<SpinnerValueFactory.IntegerSpinnerValueFactory min="1000" max="65535"/>
 		</valueFactory>
 	</Spinner>
 
-	<Label text="Reverse scroll" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-	<CheckBox fx:id="reverseScroll" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+	<Label text="Reverse scroll:"
+		   GridPane.rowIndex="5" GridPane.columnIndex="0"
+		   GridPane.halignment="RIGHT"/>
+	<CheckBox fx:id="reverseScroll"
+			  GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-	<Button onAction="#saveValues" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+	<Button onAction="#saveAndExit" text="Save"
+			GridPane.rowIndex="6" GridPane.columnIndex="0"
+			GridPane.halignment="RIGHT"/>
+	<Button onAction="#saveValues" text="Apply"
+			GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
 </GridPane>
