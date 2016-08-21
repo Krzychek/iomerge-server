@@ -27,6 +27,7 @@ open class MouseMovementReader(private val listener: IOListener) {
 	fun startReading() = try {
 		isReadingCond.lock()
 		reading = true
+		centerMousePointer()
 		isReadingCond.signal()
 	} finally {
 		isReadingCond.unlock()
