@@ -4,6 +4,7 @@ import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.EventServer
 import com.github.krzychek.iomerge.server.utils.JFXHelper
+import com.sun.javafx.collections.ObservableListWrapper
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
@@ -40,14 +41,16 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 	fun init() {
 		JFXHelper.runLater {
 			// load scene
-			val page = FXMLLoader(javaClass.getResource("/settings_window.fxml")).run {
-				setControllerFactory { this@SettingsWindow }
+			val parent = FXMLLoader(javaClass.getResource("/settings_window.fxml")).run {
+				setControllerFactory { it -> this@SettingsWindow }
 				load<Parent>()
 			}
 			stage = Stage().apply {
 				title = "IOMerge"
-				scene = Scene(page)
+				scene = Scene(parent)
 			}
+
+			edge.items = ObservableListWrapper(Edge.values().toList())
 		}
 	}
 
