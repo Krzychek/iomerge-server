@@ -10,7 +10,9 @@ import org.annoprops.annotations.ConfigProperty
 import org.annoprops.annotations.PropertyHolder
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.awt.Dimension
 import java.awt.GraphicsEnvironment
+import java.awt.Point
 import java.awt.Robot
 import java.util.*
 import javax.annotation.PostConstruct
@@ -49,33 +51,32 @@ open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private
 	}
 
 	private fun reposition() {
-		val displayRect = when (edge) {
-			Edge.LEFT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
-					.map { it.defaultConfiguration.bounds }
-					.minWith(Comparator { a, b -> a.x - b.x })!!
-					.apply { translate(0, offset) }
-
-
-			Edge.RIGHT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
-					.map { it.defaultConfiguration.bounds }
-					.maxWith(Comparator { a, b -> a.x - b.x })!!
-					.apply { translate(width - this@EdgeTrigger.width, offset) }
-
-			else -> throw IllegalStateException("Not handled edge: " + edge)
-
-		}
-
 		val wasVisible = isVisible
 		isVisible = false
 
-		displayRect.let {
-			location = it.location
-			size = it.size
-		}
+		size = calculateSize()
+		location = calculateLocation()
 
 		isVisible = wasVisible
-
 	}
+
+	private fun calculateSize(): Dimension = when (edge) {
+		Edge.LEFT,
+		Edge.RIGHT -> Dimension(1, length)
+		else -> throw IllegalStateException("Not handled edge: " + edge)
+	}
+
+	private fun calculateLocation(): Point = when (edge) {
+		Edge.LEFT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
+				.map { it.defaultConfiguration.bounds }
+				.minWith(Comparator { a, b -> a.x - b.x })!!
+				.apply { translate(0, offset) }
+		Edge.RIGHT -> GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
+				.map { it.defaultConfiguration.bounds }
+				.maxWith(Comparator { a, b -> a.x - b.x })!!
+				.apply { translate(width - this@EdgeTrigger.width, offset) }
+		else -> throw IllegalStateException("Not handled edge: " + edge)
+	}.location
 
 	@EventListener
 	fun onStateChange(appStateUpdateEvent: AppState) {
