@@ -14,6 +14,6 @@ Project is in a beta state, so I'm not releasing it for now.
 ## Why beta?
 There are few things to improve in code base, especially plugins:
 - there is done dirty chaining of plugin classloaders to allow spring to laod it. It smells like hell and should be refactored
-- also plugins beans class have to be uniq due to spring it should be futher separated
+- also plugins beans class have to be uniq due to way how spring registers bean definitions: it should be futher separated
 
 
