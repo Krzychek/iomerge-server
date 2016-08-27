@@ -5,7 +5,7 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
-import com.github.krzychek.iomerge.server.config.AppConfigurator.Companion.pluginsDir
+import com.github.krzychek.iomerge.server.config.AppConfigurator.Paths.pluginsDir
 import org.pmw.tinylog.Logger
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.support.PropertiesLoaderUtils

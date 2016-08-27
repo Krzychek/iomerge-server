@@ -1,10 +1,7 @@
 package com.github.krzychek.iomerge.server
 
-import com.github.krzychek.iomerge.server.config.AppConfigurator
-import com.github.krzychek.iomerge.server.ui.SettingsWindow
 import org.annoprops.PropertyManagerHelperBean
 import org.springframework.beans.factory.ListableBeanFactory
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 import javax.annotation.PostConstruct
@@ -16,10 +13,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew
 
 @Configuration
 class BasicSpringTestContext extends SpringConfig {
-	static {
-		new AppConfigurator(new String[0], false, false)
-				.configureBootstrap();
-	}
 
 	@Override
 	def Clipboard clipboard() {

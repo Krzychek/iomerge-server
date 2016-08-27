@@ -8,12 +8,13 @@ import org.pmw.tinylog.Level
 import org.pmw.tinylog.writers.ConsoleWriter
 import org.pmw.tinylog.writers.FileWriter
 import java.io.File
-import java.nio.file.Paths
+import javax.annotation.PreDestroy
+import java.nio.file.Paths.get as getPath
 
 
-class AppConfigurator(vararg args: String = emptyArray(),
-					  private val logWritingThread: Boolean = true,
-					  private val logToFile: Boolean = true) {
+private val LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" + "\\n{level}: {message}"
+
+object AppConfigurator {
 
 	@Option(name = "-debug", usage = "enables debug level of logging", forbids = arrayOf("-logLevel"))
 	var debug = false
@@ -35,7 +36,7 @@ class AppConfigurator(vararg args: String = emptyArray(),
 	var logFileArg: String? = null
 
 
-	init {
+	fun parseArg(vararg args: String) {
 		CmdLineParser(this).apply {
 			try {
 				parseArgument(*args)
@@ -47,39 +48,36 @@ class AppConfigurator(vararg args: String = emptyArray(),
 		}
 
 		if (configurationDirArg.isNotBlank())
-			configurationDir = Paths.get("user.dir", configurationDirArg).toFile()
+			Paths.configurationDir = getPath("user.dir", configurationDirArg).toFile()
 
 		if (pluginsDirArg.isNotBlank())
-			pluginsDir = Paths.get("user.dir", pluginsDirArg).toFile()
+			Paths.pluginsDir = getPath("user.dir", pluginsDirArg).toFile()
 
 		if (settingsFileArg.isNotBlank())
-			settingsFile = Paths.get("user.dir", settingsFileArg).toFile()
+			Paths.settingsFile = getPath("user.dir", settingsFileArg).toFile()
 
 		if (logFileArg.isNotBlank())
-			logFile = Paths.get("user.dir", logFileArg).toFile()
+			Paths.logFile = getPath("user.dir", logFileArg).toFile()
 
 	}
 
 	fun configureBootstrap() {
-		Configurator.defaultConfig().apply {
-
-			formatPattern(LOG_FORMAT)
-			writer(ConsoleWriter())
-			level(logLevel)
-
-			if (logWritingThread)
-				writingThread(null)
-
-			if (logToFile)
-				addWriter(FileWriter(logFile.absolutePath))
-
-			activate()
-		}
+		Configurator.defaultConfig()
+				.formatPattern(LOG_FORMAT)
+				.writer(ConsoleWriter())
+				.level(logLevel)
+				.writingThread(null)
+				.addWriter(FileWriter(Paths.logFile.absolutePath))
+				.activate()
 	}
 
-	companion object {
+	@PreDestroy
+	fun destroy() {
+		Configurator.shutdownWritingThread(true)
+	}
 
-		var configurationDir = Paths.get(System.getProperty("user.home"), ".config", "iomerge").toFile()
+	object Paths {
+		var configurationDir: File = getPath(System.getProperty("user.home"), ".config", "iomerge").toFile()
 
 		private var _pluginsDir: File? = null
 		var pluginsDir: File
@@ -102,7 +100,6 @@ class AppConfigurator(vararg args: String = emptyArray(),
 				_logFile = value
 			}
 
-		private val LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" + "\\n{level}: {message}"
 	}
 
 	internal fun String?.isNotBlank(): Boolean = !this.isNullOrBlank()

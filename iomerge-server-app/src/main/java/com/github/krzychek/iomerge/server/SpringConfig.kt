@@ -3,7 +3,8 @@ package com.github.krzychek.iomerge.server
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
-import com.github.krzychek.iomerge.server.config.AppConfigurator.Companion.settingsFile
+import com.github.krzychek.iomerge.server.config.AppConfigurator
+import com.github.krzychek.iomerge.server.config.AppConfigurator.Paths.settingsFile
 import com.github.krzychek.iomerge.server.utils.plugins.PluginLoader
 import com.github.krzychek.iomerge.server.utils.plugins.createChainOfType
 import org.annoprops.PropertyManagerHelperBean
@@ -21,7 +22,6 @@ import java.awt.datatransfer.Clipboard
 @Configuration
 @ComponentScan(basePackages = arrayOf("com.github.krzychek.iomerge.server"))
 open class SpringConfig {
-
 	@Bean
 	open fun clipboard(): Clipboard {
 		return Toolkit.getDefaultToolkit().systemClipboard
@@ -57,4 +57,8 @@ open class SpringConfig {
 		return (pluginLoader.getPluginObjectsOfType(MessageDispatcher::class.java) + messageDispatcher)
 				.createChainOfType(MessageDispatcher::class.java)
 	}
+
+	@Bean
+	open fun appConfigurator() = AppConfigurator
+
 }

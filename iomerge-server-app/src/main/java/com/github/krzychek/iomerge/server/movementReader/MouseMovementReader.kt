@@ -2,7 +2,6 @@ package com.github.krzychek.iomerge.server.movementReader
 
 
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
-import com.github.krzychek.iomerge.server.utils.ReentrantLockCondition
 import com.github.krzychek.iomerge.server.utils.ThrottledCall
 import org.springframework.stereotype.Component
 import java.awt.MouseInfo
@@ -19,18 +18,20 @@ import javax.annotation.PreDestroy
 open class MouseMovementReader(private val listener: IOListener) {
 
 	private val robot = Robot()
-	private val isReadingCond = ReentrantLockCondition()
+
+	private val monitor = Object()
 
 	@Volatile private var reading: Boolean = false
+		set(value) {
+			field = value
+			synchronized(monitor) { monitor.notifyAll() }
+		}
+
 	@Volatile var center = Point()
 
-	fun startReading() = try {
-		isReadingCond.lock()
-		reading = true
+	fun startReading() {
 		centerMousePointer()
-		isReadingCond.signal()
-	} finally {
-		isReadingCond.unlock()
+		reading = true
 	}
 
 	fun stopReading() {
@@ -48,7 +49,7 @@ open class MouseMovementReader(private val listener: IOListener) {
 	@PreDestroy
 	private fun shutdown() {
 		reading = false
-		thread.cancel()
+		thread.interrupt()
 	}
 
 	private val readMove = ThrottledCall(15) {
@@ -63,18 +64,18 @@ open class MouseMovementReader(private val listener: IOListener) {
 	}
 
 	private val thread = object : Thread("MouseTrapReader : mouse move reading thread") {
-		private var canceled: Boolean = false
-
-		fun cancel() {
-			canceled = true
-		}
+		private val monitor = Object()
 
 		override fun run() {
+			while (true) {
 
-			while (!canceled) {
+				try {
+					synchronized(monitor) { monitor.wait() }
+					while (reading) readMove()
 
-				isReadingCond.awaitLocked()
-				while (reading) readMove()
+				} catch (e: InterruptedException) {
+					return
+				}
 			}
 		}
 	}

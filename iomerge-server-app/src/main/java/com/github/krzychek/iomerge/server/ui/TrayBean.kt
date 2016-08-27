@@ -10,15 +10,14 @@ import javax.imageio.ImageIO
 
 
 @Component
-open class TrayBean(private val context: AbstractApplicationContext) {
+open class TrayBean(private val ctx: AbstractApplicationContext) {
 
-	val settingsWindow: SettingsWindow
-		get() = context.getBean(SettingsWindow::class.java)
+	val settingsWindow: SettingsWindow by lazy { ctx.getBean(SettingsWindow::class.java) }
 
 	@PostConstruct
 	fun init() {
 
-		if (SystemTray.isSupported().not()) {
+		if (!SystemTray.isSupported()) {
 			Logger.error("Tray is not supported on this system")
 			return
 		}
@@ -33,8 +32,8 @@ open class TrayBean(private val context: AbstractApplicationContext) {
 		val trayIcon = TrayIcon(image, "IOMerge").apply {
 			isImageAutoSize = true
 			popupMenu = PopupMenu().apply {
-				add(MenuItem("Settings")).addActionListener { e -> settingsWindow.show() }
-				add(MenuItem("Exit")).addActionListener { e -> Runtime.getRuntime().exit(0) }
+				add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
+				add(MenuItem("Exit")).addActionListener { ctx.close(); System.exit(0) }
 			}
 		}
 
@@ -44,5 +43,4 @@ open class TrayBean(private val context: AbstractApplicationContext) {
 			Logger.error("TrayIcon could not be added.")
 		}
 	}
-
 }
