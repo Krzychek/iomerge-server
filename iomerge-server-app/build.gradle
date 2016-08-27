@@ -26,7 +26,6 @@ dependencies {
 	// kotlin
 	compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.0.3'
 
-	compile group: 'com.google.guava', name: 'guava', version: '18.0' // utils
 	compile group: 'args4j', name: 'args4j', version: '2.33' // console arguments
 
 	// annoprops
