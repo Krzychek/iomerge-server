@@ -4,8 +4,8 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.config.AppConfigurator.Companion.settingsFile
-import com.github.krzychek.iomerge.server.utils.ChainHelper
-import com.sun.javafx.application.PlatformImpl
+import com.github.krzychek.iomerge.server.utils.plugins.PluginLoader
+import com.github.krzychek.iomerge.server.utils.plugins.createChainOfType
 import org.annoprops.PropertyManagerHelperBean
 import org.annoprops.springframework.SpringframeworkAnnopropsBeanFactory
 import org.springframework.beans.factory.ListableBeanFactory
@@ -39,19 +39,22 @@ open class SpringConfig {
 
 	@Bean
 	@Primary
-	open fun ioListenerChain(ioListeners: List<IOListener>): IOListener {
-		return ChainHelper.createChain(ioListeners, IOListener::class.java)
+	open fun ioListenerChain(ioListener: IOListener, pluginLoader: PluginLoader): IOListener {
+		return (pluginLoader.getPluginObjectsOfType(IOListener::class.java) + ioListener)
+				.createChainOfType(IOListener::class.java)
 	}
 
 	@Bean
 	@Primary
-	open fun appStateManagerChain(ioListeners: List<AppStateManager>): AppStateManager {
-		return ChainHelper.createChain(ioListeners, AppStateManager::class.java)
+	open fun appStateManagerChain(appStateManager: AppStateManager, pluginLoader: PluginLoader): AppStateManager {
+		return (pluginLoader.getPluginObjectsOfType(AppStateManager::class.java) + appStateManager)
+				.createChainOfType(AppStateManager::class.java)
 	}
 
 	@Bean
 	@Primary
-	open fun messageDispatcherChain(ioListeners: List<MessageDispatcher>): MessageDispatcher {
-		return ChainHelper.createChain(ioListeners, MessageDispatcher::class.java)
+	open fun messageDispatcherChain(messageDispatcher: MessageDispatcher, pluginLoader: PluginLoader): MessageDispatcher {
+		return (pluginLoader.getPluginObjectsOfType(MessageDispatcher::class.java) + messageDispatcher)
+				.createChainOfType(MessageDispatcher::class.java)
 	}
 }
