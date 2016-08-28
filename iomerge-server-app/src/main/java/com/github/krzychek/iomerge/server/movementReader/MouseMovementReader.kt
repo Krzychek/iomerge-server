@@ -64,8 +64,6 @@ open class MouseMovementReader(private val listener: IOListener) {
 	}
 
 	private val thread = object : Thread("MouseTrapReader : mouse move reading thread") {
-		private val monitor = Object()
-
 		override fun run() {
 			while (true) {
 
