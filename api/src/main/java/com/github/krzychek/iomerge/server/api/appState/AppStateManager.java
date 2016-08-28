@@ -8,7 +8,7 @@ import com.github.krzychek.iomerge.server.api.Chainable;
  *
  * @see Chainable
  */
-public interface AppStateManager extends Chainable<AppStateManager> {
+public interface AppStateManager {
 
 	void enterRemoteScreen(MouseRestoreListener edgeTrigger);
 

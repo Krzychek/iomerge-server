@@ -2,12 +2,10 @@ package com.github.krzychek.iomerge.server.utils.plugins
 
 import com.github.krzychek.iomerge.server.api.PluginProperties.PLUGIN_CLASSES_PROP
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
-import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
-import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.config.AppConfigurator.Paths.pluginsDir
+import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import org.pmw.tinylog.Logger
-import org.springframework.context.ApplicationContext
 import org.springframework.core.io.support.PropertiesLoaderUtils
 import org.springframework.stereotype.Component
 import java.io.File
@@ -15,11 +13,14 @@ import java.net.URLClassLoader
 import java.util.*
 
 
-private val ALLOWED_TYPES: Array<Class<*>>
-		= arrayOf(IOListener::class.java, AppStateManager::class.java, MessageDispatcher::class.java, MouseRestoreListener::class.java)
-
 @Component
-open class PluginLoader(private val ctx: ApplicationContext) {
+open class PluginLoader(appStateManager: AppStateManager,
+						messageDispatcher: MessageDispatcherImpl) {
+
+	private val injectableObjects = mapOf(
+			AppStateManager::class.java to appStateManager,
+			MessageDispatcher::class.java to messageDispatcher
+	)
 
 	private val pluginClasses = readPluginJars(pluginsDir)
 			.flatMap { loadPluginClasses(it) }
@@ -49,10 +50,9 @@ open class PluginLoader(private val ctx: ApplicationContext) {
 	 */
 	private fun <T> getObjectOfType(clazz: Class<T>): T = clazz.cast(
 			classToObject[clazz] ?:
-					clazz.constructors.first {
-						it.parameterTypes.all { type -> type in ALLOWED_TYPES }
-					}.run {
-						newInstance(*parameterTypes.map { ctx.getBean(it) }.toTypedArray())
+					clazz.constructors.maxBy { it.parameterCount }!!.run {
+						val parameters = parameterTypes.map { injectableObjects[it] }.toTypedArray()
+						newInstance(*parameters)
 					}
 	)
 

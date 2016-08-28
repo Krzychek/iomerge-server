@@ -1,7 +1,6 @@
 package com.github.krzychek.iomerge.server
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
-import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.config.AppConfigurator
@@ -47,13 +46,6 @@ open class SpringConfig : DisposableBean {
 	open fun ioListenerChain(ioListener: IOListener, pluginLoader: PluginLoader): IOListener {
 		return (pluginLoader.getPluginObjectsOfType(IOListener::class.java) + ioListener)
 				.createChainOfType(IOListener::class.java)
-	}
-
-	@Bean
-	@Primary
-	open fun appStateManagerChain(appStateManager: AppStateManager, pluginLoader: PluginLoader): AppStateManager {
-		return (pluginLoader.getPluginObjectsOfType(AppStateManager::class.java) + appStateManager)
-				.createChainOfType(AppStateManager::class.java)
 	}
 
 	@Bean

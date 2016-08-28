@@ -1,7 +1,7 @@
 package com.github.krzychek.iomerge.server.appState
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
-import com.github.krzychek.iomerge.server.api.appState.AppStateManagerAdapter
+import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
 import com.google.common.eventbus.EventBus
 import org.pmw.tinylog.Logger
@@ -17,7 +17,7 @@ import java.util.*
  */
 @Order(0)
 @Component
-open class AppStateHolder(private val eventBus: EventBus) : AppStateManagerAdapter() {
+open class AppStateHolder(private val eventBus: EventBus) : AppStateManager {
 
 	private val mouseRestoreListeners = HashSet<MouseRestoreListener>()
 	private var state: AppState = AppState.STARTUP
@@ -31,31 +31,24 @@ open class AppStateHolder(private val eventBus: EventBus) : AppStateManagerAdapt
 	override fun enterRemoteScreen(mouseRestoreListener: MouseRestoreListener) {
 		mouseRestoreListeners.add(mouseRestoreListener)
 		setNewState(AppState.ON_REMOTE)
-		nextInChain.enterRemoteScreen(mouseRestoreListener)
 	}
 
 	override fun restoreMouse() {
 		mouseRestoreListeners.forEach { it.restoreMouseAt(position) }
 		mouseRestoreListeners.clear()
-
-		nextInChain.restoreMouse()
 	}
 
 	override fun connected() {
 		setNewState(AppState.ON_LOCAL)
-		nextInChain.connected()
 	}
 
 	override fun returnToLocal(position: Float) {
 		this.position = position
 		setNewState(AppState.ON_LOCAL)
-
-		nextInChain.returnToLocal(position)
 	}
 
 	override fun disconnected() {
 		setNewState(AppState.DISCONNECTED)
-		nextInChain.disconnected()
 	}
 
 	@Synchronized private fun setNewState(newState: AppState) {
