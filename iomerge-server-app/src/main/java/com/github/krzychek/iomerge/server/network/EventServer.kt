@@ -2,10 +2,10 @@ package com.github.krzychek.iomerge.server.network
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
+import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
 import org.annoprops.annotations.PropertyHolder
 import org.pmw.tinylog.Logger
-import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.io.EOFException
 import java.io.IOException
@@ -86,8 +86,8 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 
 	}
 
-	@EventListener
-	private fun onAppStateChange(appState: AppState) {
+	@Subscribe
+	fun onAppStateChange(appState: AppState) {
 		if (AppState.DISCONNECTED == appState) {
 			executor.execute { this.acceptListener() }
 		}

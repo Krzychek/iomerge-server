@@ -7,9 +7,11 @@ import com.github.krzychek.iomerge.server.config.AppConfigurator
 import com.github.krzychek.iomerge.server.config.AppConfigurator.Paths.settingsFile
 import com.github.krzychek.iomerge.server.utils.plugins.PluginLoader
 import com.github.krzychek.iomerge.server.utils.plugins.createChainOfType
+import com.google.common.eventbus.EventBus
 import org.annoprops.PropertyManagerHelperBean
 import org.annoprops.springframework.SpringframeworkAnnopropsBeanFactory
 import org.springframework.beans.factory.ListableBeanFactory
+import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -56,6 +58,19 @@ open class SpringConfig {
 	open fun messageDispatcherChain(messageDispatcher: MessageDispatcher, pluginLoader: PluginLoader): MessageDispatcher {
 		return (pluginLoader.getPluginObjectsOfType(MessageDispatcher::class.java) + messageDispatcher)
 				.createChainOfType(MessageDispatcher::class.java)
+	}
+
+	@Bean
+	open fun eventBus(): EventBus = EventBus()
+
+	@Bean
+	open fun eventBusPostProcessor() = object : BeanPostProcessor {
+		override fun postProcessAfterInitialization(bean: Any, beanName: String?) = bean
+		override fun postProcessBeforeInitialization(bean: Any, beanName: String?): Any {
+			eventBus().register(bean)
+			return bean
+		}
+
 	}
 
 	@Bean

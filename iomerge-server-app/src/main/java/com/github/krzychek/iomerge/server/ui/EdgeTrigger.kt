@@ -6,9 +6,9 @@ import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.utils.makeInvisible
+import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
 import org.annoprops.annotations.PropertyHolder
-import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
@@ -91,7 +91,7 @@ open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private
 
 	private fun getScreenBounds() = getLocalGraphicsEnvironment().screenDevices.map { it.defaultConfiguration.bounds }
 
-	@EventListener
+	@Subscribe
 	fun onStateChange(appStateUpdateEvent: AppState) {
 		when (appStateUpdateEvent) {
 			AppState.ON_LOCAL -> {

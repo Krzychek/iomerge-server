@@ -3,8 +3,8 @@ package com.github.krzychek.iomerge.server.utils
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
+import com.google.common.eventbus.Subscribe
 import org.pmw.tinylog.Logger
-import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.awt.datatransfer.*
 import java.io.IOException
@@ -18,7 +18,7 @@ open class ClipboardSynchronizer(private val messageDispatcher: MessageDispatche
 
 	private var sentData: String = ""
 
-	@EventListener
+	@Subscribe
 	fun onStateChange(newState: AppState) {
 		if (AppState.ON_REMOTE == newState //
 				&& systemClipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {

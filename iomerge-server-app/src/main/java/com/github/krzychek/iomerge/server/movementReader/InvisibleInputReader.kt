@@ -6,7 +6,7 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.utils.IOListenerToAWTAdapter
 import com.github.krzychek.iomerge.server.utils.makeInvisible
-import org.springframework.context.event.EventListener
+import com.google.common.eventbus.Subscribe
 import org.springframework.stereotype.Component
 import java.awt.GraphicsEnvironment
 import java.awt.Point
@@ -66,7 +66,7 @@ internal open class InvisibleInputReader(private val listener: IOListener,
 		isVisible = false
 	}
 
-	@EventListener
+	@Subscribe
 	fun onStateChange(newState: AppState) {
 		when (newState) {
 			AppState.ON_REMOTE -> startReading()

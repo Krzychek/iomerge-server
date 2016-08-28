@@ -3,8 +3,8 @@ package com.github.krzychek.iomerge.server.appState
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManagerAdapter
 import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
+import com.google.common.eventbus.EventBus
 import org.pmw.tinylog.Logger
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.core.annotation.Order
@@ -17,7 +17,7 @@ import java.util.*
  */
 @Order(0)
 @Component
-open class AppStateHolder(private val publisher: ApplicationEventPublisher) : AppStateManagerAdapter() {
+open class AppStateHolder(private val eventBus: EventBus) : AppStateManagerAdapter() {
 
 	private val mouseRestoreListeners = HashSet<MouseRestoreListener>()
 	private var state: AppState = AppState.STARTUP
@@ -62,7 +62,7 @@ open class AppStateHolder(private val publisher: ApplicationEventPublisher) : Ap
 		if (state != newState) {
 			Logger.info("setting application state to: " + newState)
 			state = newState
-			publisher.publishEvent(state)
+			eventBus.post(state)
 		}
 	}
 }
