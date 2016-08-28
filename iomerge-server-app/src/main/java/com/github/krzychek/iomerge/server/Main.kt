@@ -12,9 +12,11 @@ object Main {
 			configureBootstrap()
 		}
 
-		AnnotationConfigApplicationContext().apply {
-			register(SpringConfig::class.java)
-			registerShutdownHook()
-		}.refresh()
+		object : AnnotationConfigApplicationContext(SpringConfig::class.java) {
+			override fun doClose() {
+				super.doClose()
+				System.exit(0)
+			}
+		}
 	}
 }

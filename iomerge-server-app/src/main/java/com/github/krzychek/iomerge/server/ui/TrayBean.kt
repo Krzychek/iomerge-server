@@ -33,7 +33,7 @@ open class TrayBean(private val ctx: AbstractApplicationContext) {
 			isImageAutoSize = true
 			popupMenu = PopupMenu().apply {
 				add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
-				add(MenuItem("Exit")).addActionListener { ctx.close(); System.exit(0) }
+				add(MenuItem("Exit")).addActionListener { ctx.close() }
 			}
 		}
 
