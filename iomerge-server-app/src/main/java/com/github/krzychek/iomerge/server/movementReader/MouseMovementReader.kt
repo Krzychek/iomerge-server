@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 import java.awt.MouseInfo
 import java.awt.Point
 import java.awt.Robot
-import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 
@@ -38,9 +37,6 @@ open class MouseMovementReader(private val listener: IOListener) {
 		reading = false
 	}
 
-
-	@PostConstruct
-	fun init() = thread.start()
 
 	private fun centerMousePointer() {
 		robot.mouseMove(center.x, center.y)
@@ -76,6 +72,6 @@ open class MouseMovementReader(private val listener: IOListener) {
 				}
 			}
 		}
-	}
+	}.apply { start() }
 
 }

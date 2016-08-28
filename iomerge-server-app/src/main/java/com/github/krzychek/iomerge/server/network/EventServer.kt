@@ -12,7 +12,6 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.util.concurrent.Executors
-import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 
@@ -24,15 +23,14 @@ import javax.annotation.PreDestroy
 open class EventServer(private val appStateManager: AppStateManager, private val connectionHandlerProxy: ConnectionHandlerProxy) {
 	private val executor = Executors.newSingleThreadExecutor()
 
-	private lateinit var serverSocket: ServerSocket
+	private var serverSocket: ServerSocket? = null
 
 	@ConfigProperty("ServerPort")
 	var port = 7698
 		set(port) {
 			if (field != port) {
 				field = port
-				if (serverSocket.isBound)
-					restart()
+				if (serverSocket != null) restart()
 			}
 
 		}
@@ -42,7 +40,8 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 		Logger.info("shutting down server")
 
 		try {
-			serverSocket.close()
+			serverSocket?.close()
+			serverSocket = null
 		} catch (e: IOException) {
 			Logger.warn(e)
 		}
@@ -50,29 +49,20 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 		appStateManager.disconnected()
 	}
 
-	@PostConstruct
-	fun start() {
-		Logger.info("starting server at port " + this.port)
-		serverSocket = ServerSocket().apply {
-			setPerformancePreferences(1, 2, 0)
-			bind(InetSocketAddress(port))
-		}
-		Logger.info("listening at port " + this.port)
-	}
-
 	private fun restart() {
 		Logger.info("restarting server")
 		shutdown()
-		try {
-			start()
-		} catch (e: IOException) {
-			Logger.error(e)
-			throw RuntimeException(e)
-		}
-
+		acceptListener()
 	}
 
-	private fun acceptListener() {
+	private fun acceptListener() = executor.execute {
+		val serverSocket = ServerSocket().apply {
+			setPerformancePreferences(1, 2, 0)
+			bind(InetSocketAddress(port))
+		}
+		this.serverSocket = serverSocket
+		Logger.info("listening at port " + this.port)
+
 		try {
 			val clientSocket = serverSocket.accept()
 			Logger.info("client socket accepted")
@@ -83,13 +73,13 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 		} catch (e: IOException) {
 			Logger.warn("Problem with connection", e)
 		}
-
 	}
+
 
 	@Subscribe
 	fun onAppStateChange(appState: AppState) {
 		if (AppState.DISCONNECTED == appState) {
-			executor.execute { this.acceptListener() }
+			this.acceptListener()
 		}
 	}
 }

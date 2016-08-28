@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.util.*
-import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.swing.JFrame
 
@@ -20,15 +19,13 @@ import javax.swing.JFrame
  * MovementReader based on transparent JFrame, catches mouse inside
  */
 @Component
-internal open class InvisibleInputReader(private val listener: IOListener,
+internal open class InvisibleInputReader(listener: IOListener,
 										 private val appStateManager: AppStateManager,
 										 private val mouseMovementReader: MouseMovementReader)
 : JFrame("IOMerge MouseTrapReader") {
 
 
-	@PostConstruct
-	private fun init() {
-		// UI stuff
+	init {
 		reposition()
 		makeInvisible()
 		isAutoRequestFocus = true

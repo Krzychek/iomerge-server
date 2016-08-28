@@ -5,7 +5,6 @@ import org.springframework.context.support.AbstractApplicationContext
 import org.springframework.stereotype.Component
 import java.awt.*
 import java.awt.image.BufferedImage
-import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
 
 
@@ -14,33 +13,32 @@ open class TrayBean(private val ctx: AbstractApplicationContext) {
 
 	val settingsWindow: SettingsWindow by lazy { ctx.getBean(SettingsWindow::class.java) }
 
-	@PostConstruct
-	fun init() {
+	init {
+		if (SystemTray.isSupported()) {
 
-		if (!SystemTray.isSupported()) {
-			Logger.error("Tray is not supported on this system")
-			return
-		}
-
-		val image = try {
-			ImageIO.read(javaClass.getResource("/icon.png"))
-		} catch (e: Exception) {
-			Logger.error("filed to load tray icon, using blank image", e)
-			BufferedImage(1, 1, BufferedImage.TYPE_BYTE_BINARY)
-		}
-
-		val trayIcon = TrayIcon(image, "IOMerge").apply {
-			isImageAutoSize = true
-			popupMenu = PopupMenu().apply {
-				add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
-				add(MenuItem("Exit")).addActionListener { ctx.close() }
+			val image = try {
+				ImageIO.read(javaClass.getResource("/icon.png"))
+			} catch (e: Exception) {
+				Logger.error("filed to load tray icon, using blank image", e)
+				BufferedImage(1, 1, BufferedImage.TYPE_BYTE_BINARY)
 			}
-		}
 
-		try {
-			SystemTray.getSystemTray().add(trayIcon)
-		} catch (e: AWTException) {
-			Logger.error("TrayIcon could not be added.")
+			val trayIcon = TrayIcon(image, "IOMerge").apply {
+				isImageAutoSize = true
+				popupMenu = PopupMenu().apply {
+					add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
+					add(MenuItem("Exit")).addActionListener { ctx.close() }
+				}
+			}
+
+			try {
+				SystemTray.getSystemTray().add(trayIcon)
+			} catch (e: AWTException) {
+				Logger.error("TrayIcon could not be added.")
+			}
+
+		} else {
+			Logger.error("Tray is not supported on this system")
 		}
 	}
 }

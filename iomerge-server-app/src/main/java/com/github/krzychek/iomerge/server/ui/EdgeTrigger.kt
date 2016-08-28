@@ -15,7 +15,6 @@ import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 import java.awt.Point
 import java.awt.Robot
 import java.util.*
-import javax.annotation.PostConstruct
 import javax.swing.JWindow
 import javax.swing.Timer
 
@@ -27,6 +26,15 @@ import javax.swing.Timer
 @Component
 open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private val appStateManager: AppStateManager, private val robot: Robot)
 : JWindow(), MouseRestoreListener {
+
+
+	init {
+		makeInvisible()
+		isAutoRequestFocus = false
+		isFocusable = false
+
+		addMouseListener(MouseEnteredAdapter { appStateManager.enterRemoteScreen(this) })
+	}
 
 	private val THICKNESS = 1
 
@@ -42,15 +50,6 @@ open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private
 	var length = 500
 		private set
 
-	@PostConstruct
-	private fun init() {
-		reposition()
-		makeInvisible()
-		isAutoRequestFocus = false
-		isFocusable = false
-
-		addMouseListener(MouseEnteredAdapter { appStateManager.enterRemoteScreen(this) })
-	}
 
 	private fun reposition() {
 		val wasVisible = isVisible

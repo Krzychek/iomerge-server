@@ -15,7 +15,6 @@ import javafx.scene.control.Spinner
 import javafx.stage.Stage
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
-import javax.annotation.PostConstruct
 
 
 @Lazy
@@ -37,8 +36,7 @@ open class SettingsWindow(private val eventServer: EventServer, private val edge
 	@FXML
 	private lateinit var reverseScroll: CheckBox
 
-	@PostConstruct
-	fun init() {
+	init {
 		JFXHelper.runLater {
 			// load scene
 			val parent = FXMLLoader(javaClass.getResource("/settings_window.fxml")).run {
