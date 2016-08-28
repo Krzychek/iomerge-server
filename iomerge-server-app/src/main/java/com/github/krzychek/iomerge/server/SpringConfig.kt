@@ -1,5 +1,6 @@
 package com.github.krzychek.iomerge.server
 
+import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
@@ -10,6 +11,7 @@ import com.github.krzychek.iomerge.server.utils.plugins.createChainOfType
 import com.google.common.eventbus.EventBus
 import org.annoprops.PropertyManagerHelperBean
 import org.annoprops.springframework.SpringframeworkAnnopropsBeanFactory
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.context.annotation.Bean
@@ -23,7 +25,8 @@ import java.awt.datatransfer.Clipboard
 
 @Configuration
 @ComponentScan(basePackages = arrayOf("com.github.krzychek.iomerge.server"))
-open class SpringConfig {
+open class SpringConfig : DisposableBean {
+
 	@Bean
 	open fun clipboard(): Clipboard {
 		return Toolkit.getDefaultToolkit().systemClipboard
@@ -70,10 +73,12 @@ open class SpringConfig {
 			eventBus().register(bean)
 			return bean
 		}
-
 	}
 
 	@Bean
 	open fun appConfigurator() = AppConfigurator
 
+	override fun destroy() {
+		eventBus().post(AppState.SHUTDOWN)
+	}
 }

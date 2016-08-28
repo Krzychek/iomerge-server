@@ -12,7 +12,6 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.util.concurrent.Executors
-import javax.annotation.PreDestroy
 
 
 /**
@@ -35,7 +34,6 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 
 		}
 
-	@PreDestroy
 	private fun shutdown() {
 		Logger.info("shutting down server")
 
@@ -78,8 +76,7 @@ open class EventServer(private val appStateManager: AppStateManager, private val
 
 	@Subscribe
 	fun onAppStateChange(appState: AppState) {
-		if (AppState.DISCONNECTED == appState) {
-			this.acceptListener()
-		}
+		if (appState == AppState.DISCONNECTED) this.acceptListener()
+		else if (appState == AppState.SHUTDOWN) shutdown()
 	}
 }

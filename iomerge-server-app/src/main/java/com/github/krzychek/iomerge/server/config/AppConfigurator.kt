@@ -1,5 +1,7 @@
 package com.github.krzychek.iomerge.server.config
 
+import com.github.krzychek.iomerge.server.api.appState.AppState
+import com.google.common.eventbus.Subscribe
 import org.kohsuke.args4j.CmdLineException
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.Option
@@ -8,7 +10,6 @@ import org.pmw.tinylog.Level
 import org.pmw.tinylog.writers.ConsoleWriter
 import org.pmw.tinylog.writers.FileWriter
 import java.io.File
-import javax.annotation.PreDestroy
 import java.nio.file.Paths.get as getPath
 
 
@@ -71,9 +72,11 @@ object AppConfigurator {
 				.activate()
 	}
 
-	@PreDestroy
-	fun destroy() {
-		Configurator.shutdownWritingThread(true)
+	@Subscribe
+	fun destroy(appState: AppState) {
+		if (appState == AppState.SHUTDOWN) {
+			Configurator.shutdownWritingThread(true)
+		}
 	}
 
 	object Paths {

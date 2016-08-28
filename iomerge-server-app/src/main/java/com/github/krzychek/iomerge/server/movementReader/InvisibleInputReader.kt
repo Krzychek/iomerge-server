@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.util.*
-import javax.annotation.PreDestroy
 import javax.swing.JFrame
 
 
@@ -53,7 +52,6 @@ internal open class InvisibleInputReader(listener: IOListener,
 		mouseMovementReader.startReading()
 	}
 
-	@PreDestroy
 	@Synchronized private fun stopReading() {
 		mouseMovementReader.stopReading()
 

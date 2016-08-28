@@ -11,5 +11,6 @@ public enum AppState {
 	ON_REMOTE,
 	ON_LOCAL,
 	DISCONNECTED,
-	STARTUP
+	STARTUP,
+	SHUTDOWN
 }

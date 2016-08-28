@@ -1,13 +1,14 @@
 package com.github.krzychek.iomerge.server.movementReader
 
 
+import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.utils.ThrottledCall
+import com.google.common.eventbus.Subscribe
 import org.springframework.stereotype.Component
 import java.awt.MouseInfo
 import java.awt.Point
 import java.awt.Robot
-import javax.annotation.PreDestroy
 
 
 /**
@@ -42,10 +43,12 @@ open class MouseMovementReader(private val listener: IOListener) {
 		robot.mouseMove(center.x, center.y)
 	}
 
-	@PreDestroy
-	private fun shutdown() {
-		reading = false
-		thread.interrupt()
+	@Subscribe
+	private fun shutdown(appState: AppState) {
+		if (appState == AppState.SHUTDOWN) {
+			reading = false
+			thread.interrupt()
+		}
 	}
 
 	private val readMove = ThrottledCall(15) {
