@@ -17,8 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-@Singleton
-class SettingsWindow
+@Singleton class SettingsWindow
 @Inject constructor(private val eventServer: EventServer, private val edgeTrigger: EdgeTrigger, private val virtualScreen: VirtualScreen) {
 
 	private lateinit var stage: Stage

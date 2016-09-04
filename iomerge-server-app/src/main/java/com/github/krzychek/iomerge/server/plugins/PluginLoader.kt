@@ -10,9 +10,10 @@ import java.io.File
 import java.net.URLClassLoader
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class PluginLoader
+@Singleton class PluginLoader
 @Inject constructor(appStateManager: AppStateManager, messageDispatcher: MessageDispatcherImpl, appConfiguration: AppConfiguration) {
 
 	private val injectableObjects = mapOf(

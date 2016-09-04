@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server.ui
 
-import com.github.krzychek.iomerge.server.LifecycleManager
+import com.github.krzychek.iomerge.server.daggerConfig.LifecycleManager
 import dagger.Lazy
 import org.pmw.tinylog.Logger
 import java.awt.*
@@ -10,11 +10,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-@Singleton
-class TrayManager
-@Inject constructor(private val lazySettingsWindow: Lazy<SettingsWindow>, lifecycleManager: LifecycleManager) {
+@Singleton class TrayManager
+@Inject constructor(private val lazySettingsWindow: Lazy<SettingsWindow>, lazyLifecycleManager: Lazy<LifecycleManager>) {
 
 	val settingsWindow: SettingsWindow by lazy { lazySettingsWindow.get() }
+	val lifecycleManager: LifecycleManager by lazy { lazyLifecycleManager.get() }
 
 	init {
 		if (SystemTray.isSupported()) {

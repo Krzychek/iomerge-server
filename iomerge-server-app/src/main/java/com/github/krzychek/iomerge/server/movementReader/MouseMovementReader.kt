@@ -14,8 +14,7 @@ import javax.inject.Singleton
 /**
  * MovementReader based on transparent JFrame, catches mouse inside
  */
-@Singleton
-class MouseMovementReader
+@Singleton class MouseMovementReader
 @Inject constructor(private val listener: IOListener) {
 
 	private val robot = Robot()
