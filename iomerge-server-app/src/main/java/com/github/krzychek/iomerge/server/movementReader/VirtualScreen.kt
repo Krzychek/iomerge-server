@@ -4,23 +4,20 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import org.annoprops.annotations.ConfigProperty
-import org.annoprops.annotations.PropertyHolder
-import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.Point2D
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
  * Models device on server side, proxy between dispatcher msg dispatcher and whole module
  */
-@Order(0)
-@Component
-@PropertyHolder
-open class VirtualScreen(private val actionDispatcher: MessageDispatcher, private val appStateManager: AppStateManager) : IOListener {
+@Singleton class VirtualScreen
+@Inject constructor(private val actionDispatcher: MessageDispatcher, private val appStateManager: AppStateManager) : IOListener {
 
 	private lateinit var nextInChain: IOListener
 

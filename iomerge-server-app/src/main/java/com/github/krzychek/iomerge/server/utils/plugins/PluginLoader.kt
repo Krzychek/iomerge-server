@@ -3,26 +3,24 @@ package com.github.krzychek.iomerge.server.utils.plugins
 import com.github.krzychek.iomerge.server.api.PluginProperties.PLUGIN_CLASSES_PROP
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
-import com.github.krzychek.iomerge.server.config.AppConfigurator.Paths.pluginsDir
+import com.github.krzychek.iomerge.server.config.AppConfiguration
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import org.pmw.tinylog.Logger
-import org.springframework.core.io.support.PropertiesLoaderUtils
-import org.springframework.stereotype.Component
 import java.io.File
 import java.net.URLClassLoader
 import java.util.*
+import javax.inject.Inject
 
 
-@Component
-open class PluginLoader(appStateManager: AppStateManager,
-						messageDispatcher: MessageDispatcherImpl) {
+class PluginLoader
+@Inject constructor(appStateManager: AppStateManager, messageDispatcher: MessageDispatcherImpl, appConfiguration: AppConfiguration) {
 
 	private val injectableObjects = mapOf(
 			AppStateManager::class.java to appStateManager,
 			MessageDispatcher::class.java to messageDispatcher
 	)
 
-	private val pluginClasses = readPluginJars(pluginsDir)
+	private val pluginClasses = readPluginJars(appConfiguration.pluginsDir)
 			.flatMap { loadPluginClasses(it) }
 
 	private val classToObject = WeakHashMap<Class<*>, Any>()
@@ -77,7 +75,11 @@ open class PluginLoader(appStateManager: AppStateManager,
 	}
 
 	private fun ClassLoader.getConfigurationClassNames(): List<String> {
-		val properties = PropertiesLoaderUtils.loadAllProperties("iomerge-plugin.properties", this)
+		val properties = Properties()
+		this.getResourceAsStream("iomerge-plugin.properties").use {
+			properties.load(it)
+		}
+
 		val classNames = properties.getProperty(PLUGIN_CLASSES_PROP)
 
 		if (classNames.isNullOrEmpty())

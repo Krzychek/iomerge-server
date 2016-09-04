@@ -12,14 +12,12 @@ import com.github.krzychek.iomerge.server.model.message.mouse.MouseMove
 import com.github.krzychek.iomerge.server.model.message.mouse.MousePress
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseRelease
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseWheel
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@Order(0)
-@Component
-open class MessageDispatcherImpl(private val connectionHandler: ConnectionHandler) : MessageDispatcher {
+@Singleton class MessageDispatcherImpl
+@Inject constructor(private val connectionHandler: ConnectionHandlerProxy) : MessageDispatcher {
 
 	private lateinit var nextInChain: MessageDispatcher
 

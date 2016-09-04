@@ -7,20 +7,21 @@ import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.utils.IOListenerToAWTAdapter
 import com.github.krzychek.iomerge.server.utils.makeInvisible
 import com.google.common.eventbus.Subscribe
-import org.springframework.stereotype.Component
 import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 import javax.swing.JFrame
 
 
 /**
  * MovementReader based on transparent JFrame, catches mouse inside
  */
-@Component
-internal open class InvisibleInputReader(listener: IOListener,
-										 private val appStateManager: AppStateManager,
-										 private val mouseMovementReader: MouseMovementReader)
+@Singleton class InvisibleInputReader
+@Inject constructor(listener: IOListener,
+					private val appStateManager: AppStateManager,
+					private val mouseMovementReader: MouseMovementReader)
 : JFrame("IOMerge MouseTrapReader") {
 
 

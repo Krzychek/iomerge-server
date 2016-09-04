@@ -13,13 +13,13 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Spinner
 import javafx.stage.Stage
-import org.springframework.context.annotation.Lazy
-import org.springframework.stereotype.Component
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@Lazy
-@Component
-open class SettingsWindow(private val eventServer: EventServer, private val edgeTrigger: EdgeTrigger, private val virtualScreen: VirtualScreen) {
+@Singleton
+class SettingsWindow
+@Inject constructor(private val eventServer: EventServer, private val edgeTrigger: EdgeTrigger, private val virtualScreen: VirtualScreen) {
 
 	private lateinit var stage: Stage
 

@@ -1,4 +1,3 @@
-apply plugin: "groovy"
 apply plugin: "kotlin"
 apply plugin: "application"
 
@@ -34,21 +33,17 @@ dependencies {
 
 	// annoprops
 	compile group: 'com.github.Krzychek.annoprops', name: 'annoprops', version: '1.1-SNAPSHOT'
-	compile group: 'com.github.Krzychek.annoprops', name: 'annoprops-springframework', version: '1.1-SNAPSHOT'
 
 	// logging
 	compile group: 'org.tinylog', name: 'jcl-binding', version: '1.1'
 	compile group: 'org.tinylog', name: 'tinylog', version: '1.1'
 
-	// spring
-	compile group: 'org.springframework', name: 'spring-beans', version: '4.3.1.RELEASE'
-	compile group: 'org.springframework', name: 'spring-core', version: '4.3.1.RELEASE'
-	compile group: 'org.springframework', name: 'spring-context', version: '4.3.1.RELEASE'
+	// dagger
+	compile 'com.google.dagger:dagger:2.4'
+	kapt 'com.google.dagger:dagger-compiler:2.4'
+	compile 'org.glassfish:javax.annotation:10.0-b28'
+}
 
-	// tests
-	testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
-	testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.0-groovy-2.4'
-	testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.1.RELEASE'
-	testCompile group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.6.4'
-
+kapt {
+	generateStubs = true
 }

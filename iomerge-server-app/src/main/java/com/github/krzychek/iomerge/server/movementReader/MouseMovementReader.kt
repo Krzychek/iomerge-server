@@ -5,17 +5,19 @@ import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
 import com.github.krzychek.iomerge.server.utils.ThrottledCall
 import com.google.common.eventbus.Subscribe
-import org.springframework.stereotype.Component
 import java.awt.MouseInfo
 import java.awt.Point
 import java.awt.Robot
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
  * MovementReader based on transparent JFrame, catches mouse inside
  */
-@Component
-open class MouseMovementReader(private val listener: IOListener) {
+@Singleton
+class MouseMovementReader
+@Inject constructor(private val listener: IOListener) {
 
 	private val robot = Robot()
 
@@ -62,7 +64,7 @@ open class MouseMovementReader(private val listener: IOListener) {
 		}
 	}
 
-	private val thread = object : Thread("MouseTrapReader : mouse move reading thread") {
+	private val thread = object : Thread("MouseMovementReader : mouse move reading thread") {
 		override fun run() {
 			while (true) {
 
@@ -76,5 +78,4 @@ open class MouseMovementReader(private val listener: IOListener) {
 			}
 		}
 	}.apply { start() }
-
 }

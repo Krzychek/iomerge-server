@@ -1,17 +1,20 @@
 package com.github.krzychek.iomerge.server.ui
 
+import com.github.krzychek.iomerge.server.LifecycleManager
+import dagger.Lazy
 import org.pmw.tinylog.Logger
-import org.springframework.context.support.AbstractApplicationContext
-import org.springframework.stereotype.Component
 import java.awt.*
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@Component
-open class TrayBean(private val ctx: AbstractApplicationContext) {
+@Singleton
+class TrayManager
+@Inject constructor(private val lazySettingsWindow: Lazy<SettingsWindow>, lifecycleManager: LifecycleManager) {
 
-	val settingsWindow: SettingsWindow by lazy { ctx.getBean(SettingsWindow::class.java) }
+	val settingsWindow: SettingsWindow by lazy { lazySettingsWindow.get() }
 
 	init {
 		if (SystemTray.isSupported()) {
@@ -27,7 +30,7 @@ open class TrayBean(private val ctx: AbstractApplicationContext) {
 				isImageAutoSize = true
 				popupMenu = PopupMenu().apply {
 					add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
-					add(MenuItem("Exit")).addActionListener { ctx.close() }
+					add(MenuItem("Exit")).addActionListener { lifecycleManager.shutdown() }
 				}
 			}
 

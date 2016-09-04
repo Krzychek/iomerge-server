@@ -5,16 +5,17 @@ import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.google.common.eventbus.Subscribe
 import org.pmw.tinylog.Logger
-import org.springframework.stereotype.Component
+
 import java.awt.datatransfer.*
 import java.io.IOException
+import javax.inject.Inject
 
 
 /**
  * Manages system clipboard, syncs clipboard on remote entering
  */
-@Component
-open class ClipboardSynchronizer(private val messageDispatcher: MessageDispatcher, private val systemClipboard: Clipboard) : ClipboardOwner {
+class ClipboardSynchronizer
+@Inject constructor(private val messageDispatcher: MessageDispatcher, private val systemClipboard: Clipboard) : ClipboardOwner {
 
 	private var sentData: String = ""
 

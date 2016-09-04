@@ -4,12 +4,13 @@ package com.github.krzychek.iomerge.server.network
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.model.MessageProcessor
 import com.github.krzychek.iomerge.server.model.message.Message
-import org.springframework.stereotype.Component
 import java.net.Socket
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@Component
-open class ConnectionHandlerProxy(private val messageProcessor: MessageProcessor, private val appStateManager: AppStateManager) : ConnectionHandler {
+@Singleton class ConnectionHandlerProxy
+@Inject constructor(private val messageProcessor: MessageProcessor, private val appStateManager: AppStateManager) : ConnectionHandler {
 
 	private var connectionHandler: ConnectionHandler? = null
 

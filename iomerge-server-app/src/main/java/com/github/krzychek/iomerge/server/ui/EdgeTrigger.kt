@@ -8,13 +8,13 @@ import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.utils.makeInvisible
 import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
-import org.annoprops.annotations.PropertyHolder
-import org.springframework.stereotype.Component
 import java.awt.Dimension
 import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 import java.awt.Point
 import java.awt.Robot
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 import javax.swing.JWindow
 import javax.swing.Timer
 
@@ -22,11 +22,12 @@ import javax.swing.Timer
 /**
  * Enters remote device on mouse enter. displayed as 1px on border of screen
  */
-@PropertyHolder
-@Component
-open class EdgeTrigger(private val messageDispatcher: MessageDispatcher, private val appStateManager: AppStateManager, private val robot: Robot)
+@Singleton class EdgeTrigger
+@Inject constructor(private val messageDispatcher: MessageDispatcher,
+					private val appStateManager: AppStateManager)
 : JWindow(), MouseRestoreListener {
 
+	private val robot = Robot()
 
 	init {
 		makeInvisible()

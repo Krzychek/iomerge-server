@@ -1,7 +1,5 @@
 package com.github.krzychek.iomerge.server.config
 
-import com.github.krzychek.iomerge.server.api.appState.AppState
-import com.google.common.eventbus.Subscribe
 import org.kohsuke.args4j.CmdLineException
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.Option
@@ -12,10 +10,14 @@ import org.pmw.tinylog.writers.FileWriter
 import java.io.File
 import java.nio.file.Paths.get as getPath
 
+class AppConfiguration(val startupCallback: () -> Unit,
+					   val pluginsDir: File,
+					   val settingsFile: File,
+					   val shutdownCallback: () -> Unit)
 
 private val LOG_FORMAT = "\\t\\t{date:yyyy-MM-dd HH:mm:ss} [{thread}] {class_name}" + "\\n{level}: {message}"
 
-object AppConfigurator {
+class AppConfigurator(vararg args: String) {
 
 	@Option(name = "-debug", usage = "enables debug level of logging", forbids = arrayOf("-logLevel"))
 	var debug = false
@@ -37,7 +39,7 @@ object AppConfigurator {
 	var logFileArg: String? = null
 
 
-	fun parseArg(vararg args: String) {
+	init {
 		CmdLineParser(this).apply {
 			try {
 				parseArgument(*args)
@@ -47,19 +49,14 @@ object AppConfigurator {
 				System.exit(1)
 			}
 		}
+	}
 
-		if (configurationDirArg.isNotBlank())
-			Paths.configurationDir = getPath("user.dir", configurationDirArg).toFile()
-
-		if (pluginsDirArg.isNotBlank())
-			Paths.pluginsDir = getPath("user.dir", pluginsDirArg).toFile()
-
-		if (settingsFileArg.isNotBlank())
-			Paths.settingsFile = getPath("user.dir", settingsFileArg).toFile()
-
-		if (logFileArg.isNotBlank())
-			Paths.logFile = getPath("user.dir", logFileArg).toFile()
-
+	fun createConfig(): AppConfiguration {
+		return AppConfiguration(
+				startupCallback = { configureBootstrap() },
+				pluginsDir = pluginsDir,
+				settingsFile = settingsFile,
+				shutdownCallback = { shutdown() })
 	}
 
 	fun configureBootstrap() {
@@ -68,42 +65,23 @@ object AppConfigurator {
 				.writer(ConsoleWriter())
 				.level(logLevel)
 				.writingThread(null)
-				.addWriter(FileWriter(Paths.logFile.absolutePath))
+				.addWriter(FileWriter(logFile.absolutePath))
 				.activate()
 	}
 
-	@Subscribe
-	fun destroy(appState: AppState) {
-		if (appState == AppState.SHUTDOWN) {
-			Configurator.shutdownWritingThread(true)
-		}
+	fun shutdown() {
+		Configurator.shutdownWritingThread(true)
 	}
 
-	object Paths {
-		var configurationDir: File = getPath(System.getProperty("user.home"), ".config", "iomerge").toFile()
+	val configurationDir: File get() = configurationDirArg?.let { getPath("user.dir", it).toFile() }
+			?: getPath(System.getProperty("user.home"), ".config", "iomerge").toFile()
 
-		private var _pluginsDir: File? = null
-		var pluginsDir: File
-			get() = _pluginsDir ?: configurationDir.resolve("plugins")
-			set(value) {
-				_pluginsDir = value
-			}
+	val pluginsDir: File get() = pluginsDirArg?.let { getPath("user.dir", it).toFile() }
+			?: configurationDir.resolve("plugins")
 
-		private var _settingsFile: File? = null
-		var settingsFile: File
-			get() = _settingsFile ?: configurationDir.resolve("config.properties")
-			set(value) {
-				_settingsFile = value
-			}
+	val settingsFile: File get() = settingsFileArg?.let { getPath("user.dir", it).toFile() }
+			?: configurationDir.resolve("config.properties")
 
-		private var _logFile: File? = null
-		var logFile: File
-			get():File = _logFile ?: configurationDir.resolve("iomerge.log")
-			set(value) {
-				_logFile = value
-			}
-
-	}
-
-	internal fun String?.isNotBlank(): Boolean = !this.isNullOrBlank()
+	val logFile: File get() = logFileArg?.let { getPath("user.dir", it).toFile() }
+			?: configurationDir.resolve("iomerge.log")
 }

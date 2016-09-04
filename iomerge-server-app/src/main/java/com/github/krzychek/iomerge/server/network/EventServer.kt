@@ -4,22 +4,21 @@ import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
-import org.annoprops.annotations.PropertyHolder
 import org.pmw.tinylog.Logger
-import org.springframework.stereotype.Component
 import java.io.EOFException
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.util.concurrent.Executors
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
  * Waits for clients and starts up connection
  */
-@PropertyHolder
-@Component
-open class EventServer(private val appStateManager: AppStateManager, private val connectionHandlerProxy: ConnectionHandlerProxy) {
+@Singleton class EventServer
+@Inject constructor(private val appStateManager: AppStateManager, private val connectionHandlerProxy: ConnectionHandlerProxy) {
 	private val executor = Executors.newSingleThreadExecutor()
 
 	private var serverSocket: ServerSocket? = null
