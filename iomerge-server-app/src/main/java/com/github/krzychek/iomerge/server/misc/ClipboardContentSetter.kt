@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.utils
+package com.github.krzychek.iomerge.server.misc
 
 
 import java.awt.datatransfer.Clipboard

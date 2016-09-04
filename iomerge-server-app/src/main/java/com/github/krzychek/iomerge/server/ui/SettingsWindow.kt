@@ -1,9 +1,9 @@
 package com.github.krzychek.iomerge.server.ui
 
+import com.github.krzychek.iomerge.server.misc.JFXHelper
 import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.EventServer
-import com.github.krzychek.iomerge.server.utils.JFXHelper
 import com.sun.javafx.collections.ObservableListWrapper
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader

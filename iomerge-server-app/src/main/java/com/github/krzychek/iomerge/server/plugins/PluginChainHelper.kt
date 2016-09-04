@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.utils.plugins
+package com.github.krzychek.iomerge.server.plugins
 
 import com.github.krzychek.iomerge.server.api.Chainable
 import java.lang.reflect.Proxy

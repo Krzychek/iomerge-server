@@ -8,6 +8,7 @@ import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.appState.AppStateHolder
 import com.github.krzychek.iomerge.server.config.AppConfiguration
 import com.github.krzychek.iomerge.server.config.AppConfigurator
+import com.github.krzychek.iomerge.server.misc.ClipboardSynchronizer
 import com.github.krzychek.iomerge.server.model.MessageProcessor
 import com.github.krzychek.iomerge.server.movementReader.InvisibleInputReader
 import com.github.krzychek.iomerge.server.movementReader.MouseMovementReader
@@ -15,11 +16,10 @@ import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
 import com.github.krzychek.iomerge.server.network.EventServer
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.github.krzychek.iomerge.server.network.MsgProcessor
+import com.github.krzychek.iomerge.server.plugins.PluginLoader
+import com.github.krzychek.iomerge.server.plugins.createChainOfType
 import com.github.krzychek.iomerge.server.ui.EdgeTrigger
 import com.github.krzychek.iomerge.server.ui.TrayManager
-import com.github.krzychek.iomerge.server.utils.ClipboardSynchronizer
-import com.github.krzychek.iomerge.server.utils.plugins.PluginLoader
-import com.github.krzychek.iomerge.server.utils.plugins.createChainOfType
 import com.google.common.eventbus.EventBus
 import dagger.Component
 import dagger.Module

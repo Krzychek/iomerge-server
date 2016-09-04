@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.utils
+package com.github.krzychek.iomerge.server.misc
 
 import com.sun.javafx.application.PlatformImpl
 import javafx.application.Platform

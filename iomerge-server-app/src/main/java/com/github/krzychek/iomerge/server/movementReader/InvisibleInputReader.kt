@@ -4,8 +4,8 @@ package com.github.krzychek.iomerge.server.movementReader
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.movementReader.IOListener
-import com.github.krzychek.iomerge.server.utils.IOListenerToAWTAdapter
-import com.github.krzychek.iomerge.server.utils.makeInvisible
+import com.github.krzychek.iomerge.server.misc.IOListenerToAWTAdapter
+import com.github.krzychek.iomerge.server.misc.makeInvisible
 import com.google.common.eventbus.Subscribe
 import java.awt.GraphicsEnvironment
 import java.awt.Point

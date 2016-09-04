@@ -4,8 +4,8 @@ import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.appState.MouseRestoreListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
+import com.github.krzychek.iomerge.server.misc.makeInvisible
 import com.github.krzychek.iomerge.server.model.Edge
-import com.github.krzychek.iomerge.server.utils.makeInvisible
 import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
 import java.awt.Dimension

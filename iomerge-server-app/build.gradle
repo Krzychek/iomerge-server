@@ -28,7 +28,7 @@ dependencies {
 	// console arguments
 	compile group: 'args4j', name: 'args4j', version: '2.33'
 
-	// utils
+	// misc
 	compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
 	// annoprops

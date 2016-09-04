@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.utils.plugins
+package com.github.krzychek.iomerge.server.plugins
 
 import com.github.krzychek.iomerge.server.api.PluginProperties.PLUGIN_CLASSES_PROP
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager

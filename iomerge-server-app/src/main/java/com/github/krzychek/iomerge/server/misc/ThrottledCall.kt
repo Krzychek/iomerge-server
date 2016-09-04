@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.utils
+package com.github.krzychek.iomerge.server.misc
 
 class ThrottledCall<T : Any>(private val threadsholdMilis: Long, private val call: () -> T) {
 
