@@ -2,46 +2,62 @@ package com.github.krzychek.iomerge.server.ui
 
 import com.github.krzychek.iomerge.server.daggerConfig.LifecycleManager
 import dagger.Lazy
+import dorkbox.systemTray.SystemTray
 import org.pmw.tinylog.Logger
-import java.awt.*
-import java.awt.image.BufferedImage
+import java.awt.MenuItem
+import java.awt.PopupMenu
+import java.awt.TrayIcon
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton class TrayManager
-@Inject constructor(private val lazySettingsWindow: Lazy<SettingsWindow>, lazyLifecycleManager: Lazy<LifecycleManager>) {
+@Inject constructor(lazySettingsWindow: Lazy<SettingsWindow>, val lifecycleManager: LifecycleManager) {
 
 	val settingsWindow: SettingsWindow by lazy { lazySettingsWindow.get() }
-	val lifecycleManager: LifecycleManager by lazy { lazyLifecycleManager.get() }
+
+
+	private fun tryLoadNativeTray() {
+		SystemTray.getSystemTray()?.apply {
+
+			status = "IOMerge"
+
+			setIcon("trayIcon", javaClass.getResourceAsStream("/icon.png"))
+
+			addMenuEntry("Settings", { systemTray, menuEntry -> settingsWindow.show() })
+			addMenuEntry("Exit", { systemTray, menuEntry -> lifecycleManager.shutdown() })
+		}
+	}
+
+	private fun loadAwtTray() {
+
+		val image = ImageIO.read(javaClass.getResource("/icon.png"))
+
+		val trayIcon = TrayIcon(image, "IOMerge").apply {
+			isImageAutoSize = true
+			popupMenu = PopupMenu().apply {
+				add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
+				add(MenuItem("Exit")).addActionListener { lifecycleManager.shutdown() }
+			}
+		}
+		java.awt.SystemTray.getSystemTray().add(trayIcon)
+	}
 
 	init {
-		if (SystemTray.isSupported()) {
 
-			val image = try {
-				ImageIO.read(javaClass.getResource("/icon.png"))
-			} catch (e: Exception) {
-				Logger.error("filed to load tray icon, using blank image", e)
-				BufferedImage(1, 1, BufferedImage.TYPE_BYTE_BINARY)
-			}
+		var loaded = false
+		try {
+			tryLoadNativeTray()
+			loaded = true
+		} catch (e: Throwable) {
+			Logger.warn(e, "Problems with loading native tray, trying awt.")
+		}
 
-			val trayIcon = TrayIcon(image, "IOMerge").apply {
-				isImageAutoSize = true
-				popupMenu = PopupMenu().apply {
-					add(MenuItem("Settings")).addActionListener { settingsWindow.show() }
-					add(MenuItem("Exit")).addActionListener { lifecycleManager.shutdown() }
-				}
-			}
-
-			try {
-				SystemTray.getSystemTray().add(trayIcon)
-			} catch (e: AWTException) {
-				Logger.error("TrayIcon could not be added.")
-			}
-
-		} else {
-			Logger.error("Tray is not supported on this system")
+		if (!loaded) try {
+			loadAwtTray()
+		} catch (e: Throwable) {
+			Logger.warn(e, "Filed to load awt tray")
 		}
 	}
 }

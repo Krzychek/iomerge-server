@@ -31,6 +31,9 @@ dependencies {
 	// misc
 	compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
+	// trayIcon
+	compile group: 'com.dorkbox', name: 'SystemTray', version: '2.20'
+
 	// annoprops
 	compile group: 'com.github.Krzychek.annoprops', name: 'annoprops', version: '1.1-SNAPSHOT'
 
