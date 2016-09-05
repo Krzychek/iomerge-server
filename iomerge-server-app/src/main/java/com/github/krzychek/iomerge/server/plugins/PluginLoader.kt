@@ -13,6 +13,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+/**
+ * Component responsible for loading plugins
+ */
 @Singleton class PluginLoader
 @Inject constructor(appStateManager: AppStateManager, messageDispatcher: MessageDispatcherImpl, appConfiguration: AppConfiguration) {
 
@@ -21,18 +24,15 @@ import javax.inject.Singleton
 			MessageDispatcher::class.java to messageDispatcher
 	)
 
-	private val pluginClasses = readPluginJars(appConfiguration.pluginsDir)
-			.flatMap { loadPluginClasses(it) }
+	private val pluginJars by lazy {
+		appConfiguration.pluginsDir
+				.listFiles { file, name -> file.isFile && name.endsWith(".jar") }
+				?.sortedBy { it.name } ?: emptyList()
+	}
+
+	private val pluginClasses by lazy { pluginJars.flatMap { loadPluginClasses(it) } }
 
 	private val classToObject = WeakHashMap<Class<*>, Any>()
-
-	/**
-	 * @return stream of jar files in  plugins directory
-	 */
-	private fun readPluginJars(dir: File): Array<File> {
-		return dir.listFiles { file -> file.isFile && file.name.endsWith(".jar") }
-				?: emptyArray<File>()
-	}
 
 	/**
 	 * create (or gets from cache, if already created) plugin objects of particular supertype
@@ -45,7 +45,9 @@ import javax.inject.Singleton
 
 
 	/**
-	 * creates objects of particular class or return if was created before
+	 * creates objects of particular class or gets it from cache
+	 *
+	 * @param clazz type of object to get
 	 */
 	private fun <T> getObjectOfType(clazz: Class<T>): T = clazz.cast(
 			classToObject[clazz] ?:
@@ -60,32 +62,40 @@ import javax.inject.Singleton
 	 * @return stream of configuration classes in given plugin jar file
 	 */
 	private fun loadPluginClasses(pluginJar: File): List<Class<*>> {
-		try {
-			val pluginClassLoader = URLClassLoader(
-					arrayOf(pluginJar.toURI().toURL()),
-					Thread.currentThread().contextClassLoader)
-
-			// load classes
-			return pluginClassLoader.getConfigurationClassNames()
-					.map { pluginClassLoader.loadClass(it) }
+		return try {
+			val pluginClassloader = createPluginClassloader(pluginJar)
+			pluginClassloader.getPluginClassNames()
+					.map { pluginClassloader.loadClass(it) }
 
 		} catch (ex: Exception) {
-			Logger.warn(ex, "Problem while loading plugin ", pluginJar)
-			return emptyList()
+			Logger.warn(ex, "Problem while loading plugin $pluginJar")
+			emptyList()
 		}
 	}
 
-	private fun ClassLoader.getConfigurationClassNames(): List<String> {
-		val properties = Properties()
-		this.getResourceAsStream("iomerge-plugin.properties").use {
-			properties.load(it)
-		}
+	/**
+	 * creates class loader for plugin
+	 *
+	 * @param pluginJar jar file of the plugin
+	 */
+	private fun createPluginClassloader(pluginJar: File) =
+			object : URLClassLoader(arrayOf(pluginJar.toURI().toURL()), Thread.currentThread().contextClassLoader) {
 
-		val classNames = properties.getProperty(PLUGIN_CLASSES_PROP)
+				fun getPluginClassNames(): List<String> {
+					val properties = Properties()
+					this.getResourceAsStream("iomerge-plugin.properties").use {
+						properties.load(it)
+					}
 
-		if (classNames.isNullOrEmpty())
-			throw IllegalArgumentException("Plugin mendatory property: '$PLUGIN_CLASSES_PROP' not found")
+					val classNames: String? = properties.getProperty(PLUGIN_CLASSES_PROP)
 
-		return classNames.split(",").filter { !it.isEmpty() }
-	}
+					return when {
+						classNames != null && classNames.isNotBlank() -> classNames.split(",").filter { !it.isBlank() }
+						else -> {
+							Logger.error("Plugin mandatory property: '$PLUGIN_CLASSES_PROP' not found")
+							emptyList()
+						}
+					}
+				}
+			}
 }
