@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 
 	private fun tryLoadNativeTray() {
-		SystemTray.getSystemTray()?.apply {
+		SystemTray.getSystemTray()!!.apply {
 
 			status = "IOMerge"
 
