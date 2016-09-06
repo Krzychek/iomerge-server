@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 
 @Singleton class MessageDispatcherImpl
-@Inject constructor(private val connectionHandler: ConnectionHandlerProxy) : MessageDispatcher {
+@Inject constructor(private val connectionHandler: ConnectionHandlerHolder) : MessageDispatcher {
 
 	private lateinit var nextInChain: MessageDispatcher
 

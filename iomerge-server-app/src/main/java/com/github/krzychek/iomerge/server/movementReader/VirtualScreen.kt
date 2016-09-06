@@ -13,6 +13,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+private val MOD_KEYS = intArrayOf(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT).apply { Arrays.sort(this) }
+private val Int.isModKey: Boolean
+	get() = MOD_KEYS.binarySearch(this) >= 0
+
 /**
  * Models device on server side, proxy between dispatcher msg dispatcher and whole module
  */
@@ -88,12 +92,5 @@ import javax.inject.Singleton
 
 	override fun chain(nextInChain: IOListener) {
 		this.nextInChain = nextInChain
-	}
-
-
-	companion object {
-		private val modKeys = intArrayOf(KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT).apply { Arrays.sort(this) }
-		private val Int.isModKey: Boolean
-			get() = Arrays.binarySearch(modKeys, this) >= 0
 	}
 }

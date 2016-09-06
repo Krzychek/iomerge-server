@@ -5,6 +5,7 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.config.AppConfiguration
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
+import com.google.common.eventbus.EventBus
 import org.pmw.tinylog.Logger
 import java.io.File
 import java.net.URLClassLoader
@@ -17,11 +18,15 @@ import javax.inject.Singleton
  * Component responsible for loading plugins
  */
 @Singleton class PluginLoader
-@Inject constructor(appStateManager: AppStateManager, messageDispatcher: MessageDispatcherImpl, appConfiguration: AppConfiguration) {
+@Inject constructor(private val eventBus: EventBus,
+					appConfiguration: AppConfiguration,
+					appStateManager: AppStateManager,
+					messageDispatcher: MessageDispatcherImpl) {
 
 	private val injectableObjects = mapOf(
 			AppStateManager::class.java to appStateManager,
-			MessageDispatcher::class.java to messageDispatcher
+			MessageDispatcher::class.java to messageDispatcher,
+			EventBus::class.java to eventBus
 	)
 
 	private val pluginJars by lazy {
@@ -53,7 +58,7 @@ import javax.inject.Singleton
 			classToObject[clazz] ?:
 					clazz.constructors.maxBy { it.parameterCount }!!.run {
 						val parameters = parameterTypes.map { injectableObjects[it] }.toTypedArray()
-						newInstance(*parameters)
+						newInstance(*parameters).apply { eventBus.register(this) }
 					}
 	)
 
