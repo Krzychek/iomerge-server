@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.daggerConfig
+package com.github.krzychek.iomerge.server.dagger
 
 import com.github.krzychek.iomerge.server.misc.ClipboardSynchronizer
 import com.github.krzychek.iomerge.server.movementReader.InvisibleInputReader

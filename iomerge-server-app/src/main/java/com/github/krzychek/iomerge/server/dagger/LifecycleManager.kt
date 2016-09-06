@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.daggerConfig
+package com.github.krzychek.iomerge.server.dagger
 
 import com.github.krzychek.iomerge.server.appState.AppStateHolder
 import com.github.krzychek.iomerge.server.config.AppConfiguration

@@ -4,10 +4,10 @@ package com.github.krzychek.iomerge.server
 
 import com.github.krzychek.iomerge.server.config.AppConfiguration
 import com.github.krzychek.iomerge.server.config.AppConfigurator
-import com.github.krzychek.iomerge.server.daggerConfig.ChainingModule
-import com.github.krzychek.iomerge.server.daggerConfig.EagerSingletons
-import com.github.krzychek.iomerge.server.daggerConfig.IfaceMappingModule
-import com.github.krzychek.iomerge.server.daggerConfig.MiscModule
+import com.github.krzychek.iomerge.server.dagger.ChainingModule
+import com.github.krzychek.iomerge.server.dagger.EagerSingletons
+import com.github.krzychek.iomerge.server.dagger.IfaceMappingModule
+import com.github.krzychek.iomerge.server.dagger.MiscModule
 import dagger.Component
 import javax.inject.Singleton
 
