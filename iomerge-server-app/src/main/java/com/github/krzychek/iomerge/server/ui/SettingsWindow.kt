@@ -1,8 +1,8 @@
 package com.github.krzychek.iomerge.server.ui
 
+import com.github.krzychek.iomerge.server.input.processors.MouseInputProcessor
 import com.github.krzychek.iomerge.server.misc.JFXHelper
 import com.github.krzychek.iomerge.server.model.Edge
-import com.github.krzychek.iomerge.server.movementReader.MouseInputProcessor
 import com.github.krzychek.iomerge.server.network.ServerManager
 import com.sun.javafx.collections.ObservableListWrapper
 import javafx.fxml.FXML

@@ -5,9 +5,9 @@ import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.appState.AppStateHolder
+import com.github.krzychek.iomerge.server.input.processors.KeyboardInputProcessor
+import com.github.krzychek.iomerge.server.input.processors.MouseInputProcessor
 import com.github.krzychek.iomerge.server.model.MessageProcessor
-import com.github.krzychek.iomerge.server.movementReader.KeyboardInputProcessor
-import com.github.krzychek.iomerge.server.movementReader.MouseInputProcessor
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.github.krzychek.iomerge.server.network.MessageProcessorImpl
 import com.github.krzychek.iomerge.server.network.ServerManager

@@ -1,4 +1,4 @@
-package com.github.krzychek.iomerge.server.movementReader
+package com.github.krzychek.iomerge.server.input.processors
 
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListenerAdapter
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher

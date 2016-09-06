@@ -1,11 +1,10 @@
-package com.github.krzychek.iomerge.server.movementReader
+package com.github.krzychek.iomerge.server.input.readers
 
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
-import com.github.krzychek.iomerge.server.misc.IOListenerToAWTAdapter
 import com.github.krzychek.iomerge.server.misc.makeInvisible
 import com.google.common.eventbus.Subscribe
 import java.awt.GraphicsEnvironment
@@ -31,7 +30,7 @@ import javax.swing.JFrame
 		makeInvisible()
 		isAutoRequestFocus = true
 
-		IOListenerToAWTAdapter(mouseListener, keyboardListener).let {
+		AWTListenerAdapter(mouseListener, keyboardListener).let {
 			addMouseWheelListener(it)
 			addMouseListener(it)
 			addKeyListener(it)

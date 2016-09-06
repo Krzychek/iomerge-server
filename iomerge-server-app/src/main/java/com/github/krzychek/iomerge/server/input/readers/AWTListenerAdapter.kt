@@ -1,11 +1,11 @@
-package com.github.krzychek.iomerge.server.misc
+package com.github.krzychek.iomerge.server.input.readers
 
 import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import java.awt.event.*
 
 
-class IOListenerToAWTAdapter(private val mouseListener: MouseListener, private val keyboardListener: KeyboardListener)
+class AWTListenerAdapter(private val mouseListener: MouseListener, private val keyboardListener: KeyboardListener)
 : MouseWheelListener, java.awt.event.MouseListener, KeyListener {
 
 	override fun mouseWheelMoved(e: MouseWheelEvent) = mouseListener.mouseWheelMoved(e)

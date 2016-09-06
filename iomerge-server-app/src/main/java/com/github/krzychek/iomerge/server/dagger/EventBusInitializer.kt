@@ -1,8 +1,8 @@
 package com.github.krzychek.iomerge.server.dagger
 
+import com.github.krzychek.iomerge.server.input.readers.InvisibleInputReader
+import com.github.krzychek.iomerge.server.input.readers.MouseMovementReader
 import com.github.krzychek.iomerge.server.misc.ClipboardSynchronizer
-import com.github.krzychek.iomerge.server.movementReader.InvisibleInputReader
-import com.github.krzychek.iomerge.server.movementReader.MouseMovementReader
 import com.github.krzychek.iomerge.server.network.ServerManager
 import com.github.krzychek.iomerge.server.ui.EdgeTrigger
 import com.google.common.eventbus.EventBus
