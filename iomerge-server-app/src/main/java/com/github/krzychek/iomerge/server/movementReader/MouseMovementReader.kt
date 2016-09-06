@@ -1,7 +1,7 @@
 package com.github.krzychek.iomerge.server.movementReader
 
 
-import com.github.krzychek.iomerge.server.api.movementReader.IOListener
+import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import com.github.krzychek.iomerge.server.misc.NotifyingValueHolder
 import com.github.krzychek.iomerge.server.misc.ThrottledCall
 import java.awt.MouseInfo
@@ -15,7 +15,7 @@ import javax.inject.Singleton
  * MovementReader based on transparent JFrame, catches mouse inside
  */
 @Singleton class MouseMovementReader
-@Inject constructor(private val listener: IOListener) {
+@Inject constructor(private val listener: MouseListener) {
 
 	private val robot = Robot()
 

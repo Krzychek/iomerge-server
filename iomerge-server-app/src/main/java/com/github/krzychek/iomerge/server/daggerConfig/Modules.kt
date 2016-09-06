@@ -1,11 +1,13 @@
 package com.github.krzychek.iomerge.server.daggerConfig
 
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
-import com.github.krzychek.iomerge.server.api.movementReader.IOListener
+import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
+import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.appState.AppStateHolder
 import com.github.krzychek.iomerge.server.model.MessageProcessor
-import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
+import com.github.krzychek.iomerge.server.movementReader.KeyboardInputProcessor
+import com.github.krzychek.iomerge.server.movementReader.MouseInputProcessor
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.github.krzychek.iomerge.server.network.MessageProcessorImpl
 import com.github.krzychek.iomerge.server.network.ServerManager
@@ -26,8 +28,8 @@ class MiscModule {
 
 	@Provides @Singleton fun eventBus() = EventBus()
 
-	@Provides @Singleton fun propertyManager(edgeTrigger: EdgeTrigger, serverManager: ServerManager, virtualScreen: VirtualScreen): PropertyManager
-			= PropertyManagerBuilder().withObjects(edgeTrigger, serverManager, virtualScreen).build()
+	@Provides @Singleton fun propertyManager(edgeTrigger: EdgeTrigger, serverManager: ServerManager, mouseInputProcessor: MouseInputProcessor): PropertyManager
+			= PropertyManagerBuilder().withObjects(edgeTrigger, serverManager, mouseInputProcessor).build()
 
 	@Provides @Singleton fun clipboard(): Clipboard = Toolkit.getDefaultToolkit().systemClipboard
 }
@@ -38,9 +40,14 @@ class IfaceMappingModule {
 
 	@Provides @Singleton fun appStateManager(appStateHolder: AppStateHolder): AppStateManager = appStateHolder
 
-	@Provides @Singleton fun ioListenerChain(virtualScreen: VirtualScreen, pluginLoader: PluginLoader): IOListener {
-		return (pluginLoader.getPluginObjectsOfType(IOListener::class.java) + virtualScreen)
-				.createChainOfType(IOListener::class.java)
+	@Provides @Singleton fun mouseListenerChain(mouseInputProcessor: MouseInputProcessor, pluginLoader: PluginLoader): MouseListener {
+		return (pluginLoader.getPluginObjectsOfType(MouseListener::class.java) + mouseInputProcessor)
+				.createChainOfType(MouseListener::class.java)
+	}
+
+	@Provides @Singleton fun keyboardListenerChain(keyboardInputProcessor: KeyboardInputProcessor, pluginLoader: PluginLoader): KeyboardListener {
+		return (pluginLoader.getPluginObjectsOfType(KeyboardListener::class.java) + keyboardInputProcessor)
+				.createChainOfType(KeyboardListener::class.java)
 	}
 
 	@Provides @Singleton fun messageDispatcherChain(messageDispatcherImpl: MessageDispatcherImpl, pluginLoader: PluginLoader): MessageDispatcher {

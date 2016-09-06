@@ -1,28 +1,30 @@
 package com.github.krzychek.iomerge.server.misc
 
-import com.github.krzychek.iomerge.server.api.movementReader.IOListener
+import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
+import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import java.awt.event.*
 
 
-class IOListenerToAWTAdapter(private val listener: IOListener) : MouseWheelListener, MouseListener, KeyListener {
+class IOListenerToAWTAdapter(private val mouseListener: MouseListener, private val keyboardListener: KeyboardListener)
+: MouseWheelListener, java.awt.event.MouseListener, KeyListener {
 
-    override fun mouseWheelMoved(e: MouseWheelEvent) = listener.mouseWheelMoved(e)
+	override fun mouseWheelMoved(e: MouseWheelEvent) = mouseListener.mouseWheelMoved(e)
 
-    override fun mouseClicked(e: MouseEvent) = listener.mouseClicked(e)
+	override fun mouseClicked(e: MouseEvent) = mouseListener.mouseClicked(e)
 
-    override fun mousePressed(e: MouseEvent) = listener.mousePressed(e)
+	override fun mousePressed(e: MouseEvent) = mouseListener.mousePressed(e)
 
-    override fun mouseReleased(e: MouseEvent) = listener.mouseReleased(e)
+	override fun mouseReleased(e: MouseEvent) = mouseListener.mouseReleased(e)
 
-    override fun mouseEntered(e: MouseEvent) {
-    }
+	override fun mouseEntered(e: MouseEvent) {
+	}
 
-    override fun mouseExited(e: MouseEvent) {
-    }
+	override fun mouseExited(e: MouseEvent) {
+	}
 
-    override fun keyTyped(e: KeyEvent) = listener.keyTyped(e)
+	override fun keyTyped(e: KeyEvent) = keyboardListener.keyTyped(e)
 
-    override fun keyPressed(e: KeyEvent) = listener.keyPressed(e)
+	override fun keyPressed(e: KeyEvent) = keyboardListener.keyPressed(e)
 
-    override fun keyReleased(e: KeyEvent) = listener.keyReleased(e)
+	override fun keyReleased(e: KeyEvent) = keyboardListener.keyReleased(e)
 }

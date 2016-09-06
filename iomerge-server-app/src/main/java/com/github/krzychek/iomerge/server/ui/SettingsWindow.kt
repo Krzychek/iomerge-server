@@ -2,7 +2,7 @@ package com.github.krzychek.iomerge.server.ui
 
 import com.github.krzychek.iomerge.server.misc.JFXHelper
 import com.github.krzychek.iomerge.server.model.Edge
-import com.github.krzychek.iomerge.server.movementReader.VirtualScreen
+import com.github.krzychek.iomerge.server.movementReader.MouseInputProcessor
 import com.github.krzychek.iomerge.server.network.ServerManager
 import com.sun.javafx.collections.ObservableListWrapper
 import javafx.fxml.FXML
@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 
 @Singleton class SettingsWindow
-@Inject constructor(private val serverManager: ServerManager, private val edgeTrigger: EdgeTrigger, private val virtualScreen: VirtualScreen) {
+@Inject constructor(private val serverManager: ServerManager, private val edgeTrigger: EdgeTrigger, private val mouseInputProcessor: MouseInputProcessor) {
 
 	private lateinit var stage: Stage
 
@@ -62,8 +62,8 @@ import javax.inject.Singleton
 	private fun saveValues() {
 		edgeTrigger.setProperties(edge.value, triggerLength.value, triggerOffset.value)
 		serverManager.port = port.value
-		virtualScreen.movementScale = moveScale.value
-		virtualScreen.reverseScroll = reverseScroll.isSelected
+		mouseInputProcessor.movementScale = moveScale.value
+		mouseInputProcessor.reverseScroll = reverseScroll.isSelected
 	}
 
 	@FXML
@@ -75,10 +75,10 @@ import javax.inject.Singleton
 	private fun refreshFields() {
 		triggerLength.valueFactory.value = edgeTrigger.length
 		triggerOffset.valueFactory.value = edgeTrigger.offset
-		moveScale.valueFactory.value = virtualScreen.movementScale
+		moveScale.valueFactory.value = mouseInputProcessor.movementScale
 		port.valueFactory.value = serverManager.port
 		edge.value = edgeTrigger.edge
-		reverseScroll.isSelected = virtualScreen.reverseScroll
+		reverseScroll.isSelected = mouseInputProcessor.reverseScroll
 	}
 
 }

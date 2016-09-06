@@ -1,26 +1,19 @@
-package com.github.krzychek.iomerge.server.api.movementReader;
+package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.Chainable;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 
 /**
- * Receives io application events
+ * Receives mouse input application events
  *
  * @see Chainable
  */
-public interface IOListener extends Chainable<IOListener> {
+public interface MouseListener extends Chainable<MouseListener> {
 
 	void move(int dx, int dy);
-
-	void keyTyped(KeyEvent e);
-
-	void keyPressed(KeyEvent e);
-
-	void keyReleased(KeyEvent e);
 
 	void mouseClicked(MouseEvent e);
 

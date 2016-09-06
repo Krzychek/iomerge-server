@@ -1,16 +1,15 @@
-package com.github.krzychek.iomerge.server.api.movementReader;
+package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.AbstractChainable;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 
 /**
- * adapter for {@link IOListener} with all method delegating to chained objects
+ * adapter for {@link MouseListener} with all method delegating to chained objects
  */
-public abstract class IOListenerAdapter extends AbstractChainable<IOListener> implements IOListener {
+public abstract class MouseListenerAdapter extends AbstractChainable<MouseListener> implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -30,21 +29,6 @@ public abstract class IOListenerAdapter extends AbstractChainable<IOListener> im
 	@Override
 	public void move(int dx, int dy) {
 		nextInChain.move(dx, dy);
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		nextInChain.keyTyped(e);
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		nextInChain.keyPressed(e);
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		nextInChain.keyReleased(e);
 	}
 
 	@Override

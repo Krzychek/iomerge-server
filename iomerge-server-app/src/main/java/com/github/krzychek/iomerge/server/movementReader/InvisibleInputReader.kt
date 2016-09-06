@@ -3,7 +3,8 @@ package com.github.krzychek.iomerge.server.movementReader
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
-import com.github.krzychek.iomerge.server.api.movementReader.IOListener
+import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
+import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
 import com.github.krzychek.iomerge.server.misc.IOListenerToAWTAdapter
 import com.github.krzychek.iomerge.server.misc.makeInvisible
 import com.google.common.eventbus.Subscribe
@@ -19,7 +20,7 @@ import javax.swing.JFrame
  * MovementReader based on transparent JFrame, catches mouse inside
  */
 @Singleton class InvisibleInputReader
-@Inject constructor(listener: IOListener,
+@Inject constructor(mouseListener: MouseListener, keyboardListener: KeyboardListener,
 					private val appStateManager: AppStateManager,
 					private val mouseMovementReader: MouseMovementReader)
 : JFrame("IOMerge MouseTrapReader") {
@@ -30,7 +31,7 @@ import javax.swing.JFrame
 		makeInvisible()
 		isAutoRequestFocus = true
 
-		IOListenerToAWTAdapter(listener).let {
+		IOListenerToAWTAdapter(mouseListener, keyboardListener).let {
 			addMouseWheelListener(it)
 			addMouseListener(it)
 			addKeyListener(it)
