@@ -36,9 +36,14 @@ class MiscModule {
 
 @Module
 class IfaceMappingModule {
+
 	@Provides @Singleton fun messageProcessor(messageProcessorImpl: MessageProcessorImpl): MessageProcessor = messageProcessorImpl
 
 	@Provides @Singleton fun appStateManager(appStateHolder: AppStateHolder): AppStateManager = appStateHolder
+}
+
+@Module
+class ChainingModule {
 
 	@Provides @Singleton fun mouseListenerChain(mouseInputProcessor: MouseInputProcessor, pluginLoader: PluginLoader): MouseListener {
 		return (pluginLoader.getPluginObjectsOfType(MouseListener::class.java) + mouseInputProcessor)
