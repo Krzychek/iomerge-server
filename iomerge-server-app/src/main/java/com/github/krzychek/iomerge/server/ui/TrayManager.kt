@@ -1,6 +1,7 @@
 package com.github.krzychek.iomerge.server.ui
 
-import com.github.krzychek.iomerge.server.daggerConfig.LifecycleManager
+import com.github.krzychek.iomerge.server.dagger.LifecycleManager
+import com.github.krzychek.iomerge.server.dagger.getValue
 import dagger.Lazy
 import dorkbox.systemTray.SystemTray
 import org.pmw.tinylog.Logger
@@ -15,8 +16,7 @@ import javax.inject.Singleton
 @Singleton class TrayManager
 @Inject constructor(lazySettingsWindow: Lazy<SettingsWindow>, val lifecycleManager: LifecycleManager) {
 
-	val settingsWindow: SettingsWindow by lazy { lazySettingsWindow.get() }
-
+	private val settingsWindow: SettingsWindow by lazySettingsWindow
 
 	private fun tryLoadNativeTray() {
 		SystemTray.getSystemTray()!!.apply {
