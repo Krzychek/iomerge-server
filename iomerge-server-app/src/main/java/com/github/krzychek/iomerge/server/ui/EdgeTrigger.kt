@@ -12,7 +12,6 @@ import java.awt.Dimension
 import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 import java.awt.Point
 import java.awt.Robot
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.swing.JWindow
@@ -27,8 +26,6 @@ import javax.swing.Timer
 					private val appStateManager: AppStateManager)
 : JWindow(), MouseRestoreListener {
 
-	private val robot = Robot()
-
 	init {
 		makeInvisible()
 		isAutoRequestFocus = false
@@ -38,6 +35,8 @@ import javax.swing.Timer
 	}
 
 	private val THICKNESS = 1
+
+	private val robot = Robot()
 
 	@ConfigProperty("Edge")
 	var edge = Edge.LEFT
@@ -68,25 +67,23 @@ import javax.swing.Timer
 		else -> throw IllegalStateException("Not handled edge: " + edge)
 	}
 
-	private fun calculateLocation(): Point = when (edge) {
-		Edge.LEFT -> getScreenBounds()
-				.minWith(Comparator { a, b -> a.x - b.x })!!
-				.apply { translate(0, offset) }
+	private fun calculateLocation(): Point = getScreenBounds().run {
+		when (edge) {
+			Edge.LEFT -> minBy { it.x }!!
+					.apply { translate(0, offset) }
 
-		Edge.RIGHT -> getScreenBounds()
-				.maxWith(Comparator { a, b -> a.x - b.x })!!
-				.apply { translate(width - THICKNESS, offset) }
+			Edge.RIGHT -> maxBy { it.x }!!
+					.apply { translate(width - THICKNESS, offset) }
 
-		Edge.TOP -> getScreenBounds()
-				.minWith(Comparator { a, b -> a.y - b.y })!!
-				.apply { translate(offset, 0) }
+			Edge.TOP -> minBy { it.y }!!
+					.apply { translate(offset, 0) }
 
-		Edge.BOTTOM -> getScreenBounds()
-				.maxWith(Comparator { a, b -> a.y - b.y })!!
-				.apply { translate(offset, height - THICKNESS) }
+			Edge.BOTTOM -> maxBy { it.y }!!
+					.apply { translate(offset, height - THICKNESS) }
 
-		else -> throw IllegalStateException("Not handled edge: " + edge)
-	}.location
+			else -> throw IllegalStateException("Not handled edge: " + edge)
+		}.location
+	}
 
 
 	private fun getScreenBounds() = getLocalGraphicsEnvironment().screenDevices.map { it.defaultConfiguration.bounds }
@@ -95,13 +92,12 @@ import javax.swing.Timer
 	fun onStateChange(appStateUpdateEvent: AppState) {
 		when (appStateUpdateEvent) {
 			AppState.ON_LOCAL -> {
-				messageDispatcher.dispatchEdgeSync(edge)
+				syncEdge()
 				reposition()
-				Timer(50) { actionEvent -> isVisible = true }
-						.apply {
-							isRepeats = false
-							start()
-						}
+				Timer(50) { actionEvent -> isVisible = true }.apply {
+					isRepeats = false
+					start()
+				}
 			}
 			else -> isVisible = false
 		}
@@ -113,8 +109,12 @@ import javax.swing.Timer
 			this.offset = offset
 			this.length = length
 			reposition()
-			messageDispatcher.dispatchEdgeSync(edge)
+			syncEdge()
 		}
+	}
+
+	fun syncEdge() {
+		messageDispatcher.dispatchEdgeSync(edge)
 	}
 
 	override fun restoreMouseAt(position: Float) {
