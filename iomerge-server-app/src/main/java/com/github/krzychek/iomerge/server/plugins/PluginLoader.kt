@@ -7,7 +7,6 @@ import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.google.common.eventbus.EventBus
 import org.pmw.tinylog.Logger
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,24 +26,19 @@ import javax.inject.Singleton
 			EventBus::class.java to eventBus
 	)
 
-	private val pluginJars by lazy {
-		appConfiguration.pluginsDir
-				.listFiles { file, name -> file.isFile && name.endsWith(".jar") }
-				?.sortedBy { it.name } ?: emptyList()
-	}
+	private val pluginJars = appConfiguration.pluginsDir
+			.listFiles { file, name -> file.isFile && name.endsWith(".jar") }
+			?.sortedBy { it.name } ?: emptyList()
 
-	private val pluginClasses by lazy { pluginJars.flatMap { loadPluginClasses(it) } }
-
-	private val classToObject = WeakHashMap<Class<*>, Any>()
+	private val pluginObjects = pluginJars
+			.flatMap { it.loadPluginClasses() }
+			.map { getObjectOfType(it) }
 
 	/**
 	 * creates (or gets from cache, if already created) plugin objects of particular supertype
 	 */
 	fun <T> getPluginObjectsOfType(type: Class<T>): List<T>
-			= pluginClasses
-			.filter { type.isAssignableFrom(it) }
-			.map { @Suppress("UNCHECKED_CAST") (it as Class<out T>) }
-			.map { getObjectOfType(it) }
+			= pluginObjects.filterIsInstance(type)
 
 
 	/**
@@ -53,21 +47,19 @@ import javax.inject.Singleton
 	 * @param clazz type of object to get
 	 */
 	private fun <T> getObjectOfType(clazz: Class<T>): T = clazz.cast(
-			classToObject[clazz] ?:
-					clazz.constructors.maxBy { it.parameterCount }!!.run {
-						val parameters = parameterTypes.map { injectableObjects[it] }.toTypedArray()
-						newInstance(*parameters).apply { eventBus.register(this) }
-					}
+			clazz.constructors.maxBy { it.parameterCount }!!.run {
+				val parameters = parameterTypes.map { injectableObjects[it] }.toTypedArray()
+				newInstance(*parameters).apply { eventBus.register(this) }
+			}
 	)
-
 
 	/**
 	 * @return stream of configuration classes in given plugin jar file
 	 */
-	private fun loadPluginClasses(pluginJar: File): List<Class<*>> = try {
-		PluginClassLoader(pluginJar).loadPluginClasses()
+	private fun File.loadPluginClasses(): List<Class<*>> = try {
+		PluginClassLoader(this).loadPluginClasses()
 	} catch (ex: Exception) {
-		Logger.error(ex, "Problem while loading plugin $pluginJar")
+		Logger.error(ex, "Problem while loading plugin $this")
 		emptyList()
 	}
 }
