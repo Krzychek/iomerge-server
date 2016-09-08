@@ -1,5 +1,6 @@
 package com.github.krzychek.iomerge.server.network
 
+import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.model.Edge
 import com.github.krzychek.iomerge.server.model.message.Message
@@ -16,6 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+@Order(0)
 @Singleton class MessageDispatcherImpl
 @Inject constructor(private val connectionHandler: ConnectionHandlerHolder) : MessageDispatcher {
 

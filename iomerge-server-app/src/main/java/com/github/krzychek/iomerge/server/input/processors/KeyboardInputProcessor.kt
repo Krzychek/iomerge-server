@@ -1,5 +1,6 @@
 package com.github.krzychek.iomerge.server.input.processors
 
+import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListenerAdapter
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
@@ -9,6 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+@Order(0)
 @Singleton class KeyboardInputProcessor
 @Inject constructor(private val messageDispatcher: MessageDispatcher, private val appStateManager: AppStateManager)
 : KeyboardListenerAdapter() {

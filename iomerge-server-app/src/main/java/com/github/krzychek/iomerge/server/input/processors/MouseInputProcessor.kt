@@ -1,5 +1,6 @@
 package com.github.krzychek.iomerge.server.input.processors
 
+import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListenerAdapter
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import org.annoprops.annotations.ConfigProperty
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 /**
  * Models device on server side, proxy between dispatcher msg dispatcher and whole module
  */
+@Order(0)
 @Singleton class MouseInputProcessor
 @Inject constructor(private val messageDispatcher: MessageDispatcher)
 : MouseListenerAdapter() {

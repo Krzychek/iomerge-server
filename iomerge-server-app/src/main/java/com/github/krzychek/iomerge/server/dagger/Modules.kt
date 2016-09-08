@@ -12,7 +12,7 @@ import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.github.krzychek.iomerge.server.network.MessageProcessorImpl
 import com.github.krzychek.iomerge.server.network.ServerManager
 import com.github.krzychek.iomerge.server.plugins.PluginLoader
-import com.github.krzychek.iomerge.server.plugins.createChainOfType
+import com.github.krzychek.iomerge.server.plugins.convertToChainOfType
 import com.github.krzychek.iomerge.server.ui.EdgeTrigger
 import com.google.common.eventbus.EventBus
 import dagger.Module
@@ -47,16 +47,16 @@ class ChainingModule {
 
 	@Provides @Singleton fun mouseListenerChain(mouseInputProcessor: MouseInputProcessor, pluginLoader: PluginLoader): MouseListener {
 		return (pluginLoader.getPluginObjectsOfType(MouseListener::class.java) + mouseInputProcessor)
-				.createChainOfType(MouseListener::class.java)
+				.convertToChainOfType(MouseListener::class.java)
 	}
 
 	@Provides @Singleton fun keyboardListenerChain(keyboardInputProcessor: KeyboardInputProcessor, pluginLoader: PluginLoader): KeyboardListener {
 		return (pluginLoader.getPluginObjectsOfType(KeyboardListener::class.java) + keyboardInputProcessor)
-				.createChainOfType(KeyboardListener::class.java)
+				.convertToChainOfType(KeyboardListener::class.java)
 	}
 
 	@Provides @Singleton fun messageDispatcherChain(messageDispatcherImpl: MessageDispatcherImpl, pluginLoader: PluginLoader): MessageDispatcher {
 		return (pluginLoader.getPluginObjectsOfType(MessageDispatcher::class.java) + messageDispatcherImpl)
-				.createChainOfType(MessageDispatcher::class.java)
+				.convertToChainOfType(MessageDispatcher::class.java)
 	}
 }
