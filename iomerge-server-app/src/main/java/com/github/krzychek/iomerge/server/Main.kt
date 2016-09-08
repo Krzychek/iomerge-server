@@ -2,14 +2,9 @@
 
 package com.github.krzychek.iomerge.server
 
-import com.github.krzychek.iomerge.server.config.AppConfiguration
 import com.github.krzychek.iomerge.server.config.AppConfigurator
-import com.github.krzychek.iomerge.server.dagger.ChainingModule
-import com.github.krzychek.iomerge.server.dagger.EagerSingletons
-import com.github.krzychek.iomerge.server.dagger.IfaceMappingModule
-import com.github.krzychek.iomerge.server.dagger.MiscModule
-import dagger.Component
-import javax.inject.Singleton
+import com.github.krzychek.iomerge.server.dagger.DaggerMainComponent
+import com.github.krzychek.iomerge.server.dagger.MainComponent
 
 
 fun main(vararg args: String) {
@@ -22,11 +17,4 @@ fun main(vararg args: String) {
 	mainComponent.init()
 }
 
-
-// Left in Main file until intellij stops complaining about missing Dagger generated class..
-@Component(modules = arrayOf(MiscModule::class, IfaceMappingModule::class, ChainingModule::class), dependencies = arrayOf(AppConfiguration::class))
-@Singleton
-interface MainComponent {
-	fun init(): EagerSingletons
-}
 
