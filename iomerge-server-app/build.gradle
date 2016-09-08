@@ -16,6 +16,14 @@ buildscript {
 	}
 }
 
+apply plugin: 'idea'
+idea {
+	module {
+		sourceDirs += file('build/generated/source/kapt')
+		generatedSourceDirs += file('build/generated/source/kapt')
+	}
+}
+
 dependencies {
 
 	// internals
@@ -42,8 +50,8 @@ dependencies {
 	compile group: 'org.tinylog', name: 'tinylog', version: '1.1'
 
 	// dagger
-	compile 'com.google.dagger:dagger:2.4'
-	kapt 'com.google.dagger:dagger-compiler:2.4'
+	compile 'com.google.dagger:dagger:2.6.1'
+	kapt 'com.google.dagger:dagger-compiler:2.6.1'
 	compile 'org.glassfish:javax.annotation:10.0-b28'
 }
 
