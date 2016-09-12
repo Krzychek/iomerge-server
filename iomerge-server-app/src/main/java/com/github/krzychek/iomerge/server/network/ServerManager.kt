@@ -42,8 +42,6 @@ import javax.inject.Singleton
 		} catch (e: IOException) {
 			Logger.warn(e)
 		}
-
-		appStateManager.disconnected()
 	}
 
 	private fun restart() {
@@ -53,29 +51,32 @@ import javax.inject.Singleton
 	}
 
 	private fun acceptListener() = executor.execute {
-		serverSocket = ServerSocket().apply {
+		serverSocket?.close()
+		ServerSocket().apply {
 			setPerformancePreferences(1, 2, 0)
 			bind(InetSocketAddress(port))
+			serverSocket = this
 			Logger.info("listening at port: $port")
+
+		}.apply {
 
 			try {
 				val clientSocket = accept()
-				close()
-				Logger.info("client socket accepted")
 				connectionHandlerProxy.connect(clientSocket)
+				Logger.info("client socket accepted")
 
 			} catch (e: EOFException) {
 				Logger.info("Problem with connection", e)
 			} catch (e: IOException) {
 				Logger.warn("Problem with connection", e)
 			}
-		}
+		}.close()
 	}
 
 
 	@Subscribe
 	fun onAppStateChange(appState: AppState) {
-		if (appState == AppState.DISCONNECTED) this.acceptListener()
+		if (appState == AppState.DISCONNECTED) acceptListener()
 		else if (appState == AppState.SHUTDOWN) shutdown()
 	}
 }
