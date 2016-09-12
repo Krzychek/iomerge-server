@@ -53,22 +53,22 @@ import javax.inject.Singleton
 	}
 
 	private fun acceptListener() = executor.execute {
-		val serverSocket = ServerSocket().apply {
+		serverSocket = ServerSocket().apply {
 			setPerformancePreferences(1, 2, 0)
 			bind(InetSocketAddress(port))
-		}
-		this.serverSocket = serverSocket
-		Logger.info("listening at port " + this.port)
+			Logger.info("listening at port: $port")
 
-		try {
-			val clientSocket = serverSocket.accept()
-			Logger.info("client socket accepted")
-			connectionHandlerProxy.connect(clientSocket)
+			try {
+				val clientSocket = accept()
+				close()
+				Logger.info("client socket accepted")
+				connectionHandlerProxy.connect(clientSocket)
 
-		} catch (e: EOFException) {
-			Logger.info("Problem with connection", e)
-		} catch (e: IOException) {
-			Logger.warn("Problem with connection", e)
+			} catch (e: EOFException) {
+				Logger.info("Problem with connection", e)
+			} catch (e: IOException) {
+				Logger.warn("Problem with connection", e)
+			}
 		}
 	}
 
