@@ -1,8 +1,8 @@
 package com.github.krzychek.iomerge.server.model.message.misc;
 
 import com.github.krzychek.iomerge.server.model.Edge;
-import com.github.krzychek.iomerge.server.model.MessageProcessor;
 import com.github.krzychek.iomerge.server.model.message.Message;
+import com.github.krzychek.iomerge.server.model.processors.MessageProcessor;
 
 
 public class EdgeSync implements Message {

@@ -1,7 +1,7 @@
 package com.github.krzychek.iomerge.server.model.message.mouse;
 
-import com.github.krzychek.iomerge.server.model.MessageProcessor;
 import com.github.krzychek.iomerge.server.model.message.Message;
+import com.github.krzychek.iomerge.server.model.processors.MessageProcessor;
 
 
 public class MouseWheel implements Message {
