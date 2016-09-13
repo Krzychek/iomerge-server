@@ -1,9 +1,7 @@
 package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.Chainable;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 
 
 /**
@@ -15,12 +13,12 @@ public interface MouseListener extends Chainable<MouseListener> {
 
 	void move(int dx, int dy);
 
-	void mouseClicked(MouseEvent e);
+	void mouseClicked(MouseButton button);
 
-	void mousePressed(MouseEvent e);
+	void mousePressed(MouseButton button);
 
-	void mouseReleased(MouseEvent e);
+	void mouseReleased(MouseButton button);
 
-	void mouseWheelMoved(MouseWheelEvent e);
+	void mouseWheelMoved(int wheelRotation);
 
 }

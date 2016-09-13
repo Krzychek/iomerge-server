@@ -30,11 +30,9 @@ import javax.swing.JFrame
 		makeInvisible()
 		isAutoRequestFocus = true
 
-		AWTListenerAdapter(mouseListener, keyboardListener).let {
-			addMouseWheelListener(it)
-			addMouseListener(it)
-			addKeyListener(it)
-		}
+		addMouseWheelListener(mouseListener.asAWTMouseWheelListener())
+		addMouseListener(mouseListener.asAWTMouseListener())
+		addKeyListener(keyboardListener.asAWTKeyListener())
 	}
 
 	private fun reposition() {

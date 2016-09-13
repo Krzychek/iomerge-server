@@ -3,6 +3,7 @@ package com.github.krzychek.iomerge.server.api.network;
 import com.github.krzychek.iomerge.server.api.Chainable;
 import com.github.krzychek.iomerge.server.model.Edge;
 import com.github.krzychek.iomerge.server.model.message.Message;
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 
 
 /**
@@ -14,9 +15,9 @@ public interface MessageDispatcher extends Chainable<MessageDispatcher> {
 
 	void dispatchMouseMove(int x, int y);
 
-	void dispatchMousePress(int button);
+	void dispatchMousePress(MouseButton button);
 
-	void dispatchMouseRelease(int button);
+	void dispatchMouseRelease(MouseButton button);
 
 	void dispatchKeyPress(int keyCode);
 

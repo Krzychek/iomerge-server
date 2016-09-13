@@ -2,8 +2,6 @@ package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.AbstractChainable;
 
-import java.awt.event.KeyEvent;
-
 
 /**
  * adapter for {@link KeyboardListener} with all method delegating to chained objects
@@ -11,17 +9,17 @@ import java.awt.event.KeyEvent;
 public abstract class KeyboardListenerAdapter extends AbstractChainable<KeyboardListener> implements KeyboardListener {
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		nextInChain.keyTyped(e);
+	public void keyTyped(int keyCode) {
+		nextInChain.keyTyped(keyCode);
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		nextInChain.keyPressed(e);
+	public void keyPressed(int keyCode) {
+		nextInChain.keyPressed(keyCode);
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		nextInChain.keyReleased(e);
+	public void keyReleased(int keyCode) {
+		nextInChain.keyReleased(keyCode);
 	}
 }

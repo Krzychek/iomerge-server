@@ -16,13 +16,11 @@ import javax.inject.Singleton
 : KeyboardListenerAdapter() {
 
 
-	override fun keyTyped(e: KeyEvent) {
-		nextInChain.keyTyped(e)
+	override fun keyTyped(keyCode: Int) {
+		nextInChain.keyTyped(keyCode)
 	}
 
-	override fun keyPressed(e: KeyEvent) {
-		val keyCode = e.keyCode
-
+	override fun keyPressed(keyCode: Int) {
 		if (keyCode == KeyEvent.VK_F4)
 			appStateManager.restoreMouse()
 		else if (keyCode.isModKey())
@@ -30,16 +28,14 @@ import javax.inject.Singleton
 		else
 			messageDispatcher.dispatchKeyClick(keyCode)
 
-		nextInChain.keyPressed(e)
+		nextInChain.keyPressed(keyCode)
 	}
 
-	override fun keyReleased(e: KeyEvent) {
-		val keyCode = e.keyCode
-
+	override fun keyReleased(keyCode: Int) {
 		if (keyCode.isModKey())
 			messageDispatcher.dispatchKeyRelease(keyCode)
 
-		nextInChain.keyReleased(e)
+		nextInChain.keyReleased(keyCode)
 	}
 
 

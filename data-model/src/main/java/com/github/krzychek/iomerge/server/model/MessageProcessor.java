@@ -1,15 +1,18 @@
 package com.github.krzychek.iomerge.server.model;
 
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
+
+
 @SuppressWarnings({"EmptyMethod", "UnusedParameters"})
 public interface MessageProcessor {
 
-	void mousePress(int button);
+	void mousePress(MouseButton button);
 
-	void mouseRelease(int button);
+	void mouseRelease(MouseButton button);
 
 	void mouseMove(int x, int y);
 
-	void mouseWheel(int move);
+	void mouseWheel(int rotation);
 
 	void backBtnClick();
 
@@ -21,9 +24,9 @@ public interface MessageProcessor {
 
 	void returnToLocal(float position);
 
-	void keyPress(int keyCode);
+	void keyPress(int character);
 
-	void keyRelease(int keyCode);
+	void keyRelease(int character);
 
 	void clipboardSync(String text);
 

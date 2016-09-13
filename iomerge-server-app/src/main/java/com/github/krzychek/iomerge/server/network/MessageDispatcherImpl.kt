@@ -9,10 +9,7 @@ import com.github.krzychek.iomerge.server.model.message.keyboard.KeyPress
 import com.github.krzychek.iomerge.server.model.message.keyboard.KeyRelease
 import com.github.krzychek.iomerge.server.model.message.misc.ClipboardSync
 import com.github.krzychek.iomerge.server.model.message.misc.EdgeSync
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseMove
-import com.github.krzychek.iomerge.server.model.message.mouse.MousePress
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseRelease
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseWheel
+import com.github.krzychek.iomerge.server.model.message.mouse.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,12 +25,12 @@ import javax.inject.Singleton
 		nextInChain.dispatchMouseMove(x, y)
 	}
 
-	override fun dispatchMousePress(button: Int) {
+	override fun dispatchMousePress(button: MouseButton) {
 		connectionHandler.sendToClient(MousePress(button))
 		nextInChain.dispatchMousePress(button)
 	}
 
-	override fun dispatchMouseRelease(button: Int) {
+	override fun dispatchMouseRelease(button: MouseButton) {
 		connectionHandler.sendToClient(MouseRelease(button))
 		nextInChain.dispatchMouseRelease(button)
 	}

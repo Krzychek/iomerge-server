@@ -1,18 +1,21 @@
 package com.github.krzychek.iomerge.server.model;
 
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
+
+
 public abstract class MessageProcessorAdapter implements MessageProcessor {
 
 	@Override
-	public void mousePress(int button) {}
+	public void mousePress(MouseButton button) {}
 
 	@Override
-	public void mouseRelease(int button) {}
+	public void mouseRelease(MouseButton button) {}
 
 	@Override
 	public void mouseMove(int x, int y) {}
 
 	@Override
-	public void mouseWheel(int move) {}
+	public void mouseWheel(int rotation) {}
 
 	@Override
 	public void backBtnClick() {}
@@ -36,10 +39,10 @@ public abstract class MessageProcessorAdapter implements MessageProcessor {
 	public void returnToLocal(float position) {}
 
 	@Override
-	public void keyPress(int keyCode) {}
+	public void keyPress(int character) {}
 
 	@Override
-	public void keyRelease(int keyCode) {}
+	public void keyRelease(int character) {}
 
 	@Override
 	public void clipboardSync(String text) {}

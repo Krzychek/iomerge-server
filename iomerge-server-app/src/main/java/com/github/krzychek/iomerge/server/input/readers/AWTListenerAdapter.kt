@@ -2,29 +2,30 @@ package com.github.krzychek.iomerge.server.input.readers
 
 import com.github.krzychek.iomerge.server.api.inputListeners.KeyboardListener
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
-import java.awt.event.*
+import com.github.krzychek.iomerge.server.misc.mouseButton
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
+import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelListener
 
+fun MouseListener.asAWTMouseListener() = object : java.awt.event.MouseListener {
+	override fun mouseClicked(e: MouseEvent) = mouseClicked(e.mouseButton)
 
-class AWTListenerAdapter(private val mouseListener: MouseListener, private val keyboardListener: KeyboardListener)
-: MouseWheelListener, java.awt.event.MouseListener, KeyListener {
+	override fun mousePressed(e: MouseEvent) = mousePressed(e.mouseButton)
 
-	override fun mouseWheelMoved(e: MouseWheelEvent) = mouseListener.mouseWheelMoved(e)
+	override fun mouseReleased(e: MouseEvent) = mouseReleased(e.mouseButton)
 
-	override fun mouseClicked(e: MouseEvent) = mouseListener.mouseClicked(e)
+	override fun mouseEntered(e: MouseEvent) = Unit
 
-	override fun mousePressed(e: MouseEvent) = mouseListener.mousePressed(e)
+	override fun mouseExited(e: MouseEvent) = Unit
+}
 
-	override fun mouseReleased(e: MouseEvent) = mouseListener.mouseReleased(e)
+fun MouseListener.asAWTMouseWheelListener() = MouseWheelListener { e -> mouseWheelMoved(e.wheelRotation) }
 
-	override fun mouseEntered(e: MouseEvent) {
-	}
+fun KeyboardListener.asAWTKeyListener() = object : KeyListener {
+	override fun keyTyped(e: KeyEvent) = keyTyped(e.keyCode)
 
-	override fun mouseExited(e: MouseEvent) {
-	}
+	override fun keyPressed(e: KeyEvent) = keyPressed(e.keyCode)
 
-	override fun keyTyped(e: KeyEvent) = keyboardListener.keyTyped(e)
-
-	override fun keyPressed(e: KeyEvent) = keyboardListener.keyPressed(e)
-
-	override fun keyReleased(e: KeyEvent) = keyboardListener.keyReleased(e)
+	override fun keyReleased(e: KeyEvent) = keyReleased(e.keyCode)
 }

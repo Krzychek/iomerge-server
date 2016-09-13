@@ -8,9 +8,9 @@ public class MousePress implements Message {
 
 	private final static long serialVersionUID = 1L;
 
-	private final int button;
+	private final MouseButton button;
 
-	public MousePress(int button) {
+	public MousePress(MouseButton button) {
 		this.button = button;
 	}
 

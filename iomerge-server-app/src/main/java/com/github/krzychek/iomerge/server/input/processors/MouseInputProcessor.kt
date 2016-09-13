@@ -3,9 +3,8 @@ package com.github.krzychek.iomerge.server.input.processors
 import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListenerAdapter
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton
 import org.annoprops.annotations.ConfigProperty
-import java.awt.event.MouseEvent
-import java.awt.event.MouseWheelEvent
 import java.awt.geom.Point2D
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,24 +36,25 @@ import javax.inject.Singleton
 		nextInChain.move(dx, dy)
 	}
 
-	override fun mousePressed(e: MouseEvent) {
-		messageDispatcher.dispatchMousePress(e.button)
-		nextInChain.mousePressed(e)
+	override fun mousePressed(button: MouseButton) {
+		messageDispatcher.dispatchMousePress(button)
+		nextInChain.mousePressed(button)
 	}
 
-	override fun mouseReleased(e: MouseEvent) {
-		messageDispatcher.dispatchMouseRelease(e.button)
-		nextInChain.mouseReleased(e)
+	override fun mouseReleased(button: MouseButton) {
+		messageDispatcher.dispatchMouseRelease(button)
+		nextInChain.mouseReleased(button)
 	}
 
-	override fun mouseWheelMoved(e: MouseWheelEvent) {
-		val wheelRotation = if (reverseScroll) -e.wheelRotation else e.wheelRotation
-		messageDispatcher.dispatchMouseWheelEvent(wheelRotation)
+	override fun mouseWheelMoved(wheelRotation: Int) {
+		messageDispatcher.dispatchMouseWheelEvent(
+				if (reverseScroll) -wheelRotation else wheelRotation)
 
-		nextInChain.mouseWheelMoved(e)
+		nextInChain.mouseWheelMoved(wheelRotation)
 	}
 
-	override fun mouseClicked(e: MouseEvent) {
-		nextInChain.mouseClicked(e)
+	override fun mouseClicked(button: MouseButton) {
+		// TODO
+		nextInChain.mouseClicked(button)
 	}
 }

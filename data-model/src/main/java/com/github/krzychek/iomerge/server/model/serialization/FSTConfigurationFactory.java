@@ -10,6 +10,7 @@ import com.github.krzychek.iomerge.server.model.message.misc.ClipboardSync;
 import com.github.krzychek.iomerge.server.model.message.misc.EdgeSync;
 import com.github.krzychek.iomerge.server.model.message.misc.Heartbeat;
 import com.github.krzychek.iomerge.server.model.message.misc.RemoteExit;
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseMove;
 import com.github.krzychek.iomerge.server.model.message.mouse.MousePress;
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseRelease;
@@ -34,7 +35,7 @@ class FSTConfigurationFactory {
 		conf.registerClass(
 				BackBtnClick.class, HomeBtnClick.class, MenuBtnClick.class, KeyClick.class, KeyPress.class, KeyRelease.class,
 				ClipboardSync.class, EdgeSync.class, Heartbeat.class, RemoteExit.class,
-				MousePress.class, MouseRelease.class, MouseMove.class, MouseWheel.class
+				MousePress.class, MouseRelease.class, MouseMove.class, MouseWheel.class, MouseButton.class
 		);
 
 		conf.setPreferSpeed(true); // TODO benchmark true against false

@@ -1,9 +1,7 @@
 package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.AbstractChainable;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 
 
 /**
@@ -12,18 +10,18 @@ import java.awt.event.MouseWheelEvent;
 public abstract class MouseListenerAdapter extends AbstractChainable<MouseListener> implements MouseListener {
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		nextInChain.mousePressed(e);
+	public void mousePressed(MouseButton button) {
+		nextInChain.mousePressed(button);
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		nextInChain.mouseReleased(e);
+	public void mouseReleased(MouseButton button) {
+		nextInChain.mouseReleased(button);
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		nextInChain.mouseWheelMoved(e);
+	public void mouseWheelMoved(int wheelRotation) {
+		nextInChain.mouseWheelMoved(wheelRotation);
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public abstract class MouseListenerAdapter extends AbstractChainable<MouseListen
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		nextInChain.mouseClicked(e);
+	public void mouseClicked(MouseButton button) {
+		nextInChain.mouseClicked(button);
 	}
 }

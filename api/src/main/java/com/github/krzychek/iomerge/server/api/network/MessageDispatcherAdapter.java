@@ -3,6 +3,7 @@ package com.github.krzychek.iomerge.server.api.network;
 import com.github.krzychek.iomerge.server.api.AbstractChainable;
 import com.github.krzychek.iomerge.server.model.Edge;
 import com.github.krzychek.iomerge.server.model.message.Message;
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 
 
 /**
@@ -14,11 +15,11 @@ public abstract class MessageDispatcherAdapter extends AbstractChainable<Message
 		nextInChain.dispatchMouseMove(x, y);
 	}
 
-	public void dispatchMousePress(int button) {
+	public void dispatchMousePress(MouseButton button) {
 		nextInChain.dispatchMousePress(button);
 	}
 
-	public void dispatchMouseRelease(int button) {
+	public void dispatchMouseRelease(MouseButton button) {
 		nextInChain.dispatchMouseRelease(button);
 	}
 
