@@ -1,5 +1,6 @@
 package com.github.krzychek.iomerge.server.model.serialization;
 
+import com.github.krzychek.iomerge.server.model.MouseButton;
 import com.github.krzychek.iomerge.server.model.message.keyboard.BackBtnClick;
 import com.github.krzychek.iomerge.server.model.message.keyboard.HomeBtnClick;
 import com.github.krzychek.iomerge.server.model.message.keyboard.KeyClick;
@@ -10,7 +11,6 @@ import com.github.krzychek.iomerge.server.model.message.misc.ClipboardSync;
 import com.github.krzychek.iomerge.server.model.message.misc.EdgeSync;
 import com.github.krzychek.iomerge.server.model.message.misc.Heartbeat;
 import com.github.krzychek.iomerge.server.model.message.misc.RemoteExit;
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseMove;
 import com.github.krzychek.iomerge.server.model.message.mouse.MousePress;
 import com.github.krzychek.iomerge.server.model.message.mouse.MouseRelease;

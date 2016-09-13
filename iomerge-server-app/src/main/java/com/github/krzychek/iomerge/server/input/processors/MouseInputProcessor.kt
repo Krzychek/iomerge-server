@@ -3,7 +3,7 @@ package com.github.krzychek.iomerge.server.input.processors
 import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListenerAdapter
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton
+import com.github.krzychek.iomerge.server.model.MouseButton
 import org.annoprops.annotations.ConfigProperty
 import java.awt.geom.Point2D
 import javax.inject.Inject

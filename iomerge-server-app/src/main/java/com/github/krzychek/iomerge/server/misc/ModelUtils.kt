@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server.misc
 
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton
+import com.github.krzychek.iomerge.server.model.MouseButton
 import java.awt.event.InputEvent
 import java.awt.event.MouseEvent
 

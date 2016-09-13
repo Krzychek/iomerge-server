@@ -3,13 +3,17 @@ package com.github.krzychek.iomerge.server.network
 import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.api.network.MessageDispatcher
 import com.github.krzychek.iomerge.server.model.Edge
+import com.github.krzychek.iomerge.server.model.MouseButton
 import com.github.krzychek.iomerge.server.model.message.Message
 import com.github.krzychek.iomerge.server.model.message.keyboard.KeyClick
 import com.github.krzychek.iomerge.server.model.message.keyboard.KeyPress
 import com.github.krzychek.iomerge.server.model.message.keyboard.KeyRelease
 import com.github.krzychek.iomerge.server.model.message.misc.ClipboardSync
 import com.github.krzychek.iomerge.server.model.message.misc.EdgeSync
-import com.github.krzychek.iomerge.server.model.message.mouse.*
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseMove
+import com.github.krzychek.iomerge.server.model.message.mouse.MousePress
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseRelease
+import com.github.krzychek.iomerge.server.model.message.mouse.MouseWheel
 import javax.inject.Inject
 import javax.inject.Singleton
 

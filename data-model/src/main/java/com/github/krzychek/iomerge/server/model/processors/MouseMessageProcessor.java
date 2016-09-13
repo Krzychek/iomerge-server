@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server.model.processors;
 
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
+import com.github.krzychek.iomerge.server.model.MouseButton;
 
 
 public interface MouseMessageProcessor {

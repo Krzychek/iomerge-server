@@ -1,7 +1,7 @@
 package com.github.krzychek.iomerge.server.network
 
 import com.github.krzychek.iomerge.server.misc.awtButton
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton
+import com.github.krzychek.iomerge.server.model.MouseButton
 import com.github.krzychek.iomerge.server.model.processors.MouseMessageProcessor
 import java.awt.MouseInfo
 import java.awt.Robot

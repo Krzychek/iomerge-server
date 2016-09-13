@@ -2,8 +2,8 @@ package com.github.krzychek.iomerge.server.api.network;
 
 import com.github.krzychek.iomerge.server.api.Chainable;
 import com.github.krzychek.iomerge.server.model.Edge;
+import com.github.krzychek.iomerge.server.model.MouseButton;
 import com.github.krzychek.iomerge.server.model.message.Message;
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
 
 
 /**

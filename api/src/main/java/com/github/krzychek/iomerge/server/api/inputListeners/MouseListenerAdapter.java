@@ -1,7 +1,7 @@
 package com.github.krzychek.iomerge.server.api.inputListeners;
 
 import com.github.krzychek.iomerge.server.api.AbstractChainable;
-import com.github.krzychek.iomerge.server.model.message.mouse.MouseButton;
+import com.github.krzychek.iomerge.server.model.MouseButton;
 
 
 /**
