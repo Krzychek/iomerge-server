@@ -2,7 +2,7 @@ package com.github.krzychek.iomerge.server.plugins
 
 import com.github.krzychek.iomerge.server.api.Chainable
 import com.github.krzychek.iomerge.server.api.Order
-import java.lang.reflect.Proxy
+import com.github.krzychek.iomerge.server.misc.NOOPProxy
 
 
 internal fun <T : Chainable<T>> List<T>.convertToChainOfType(clazz: Class<T>): T
@@ -12,10 +12,6 @@ internal fun <T : Chainable<T>> List<T>.convertToChainOfType(clazz: Class<T>): T
 			next.chain(previous)
 			next
 		}
-
-@Suppress("UNCHECKED_CAST")
-private fun <T> Class<T>.NOOPProxy()
-		= Proxy.newProxyInstance(classLoader, arrayOf(this), { a, b, c -> null }) as T
 
 private val Any.order: Int
 	get() = this.javaClass.getAnnotation(Order::class.java)?.value
