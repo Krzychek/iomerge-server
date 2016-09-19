@@ -46,7 +46,7 @@ internal class SingleClientHandler(clientSocket: Socket, private val msgProcesso
 						disconnect()
 						Logger.warn(e)
 
-					} catch (e: ClassNotFoundException) {
+					} catch (e: Exception) {
 						Logger.warn(e)
 					}
 
