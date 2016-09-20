@@ -1,7 +1,6 @@
 package com.github.krzychek.iomerge.server.network
 
 import com.github.krzychek.iomerge.server.api.appState.AppState
-import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.google.common.eventbus.Subscribe
 import org.annoprops.annotations.ConfigProperty
 import org.pmw.tinylog.Logger
@@ -18,7 +17,7 @@ import javax.inject.Singleton
  * Waits for clients and starts up connection
  */
 @Singleton class ServerManager
-@Inject constructor(private val appStateManager: AppStateManager, private val connectionHandlerProxy: ConnectionHandlerHolder) {
+@Inject constructor(private val connectionHandlerHolder: ConnectionHandlerHolder) {
 	private val executor = Executors.newSingleThreadExecutor()
 
 	private var serverSocket: ServerSocket? = null
@@ -62,7 +61,7 @@ import javax.inject.Singleton
 
 			try {
 				val clientSocket = accept()
-				connectionHandlerProxy.connect(clientSocket)
+				connectionHandlerHolder.connect(clientSocket)
 				Logger.info("client socket accepted")
 
 			} catch (e: EOFException) {
