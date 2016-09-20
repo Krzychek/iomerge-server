@@ -39,7 +39,6 @@ import javax.inject.Singleton
 
 			appConfiguration.shutdownCallback()
 
-			// TODO show non daemon thread warning
 			if (exitSystem) System.exit(0)
 		}
 	}
