@@ -10,22 +10,40 @@ import java.io.EOFException
 import java.io.IOException
 import java.net.Socket
 import java.net.SocketException
-import javax.swing.Timer
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 
 internal class SingleClientHandler(clientSocket: Socket, private val msgProcessor: MessageProcessor, private val appStateManager: AppStateManager)
 : ConnectionHandler {
 
-	private val heartBeatTimer: Timer = Timer(2000, null)
+	private val HEARBEAT_DELAY = 2
+	private val HEARTBEAT_TIMEOUT = HEARBEAT_DELAY * 2
+
+	private var heartbeatExecutor = ScheduledThreadPoolExecutor(1)
 
 	private val socket: MessageSocketWrapper = MessageSocketWrapper(clientSocket)
 
 	@Volatile private var connected: Boolean = true
 
+	@Volatile private var lastHeartbeatTime: Long = System.currentTimeMillis()
+
 	private fun initTimers() {
-		val heartbeat = Heartbeat()
-		heartBeatTimer.addActionListener { e -> sendToClient(heartbeat) }
-		heartBeatTimer.start()
+		heartbeatExecutor.scheduleWithFixedDelay({
+			sendToClient(Heartbeat.INSTANCE)
+		}, 0, HEARBEAT_DELAY.toLong(), TimeUnit.SECONDS)
+
+
+		lastHeartbeatTime = System.currentTimeMillis()
+		var lastCall: Long = 0
+
+		heartbeatExecutor.scheduleWithFixedDelay({
+			if (lastCall > lastHeartbeatTime) {
+				Logger.warn("Connection timeout")
+				disconnect()
+			}
+			lastCall = System.currentTimeMillis()
+		}, 2 * HEARTBEAT_TIMEOUT.toLong(), HEARTBEAT_TIMEOUT.toLong(), TimeUnit.SECONDS)
 	}
 
 	fun startReading() {
@@ -38,6 +56,7 @@ internal class SingleClientHandler(clientSocket: Socket, private val msgProcesso
 				while (isClosed.not()) {
 					try {
 						readMessage().process(msgProcessor)
+						lastHeartbeatTime = System.currentTimeMillis()
 
 					} catch (e: EOFException) {
 						disconnect()
@@ -62,7 +81,7 @@ internal class SingleClientHandler(clientSocket: Socket, private val msgProcesso
 		appStateManager.disconnected()
 
 		Logger.info("disconnecting from client")
-		heartBeatTimer.stop()
+		heartbeatExecutor.shutdown()
 
 		try {
 			socket.close()

@@ -11,12 +11,11 @@ import javax.inject.Singleton
  * Server implementation of [MiscMessageProcessor]
  */
 @Singleton class MiscMessageProcessorImpl
-@Inject constructor(private val clipboardContentSetter: ClipboardContentSetter, private val appStateManager: AppStateManager)
+@Inject constructor(private val clipboardContentSetter: ClipboardContentSetter,
+					private val appStateManager: AppStateManager)
 : MiscMessageProcessor {
 
 	override fun edgeSync(edge: Edge?) = Unit
-
-	override fun heartbeat() = Unit // TODO
 
 	override fun clipboardSync(text: String) = clipboardContentSetter.setClipboardContent(text)
 

@@ -10,6 +10,4 @@ public interface MiscMessageProcessor {
 	void returnToLocal(float position);
 
 	void clipboardSync(String text);
-
-	void heartbeat();
 }
