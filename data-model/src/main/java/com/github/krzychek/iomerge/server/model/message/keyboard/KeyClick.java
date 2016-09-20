@@ -8,15 +8,14 @@ public class KeyClick implements Message {
 
 	private final static long serialVersionUID = 1L;
 
-	private final int keyCode;
+	private final int character;
 
-	public KeyClick(int keyCode) {
-
-		this.keyCode = keyCode;
+	public KeyClick(int character) {
+		this.character = character;
 	}
 
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.keyClick(keyCode);
+		processor.keyClick(character);
 	}
 }

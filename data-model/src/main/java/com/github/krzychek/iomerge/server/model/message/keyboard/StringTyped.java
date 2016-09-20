@@ -4,19 +4,16 @@ import com.github.krzychek.iomerge.server.model.message.Message;
 import com.github.krzychek.iomerge.server.model.processors.MessageProcessor;
 
 
-public class KeyPress implements Message {
+public class StringTyped implements Message {
 
-	private final static long serialVersionUID = 1L;
+	private final String string;
 
-	private final int character;
-
-	public KeyPress(int character) {
-
-		this.character = character;
+	public StringTyped(String string) {
+		this.string = string;
 	}
 
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.keyPress(character);
+		processor.stringTyped(string);
 	}
 }

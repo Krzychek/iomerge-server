@@ -4,6 +4,7 @@ import com.github.krzychek.iomerge.server.api.appState.AppStateManager
 import com.github.krzychek.iomerge.server.appState.AppStateHolder
 import com.github.krzychek.iomerge.server.misc.notImplementedProxy
 import com.github.krzychek.iomerge.server.model.processors.*
+import com.github.krzychek.iomerge.server.network.KeyboardMessageProcessorImpl
 import com.github.krzychek.iomerge.server.network.MiscMessageProcessorImpl
 import com.github.krzychek.iomerge.server.network.MouseMessageProcessorImpl
 import dagger.Module
@@ -13,14 +14,14 @@ import javax.inject.Singleton
 @Module
 class IfaceMappingModule {
 
-	@Provides @Singleton fun agregateMessageProcessors(messageProcessorImpl: MiscMessageProcessorImpl,
-													   mouseMessageProcessorImpl: MouseMessageProcessorImpl): MessageProcessor
+	@Provides @Singleton fun agregateMessageProcessors(miscMessageProcessorImpl: MiscMessageProcessorImpl,
+													   mouseMessageProcessorImpl: MouseMessageProcessorImpl,
+													   keyboardMessageProcessorImpl: KeyboardMessageProcessorImpl): MessageProcessor
 			= object : MessageProcessor,
-			MiscMessageProcessor by messageProcessorImpl,
+			MiscMessageProcessor by miscMessageProcessorImpl,
 			MouseMessageProcessor by mouseMessageProcessorImpl,
-			AndroidMessageProcessor by AndroidMessageProcessor::class.java.notImplementedProxy(),
-			KeyboardMessageProcessor by KeyboardMessageProcessor::class.java.notImplementedProxy() {
-	}
+			KeyboardMessageProcessor by keyboardMessageProcessorImpl,
+			AndroidMessageProcessor by AndroidMessageProcessor::class.java.notImplementedProxy() {}
 
 	@Provides @Singleton fun appStateManager(appStateHolder: AppStateHolder): AppStateManager = appStateHolder
 }

@@ -8,15 +8,15 @@ public class KeyRelease implements Message {
 
 	private final static long serialVersionUID = 1L;
 
-	private final int keyCode;
+	private final int character;
 
-	public KeyRelease(int keyCode) {
+	public KeyRelease(int character) {
 
-		this.keyCode = keyCode;
+		this.character = character;
 	}
 
 	@Override
 	public void process(MessageProcessor processor) {
-		processor.keyRelease(keyCode);
+		processor.keyRelease(character);
 	}
 }
