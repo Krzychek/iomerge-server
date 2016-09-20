@@ -52,9 +52,4 @@ import javax.inject.Singleton
 
 		nextInChain.mouseWheelMoved(wheelRotation)
 	}
-
-	override fun mouseClicked(button: MouseButton) {
-		// TODO
-		nextInChain.mouseClicked(button)
-	}
 }

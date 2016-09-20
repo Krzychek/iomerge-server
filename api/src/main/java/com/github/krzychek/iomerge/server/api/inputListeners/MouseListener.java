@@ -13,8 +13,6 @@ public interface MouseListener extends Chainable<MouseListener> {
 
 	void move(int dx, int dy);
 
-	void mouseClicked(MouseButton button);
-
 	void mousePressed(MouseButton button);
 
 	void mouseReleased(MouseButton button);

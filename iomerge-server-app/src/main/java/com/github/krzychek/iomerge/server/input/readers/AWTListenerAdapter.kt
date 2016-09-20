@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelListener
 
 fun MouseListener.asAWTMouseListener() = object : java.awt.event.MouseListener {
-	override fun mouseClicked(e: MouseEvent) = mouseClicked(e.mouseButton)
+	override fun mouseClicked(e: MouseEvent) = Unit
 
 	override fun mousePressed(e: MouseEvent) = mousePressed(e.mouseButton)
 

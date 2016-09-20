@@ -28,9 +28,4 @@ public abstract class MouseListenerAdapter extends AbstractChainable<MouseListen
 	public void move(int dx, int dy) {
 		nextInChain.move(dx, dy);
 	}
-
-	@Override
-	public void mouseClicked(MouseButton button) {
-		nextInChain.mouseClicked(button);
-	}
 }
