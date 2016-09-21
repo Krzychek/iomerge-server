@@ -5,9 +5,9 @@ import com.github.krzychek.iomerge.server.api.Order
 import com.github.krzychek.iomerge.server.misc.NOOPProxy
 
 
-internal fun <T : Chainable<T>> List<T>.convertToChainOfType(clazz: Class<T>): T
+internal inline fun <reified T : Chainable<T>> List<T>.convertToChain(): T
 		= this.sortedBy { it.order }
-		.foldRight(clazz.NOOPProxy()) {
+		.foldRight(T::class.java.NOOPProxy()) {
 			next, previous ->
 			next.chain(previous)
 			next

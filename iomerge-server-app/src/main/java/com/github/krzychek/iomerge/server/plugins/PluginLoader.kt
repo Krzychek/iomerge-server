@@ -30,15 +30,15 @@ import javax.inject.Singleton
 			.listFiles { file, name -> file.isFile && name.endsWith(".jar") }
 			?.sortedBy { it.name } ?: emptyList()
 
-	private val pluginObjects = pluginJars
+	val pluginObjects: List<Any> = pluginJars
 			.flatMap { it.loadPluginClasses() }
 			.map { getObjectOfType(it) }
 
 	/**
 	 * creates (or gets from cache, if already created) plugin objects of particular supertype
 	 */
-	fun <T> getPluginObjectsOfType(type: Class<T>): List<T>
-			= pluginObjects.filterIsInstance(type)
+	inline fun <reified T : Any> getPluginObjectsOfType(): List<T>
+			= pluginObjects.filterIsInstance(T::class.java)
 
 
 	/**

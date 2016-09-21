@@ -7,7 +7,7 @@ import com.github.krzychek.iomerge.server.input.processors.KeyboardInputProcesso
 import com.github.krzychek.iomerge.server.input.processors.MouseInputProcessor
 import com.github.krzychek.iomerge.server.network.MessageDispatcherImpl
 import com.github.krzychek.iomerge.server.plugins.PluginLoader
-import com.github.krzychek.iomerge.server.plugins.convertToChainOfType
+import com.github.krzychek.iomerge.server.plugins.convertToChain
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,18 +15,12 @@ import javax.inject.Singleton
 @Module
 class ChainingModule {
 
-	@Provides @Singleton fun mouseListenerChain(mouseInputProcessor: MouseInputProcessor, pluginLoader: PluginLoader): MouseListener {
-		return (pluginLoader.getPluginObjectsOfType(MouseListener::class.java) + mouseInputProcessor)
-				.convertToChainOfType(MouseListener::class.java)
-	}
+	@Provides @Singleton fun mouseListenerChain(mouseInputProcessor: MouseInputProcessor, pluginLoader: PluginLoader): MouseListener
+			= (pluginLoader.getPluginObjectsOfType<MouseListener>() + mouseInputProcessor).convertToChain()
 
-	@Provides @Singleton fun keyboardListenerChain(keyboardInputProcessor: KeyboardInputProcessor, pluginLoader: PluginLoader): KeyboardListener {
-		return (pluginLoader.getPluginObjectsOfType(KeyboardListener::class.java) + keyboardInputProcessor)
-				.convertToChainOfType(KeyboardListener::class.java)
-	}
+	@Provides @Singleton fun keyboardListenerChain(keyboardInputProcessor: KeyboardInputProcessor, pluginLoader: PluginLoader): KeyboardListener
+			= (pluginLoader.getPluginObjectsOfType<KeyboardListener>() + keyboardInputProcessor).convertToChain()
 
-	@Provides @Singleton fun messageDispatcherChain(messageDispatcherImpl: MessageDispatcherImpl, pluginLoader: PluginLoader): MessageDispatcher {
-		return (pluginLoader.getPluginObjectsOfType(MessageDispatcher::class.java) + messageDispatcherImpl)
-				.convertToChainOfType(MessageDispatcher::class.java)
-	}
+	@Provides @Singleton fun messageDispatcherChain(messageDispatcherImpl: MessageDispatcherImpl, pluginLoader: PluginLoader): MessageDispatcher
+			= (pluginLoader.getPluginObjectsOfType<MessageDispatcher>() + messageDispatcherImpl).convertToChain()
 }
