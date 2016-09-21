@@ -12,6 +12,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -26,5 +27,7 @@ class MiscModule {
 
 	@Provides @Singleton fun clipboard(): Clipboard = Toolkit.getDefaultToolkit().systemClipboard
 
-	@Provides @Singleton fun scheduledExecutorService(): ScheduledExecutorService = ScheduledThreadPoolExecutor(1)
+	@Provides @Singleton fun scheduledExecutorService(): ScheduledExecutorService = ScheduledThreadPoolExecutor(1).apply {
+		scheduleAtFixedRate({ purge() }, 0, 10, TimeUnit.MINUTES)
+	}
 }
