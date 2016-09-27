@@ -1,6 +1,6 @@
 package com.github.krzychek.iomerge.server.network
 
-import com.github.krzychek.iomerge.server.misc.awtButton
+import com.github.krzychek.iomerge.server.misc.awtButtonMask
 import com.github.krzychek.iomerge.server.model.MouseButton
 import com.github.krzychek.iomerge.server.model.processors.MouseMessageProcessor
 import java.awt.MouseInfo
@@ -19,9 +19,9 @@ import javax.inject.Singleton
 		}
 	}
 
-	override fun mousePress(button: MouseButton) = robot.mousePress(button.awtButton)
+	override fun mousePress(button: MouseButton) = robot.mousePress(button.awtButtonMask)
 
-	override fun mouseRelease(button: MouseButton) = robot.mouseRelease(button.awtButton)
+	override fun mouseRelease(button: MouseButton) = robot.mouseRelease(button.awtButtonMask)
 
 	override fun mouseWheel(rotation: Int) = robot.mouseWheel(rotation)
 }

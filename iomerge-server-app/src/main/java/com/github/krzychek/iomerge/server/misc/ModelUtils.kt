@@ -4,7 +4,7 @@ import com.github.krzychek.iomerge.server.model.MouseButton
 import java.awt.event.InputEvent
 import java.awt.event.MouseEvent
 
-val MouseButton.awtButton: Int get() = when (this) {
+val MouseButton.awtButtonMask: Int get() = when (this) {
 	MouseButton.LEFT -> InputEvent.BUTTON1_DOWN_MASK
 	MouseButton.CENTER -> InputEvent.BUTTON2_DOWN_MASK
 	MouseButton.RIGHT -> InputEvent.BUTTON3_DOWN_MASK
