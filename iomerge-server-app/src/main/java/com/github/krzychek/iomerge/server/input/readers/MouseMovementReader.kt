@@ -2,11 +2,11 @@ package com.github.krzychek.iomerge.server.input.readers
 
 
 import com.github.krzychek.iomerge.server.api.inputListeners.MouseListener
-import com.github.krzychek.iomerge.server.misc.NotifyingValueHolder
-import com.github.krzychek.iomerge.server.misc.ThrottledCall
+import com.github.krzychek.iomerge.server.misc.PausableTaskExecutor
 import java.awt.MouseInfo
 import java.awt.Point
 import java.awt.Robot
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,17 +19,19 @@ import javax.inject.Singleton
 
 	private val robot = Robot()
 
-	private val isReading = NotifyingValueHolder(false)
+	private val readingExecutorService = PausableTaskExecutor().apply {
+		scheduleWithFixedDelay(task = { readMove() }, delay = 15, unit = TimeUnit.MILLISECONDS, addPaused = false)
+	}
 
 	@Volatile var center = Point()
 
 	fun startReading() {
 		centerMousePointer()
-		isReading.value = true
+		readingExecutorService.resume()
 	}
 
 	fun stopReading() {
-		isReading.value = false
+		readingExecutorService.pause()
 	}
 
 
@@ -37,7 +39,7 @@ import javax.inject.Singleton
 		robot.mouseMove(center.x, center.y)
 	}
 
-	private val readMove = ThrottledCall(15) {
+	private fun readMove() {
 		MouseInfo.getPointerInfo().location.let {
 			it.translate(-center.x, -center.y) // relative to center
 
@@ -46,23 +48,5 @@ import javax.inject.Singleton
 				centerMousePointer()
 			}
 		}
-	}
-
-	private val thread = object : Thread("MouseMovementReader : mouse move reading thread") {
-		override fun run() {
-			while (true) {
-
-				try {
-					isReading.waitToChange()
-					while (isReading.value) readMove()
-
-				} catch (e: InterruptedException) {
-					return
-				}
-			}
-		}
-	}.apply {
-		isDaemon = true
-		start()
 	}
 }
