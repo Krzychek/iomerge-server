@@ -9,7 +9,6 @@ import com.github.krzychek.iomerge.server.misc.makeInvisible
 import com.google.common.eventbus.Subscribe
 import java.awt.GraphicsEnvironment
 import java.awt.Point
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.swing.JFrame
@@ -21,33 +20,34 @@ import javax.swing.JFrame
 @Singleton class InvisibleInputReader
 @Inject constructor(mouseListener: MouseListener, keyboardListener: KeyboardListener,
 					private val appStateManager: AppStateManager,
-					private val mouseMovementReader: MouseMovementReader)
-: JFrame("IOMerge MouseTrapReader") {
+					private val mouseMovementReader: MouseMovementReader) {
 
+	val frame = JFrame("IOMerge MouseTrapReader")
 
 	init {
 		reposition()
-		makeInvisible()
-		isAutoRequestFocus = true
-
-		addMouseWheelListener(mouseListener.asAWTMouseWheelListener())
-		addMouseListener(mouseListener.asAWTMouseListener())
-		addKeyListener(keyboardListener.asAWTKeyListener())
+		frame.let {
+			it.makeInvisible()
+			it.isAutoRequestFocus = true
+			it.addMouseWheelListener(mouseListener.asAWTMouseWheelListener())
+			it.addMouseListener(mouseListener.asAWTMouseListener())
+			it.addKeyListener(keyboardListener.asAWTKeyListener())
+		}
 	}
 
 	private fun reposition() {
 		GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices
 				.map { it.defaultConfiguration.bounds }
-				.maxWith(Comparator { a, b -> a.width * a.height - b.width * b.height })!!
+				.maxBy { it.width * it.height }!!
 				.let {
-					setLocation(it.x, it.y)
-					setSize(it.width, it.height)
+					frame.setLocation(it.x, it.y)
+					frame.setSize(it.width, it.height)
 					mouseMovementReader.center = Point(it.x + it.width / 2, it.y + it.height / 2)
 				}
 	}
 
 	@Synchronized private fun startReading() {
-		isVisible = true
+		frame.isVisible = true
 		mouseMovementReader.startReading()
 	}
 
@@ -57,7 +57,7 @@ import javax.swing.JFrame
 		Thread.sleep(20) // ensure last move was read to not center mouse after restore
 
 		appStateManager.restoreMouse()
-		isVisible = false
+		frame.isVisible = false
 	}
 
 	@Subscribe
