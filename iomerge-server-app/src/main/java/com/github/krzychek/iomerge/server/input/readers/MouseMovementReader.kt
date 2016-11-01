@@ -20,7 +20,7 @@ import javax.inject.Singleton
 	private val robot = Robot()
 
 	private val readingExecutorService = PausableTaskExecutor().apply {
-		scheduleWithFixedDelay(task = { readMove() }, delay = 15, unit = TimeUnit.MILLISECONDS, addPaused = false)
+		scheduleWithFixedDelay(task = { readMove() }, delay = 15, unit = TimeUnit.MILLISECONDS, addPaused = true)
 	}
 
 	@Volatile var center = Point()
